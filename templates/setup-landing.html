@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename = 'setup-landing.js') }}"></script>
+{% endblock %}
+
+{% block styling %}
+.center-text{
+    text-align: center;
+}
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex align-items-center justify-content-center">
+        <div class="center-text">
+            <p>Hello world</p>
+
+            <br>
+
+            <p>This is a temporary landing page for our setup</p>
+        </div>
+    </div>
+
+{% endblock %}
