@@ -30,19 +30,20 @@ def handle_meeting_creation():
 	myMeeting = LayoverMeeting(meeting_name, meeting_type, date_type, start_date, end_date)
 
 	# Create unique Calendar ID
-	meeting_id = getRandomHash()
-	myKeys = meeting_db.keys()
-	while meeting_id in myKeys:
-		meeting_id = getRandomHash()
+	meeting_id = getUniqueRandomHash()
 
 	meeting_db[meeting_id] = myMeeting
 	print(meeting_db)
 	return redirect(url_for('meeting', meeting_id=meeting_id))
 
 
-def getRandomHash():
+def getUniqueRandomHash():
 	available = string.ascii_letters + string.digits
-	return ''.join(random.choice(available) for i in range(6))
+	result = ''.join(random.choice(available) for i in range(6))
+	myKeys = meeting_db.keys()
+	while result in myKeys:
+		result = ''.join(random.choice(available) for i in range(6))
+	return result
 
 
 @app.route('/meeting/<meeting_id>')
