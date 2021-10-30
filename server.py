@@ -47,10 +47,7 @@ def getRandomHash():
 @app.route('/meeting/<meeting_id>')
 def meeting(meeting_id):
 	myMeeting = meeting_db[meeting_id]
-	meetingInfo = {"Meeting Name": myMeeting.getName(),
-					"Users": list(myMeeting.getUsers()),
-					"Type": myMeeting.getMeetingType()}
-	return meetingInfo
+	return myMeeting.toJSON()
 
 
 if __name__ == "__main__":

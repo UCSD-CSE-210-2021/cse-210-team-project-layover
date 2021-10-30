@@ -1,3 +1,5 @@
+import json
+
 class LayoverMeeting:
 	def __init__(self, name, init_user_email, init_user_name, meeting_type):
 		self.name = name
@@ -12,3 +14,6 @@ class LayoverMeeting:
 
 	def getMeetingType(self):
 		return self.meeting_type
+
+	def toJSON(self):
+		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
