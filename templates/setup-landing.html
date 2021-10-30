@@ -13,7 +13,7 @@
 {% block content %}
 	<div class="container d-flex align-items-center justify-content-center">
 		<div class="center-text">
-			<form>
+			<form action="{{ url_for('handle_meeting_creation') }}" method="post">
 				<label for="meeting_name">Meeting name:</label>
 				<br>
 				<input type="text" id="meeting_name" name="meeting_name" required>
