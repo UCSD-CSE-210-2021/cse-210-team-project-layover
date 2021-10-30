@@ -11,4 +11,21 @@ $(document).ready(function() {
         $("#start_date_div").removeClass("hideDiv");
         $("#end_date_div").removeClass("hideDiv");
     });
+
+    var now = new Date();
+    var dd = ("0" + now.getDate()).slice(-2);
+    var mm = ("0" + (now.getMonth() + 1)).slice(-2);
+    var yyyy = now.getFullYear();
+    var today = yyyy + "-" + (mm) + "-" + (dd);
+
+    $("#start_date").attr("min", today);
+    $("#end_date").attr("min", today);
+
+    $("#start_date").change(function(){
+        $("#end_date").attr("min", $("#start_date").val());
+    });
+    $("#end_date").change(function(){
+        $("#start_date").attr("max", $("#end_date").val());
+    });
+
 })
