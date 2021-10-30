@@ -13,11 +13,32 @@
 {% block content %}
     <div class="container d-flex align-items-center justify-content-center">
         <div class="center-text">
-            <p>Hello world</p>
-
-            <br>
-
-            <p>This is a temporary landing page for our setup</p>
+            <form>
+                <label for="meeting_name">Meeting name:</label>
+                <br>
+                <input type="text" id="meeting_name" name="meeting_name" required>
+                <br>
+                <label for="display_name">Your name:</label>
+                <br>
+                <input type="text" id="display_name" name="display_name" required>
+                <br>
+                <label for="email">Your email:</label>
+                <br>
+                <input type="text" id="email" name="email" required>
+                <br>
+                <br>
+                <br>
+                <p>What would you prefer for your meeting type?</p>
+                <input type="radio" id="in-person" name="meeting_type" value="in_person" required>
+                <label for="in-person">In Person</label><br>
+                <input type="radio" id="remote" name="meeting_type" value="remote" required>
+                <label for="remote">Remote</label><br>
+                <input type="radio" id="either" name="meeting_type" value="either" required>
+                <label for="either">Either</label>
+                <br>
+                <br>
+                <input type="submit" value="Submit">
+            </form>
         </div>
     </div>
 
