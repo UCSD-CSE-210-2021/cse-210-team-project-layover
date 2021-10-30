@@ -1,5 +1,6 @@
 import json
 
+
 class LayoverMeeting:
 	def __init__(self, name, init_user_email, init_user_name, meeting_type):
 		self.name = name
