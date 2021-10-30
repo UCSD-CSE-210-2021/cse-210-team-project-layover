@@ -31,8 +31,5 @@ $(document).ready(function() {
     $("#start_date").change(function(){
         $("#end_date").attr("min", $("#start_date").val());
     });
-    $("#end_date").change(function(){
-        $("#start_date").attr("max", $("#end_date").val());
-    });
 
 });
