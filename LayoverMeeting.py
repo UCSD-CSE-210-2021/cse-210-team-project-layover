@@ -9,6 +9,9 @@ class LayoverMeeting:
 		self.date_type = date_type
 		self.start_date = start_date
 		self.end_date = end_date
+		if self.date_type == "general_week":
+			self.start_date = ""
+			self.end_date = ""
 
 	def getName(self):
 		return self.name
