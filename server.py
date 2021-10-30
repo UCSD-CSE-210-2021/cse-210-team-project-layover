@@ -21,12 +21,13 @@ def home():
 def handle_meeting_creation():
 	# Read form results
 	meeting_name = request.form['meeting_name']
-	display_name = request.form['display_name']
-	email = request.form['email']
 	meeting_type = request.form['meeting_type']
+	date_type = request.form['date_type']
+	start_date = request.form['start_date']
+	end_date = request.form['end_date']
 
 	# Create initial calendar
-	myMeeting = LayoverMeeting(meeting_name, email, display_name, meeting_type)
+	myMeeting = LayoverMeeting(meeting_name, meeting_type, date_type, start_date, end_date)
 
 	# Create unique Calendar ID
 	meeting_id = getRandomHash()
