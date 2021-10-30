@@ -9,12 +9,16 @@ $(document).ready(function() {
     $("#general_week").click(function() {
         $("#start_date_div").addClass("hideDiv");
         $("#end_date_div").addClass("hideDiv");
+        $("#start_date").attr("required", false);
+        $("#end_date").attr("required", false);
     });
 
     // Toggle hide/show div for start/end date
     $("#specific_date").click(function() {
         $("#start_date_div").removeClass("hideDiv");
         $("#end_date_div").removeClass("hideDiv");
+        $("#start_date").attr("required", true);
+        $("#end_date").attr("required", true);
     });
 
     // Get today's date, set min value of start/end date to today
