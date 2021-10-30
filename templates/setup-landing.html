@@ -8,38 +8,68 @@
 .center-text{
 	text-align: center;
 }
+.checkIt {
+	border: 3px solid red;
+}
 {% endblock %}
 
 {% block content %}
-	<div class="container d-flex align-items-center justify-content-center">
-		<div class="center-text">
-			<form action="{{ url_for('handle_meeting_creation') }}" method="post">
-				<label for="meeting_name">Meeting name:</label>
-				<br>
-				<input type="text" id="meeting_name" name="meeting_name" required>
-				<br>
-				<label for="display_name">Your name:</label>
-				<br>
-				<input type="text" id="display_name" name="display_name" required>
-				<br>
-				<label for="email">Your email:</label>
-				<br>
-				<input type="text" id="email" name="email" required>
-				<br>
-				<br>
-				<br>
-				<p>What would you prefer for your meeting type?</p>
-				<input type="radio" id="in-person" name="meeting_type" value="in_person" required>
-				<label for="in-person">In Person</label><br>
-				<input type="radio" id="remote" name="meeting_type" value="remote" required>
-				<label for="remote">Remote</label><br>
-				<input type="radio" id="either" name="meeting_type" value="either" required>
-				<label for="either">Either</label>
-				<br>
-				<br>
-				<input type="submit" value="Submit">
-			</form>
+<h1 class="center-text">Layover Meeting</h1>
+<div class="container">
+	<form action="{{ url_for('handle_meeting_creation') }}" method="post">
+		<div class="form-group row">
+			<label class="col-3 col-form-label" for="meeting_name">Meeting name:</label>
+			<div class="col-6">
+				<input type="text" id="meeting_name" class="form-control" name="meeting_name" required>
+			</div>
 		</div>
-	</div>
+
+		<br>
+
+		<div class="form-group row">
+			<label class="col-3 col-form-label" for="display_name">Your name:</label>
+			<div class="col-6">
+				<input type="text" id="display_name" class="form-control" name="display_name" placeholder="Jesse Doe" required>
+			</div>
+		</div>
+
+		<br>
+
+		<div class="form-group row">
+			<label class="col-3 col-form-label" for="email">Your email:</label>
+			<div class="col-6">
+				<input type="text" id="email" class="form-control" name="email" placeholder="name@example.com" required>
+			</div>
+		</div>
+
+		<br>
+
+		<fieldset class="form-group">
+			<div class="row">
+				<legend class="col-form-label col-3 pt-0">Meeting Type:</legend>
+				<div class="col-6">
+					<div class="form-check">
+						<input type="radio" id="in-person" class="form-check-input" name="meeting_type" value="in_person" required>
+						<label class="form-check-label" for="in-person">In Person</label>
+					</div>
+
+					<div class="form-check">
+						<input type="radio" id="remote" class="form-check-input" name="meeting_type" value="remote" required>
+						<label class="form-check-label" for="remote">Remote</label>
+					</div>
+
+					<div class="form-check">
+						<input type="radio" id="either" class="form-check-input" name="meeting_type" value="either" required>
+						<label class="form-check-label" for="either">Either</label>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<br>
+
+		<button type="submit" class="btn btn-primary row">Submit</button>
+	</form>
+</div>
 
 {% endblock %}
