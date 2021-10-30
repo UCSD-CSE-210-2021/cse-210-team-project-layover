@@ -2,10 +2,10 @@ import string
 import random
 
 from flask import Flask
-from flask import render_template, redirect
+from flask import render_template, redirect, url_for
 from flask import Response, request, jsonify
 
-from LayoverCalendar import LayoverCalendar
+from LayoverMeeting import LayoverMeeting
 
 app = Flask(__name__)
 
@@ -26,22 +26,31 @@ def handle_meeting_creation():
 	meeting_type = request.form['meeting_type']
 
 	# Create initial calendar
-	myCalendar = LayoverCalendar(meeting_name, email, display_name, meeting_type)
+	myMeeting = LayoverMeeting(meeting_name, email, display_name, meeting_type)
 
 	# Create unique Calendar ID
-	calendarID = getRandomHash()
+	meeting_id = getRandomHash()
 	myKeys = meeting_db.keys()
-	while calendarID in myKeys:
-		calendarID = getRandomHash()
+	while meeting_id in myKeys:
+		meeting_id = getRandomHash()
 
-	meeting_db[calendarID] = myCalendar
+	meeting_db[meeting_id] = myMeeting
 	print(meeting_db)
-	return "Finished"
+	return redirect(url_for('meeting', meeting_id=meeting_id))
 
 
 def getRandomHash():
 	available = string.ascii_letters + string.digits
 	return ''.join(random.choice(available) for i in range(6))
+
+
+@app.route('/meeting/<meeting_id>')
+def meeting(meeting_id):
+	myMeeting = meeting_db[meeting_id]
+	meetingInfo = {"Meeting Name": myMeeting.getName(),
+					"Users": list(myMeeting.getUsers()),
+					"Type": myMeeting.getMeetingType()}
+	return meetingInfo
 
 
 if __name__ == "__main__":
