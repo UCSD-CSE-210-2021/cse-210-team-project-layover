@@ -17,7 +17,32 @@
 
 <div class="row">
 	<div class="col-6">
+		<div class="row">
+			If you'd like to add or edit your availability, enter your info below!
+		</div>
+		<div class="row">
+			<form action="{{ url_for('handle_availability_info') }}" method="post">
+				<div class="form-group row">
+					<label class="col-3 col-form-label" for="display_name">Your name:</label>
+					<div class="col-6">
+						<input type="text" id="display_name" class="form-control" name="display_name" placeholder="Jesse Doe" required>
+					</div>
+				</div>
 
+				<br>
+
+				<div class="form-group row">
+					<label class="col-3 col-form-label" for="email">Your email:</label>
+					<div class="col-6">
+						<input type="text" id="email" class="form-control" name="email" placeholder="name@example.com" required>
+					</div>
+				</div>
+
+				<br>
+
+				<button type="submit" class="btn btn-primary row">Submit</button>
+			</form>
+		</div>
 	</div>
 	<div class="col-6">
 		<div class="row">

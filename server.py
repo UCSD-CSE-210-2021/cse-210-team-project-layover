@@ -52,6 +52,13 @@ def meeting(meeting_id):
 	return render_template('scheduling-landing.html', data=myData)
 
 
+@app.route('/handle_availability_info', methods=['POST'])
+def handle_availability_info():
+	user_name = request.form['display_name']
+	email = request.form['email']
+	return email
+
+
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
 	myMeeting = meeting_db[meeting_id]
