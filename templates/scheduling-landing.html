@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block scripts %}
+<script>var data = {{data|tojson}}</script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-landing.js') }}"></script>
+{% endblock %}
+
+{% block styling %}
+.center-text{
+	text-align: center;
+}
+{% endblock %}
+
+{% block content %}
+
+<div class="row center-text">{{data.name}}</div>
+
+<div class="row">
+	<div class="col-6">
+
+	</div>
+	<div class="col-6">
+		<div class="row">
+			If you would like to see the results, click below!
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<a href="/results/" role="button" class="btn btn-info" id="results_btn">Results</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

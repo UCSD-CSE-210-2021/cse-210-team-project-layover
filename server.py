@@ -26,11 +26,11 @@ def handle_meeting_creation():
 	start_date = request.form['start_date']
 	end_date = request.form['end_date']
 
-	# Create initial calendar
-	myMeeting = LayoverMeeting(meeting_name, meeting_type, date_type, start_date, end_date)
-
 	# Create unique Calendar ID
 	meeting_id = getUniqueRandomHash()
+
+	# Create initial meeting
+	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, date_type, start_date, end_date)
 
 	meeting_db[meeting_id] = myMeeting
 	print(meeting_db)
@@ -46,8 +46,15 @@ def getUniqueRandomHash():
 	return result
 
 
-@app.route('/meeting/<meeting_id>')
+@app.route('/meeting/<meeting_id>', methods=['GET', 'POST'])
 def meeting(meeting_id):
+	myMeeting = meeting_db[meeting_id]
+	myData = myMeeting.toJSON()
+	return render_template('scheduling-landing.html', data=myData)
+
+
+@app.route('/results/<meeting_id>')
+def results(meeting_id):
 	myMeeting = meeting_db[meeting_id]
 	return myMeeting.toJSON()
 

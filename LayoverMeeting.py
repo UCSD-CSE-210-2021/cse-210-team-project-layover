@@ -2,7 +2,8 @@ import json
 
 
 class LayoverMeeting:
-	def __init__(self, name, meeting_type, date_type, start_date, end_date):
+	def __init__(self, meeting_id, name, meeting_type, date_type, start_date, end_date):
+		self.meeting_id = meeting_id
 		self.name = name
 		self.users = dict()
 		self.meeting_type = meeting_type
@@ -12,6 +13,9 @@ class LayoverMeeting:
 		if self.date_type == "general_week":
 			self.start_date = ""
 			self.end_date = ""
+
+	def getMeetingID(self):
+		return self.meeting_id
 
 	def getName(self):
 		return self.name
