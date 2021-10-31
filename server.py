@@ -33,7 +33,6 @@ def handle_meeting_creation():
 	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, date_type, start_date, end_date)
 
 	meeting_db[meeting_id] = myMeeting
-	print(meeting_db)
 	return redirect(url_for('meeting', meeting_id=meeting_id))
 
 
