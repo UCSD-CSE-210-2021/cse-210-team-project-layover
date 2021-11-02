@@ -53,15 +53,16 @@ def meeting(meeting_id):
 	return render_template('scheduling-landing.html', data=myData)
 
 
-@app.route('/handle_availability_info', methods=['POST'])
-def handle_availability_info():
+@app.route('/handle_user_info', methods=['POST'])
+def handle_user_info():
 	user_name = request.form['display_name']
 	email = request.form['email']
 	meeting_id = request.form['meeting_id']
-	layoverUser = LayoverUser(user_name, email, meeting_id)
 	myMeeting = meeting_db[meeting_id]
-	myMeeting.addUser(layoverUser)
-	meeting_db[meeting_id] = myMeeting
+	if email not in myMeeting.getUsers():
+		layoverUser = LayoverUser(user_name, email, meeting_id)
+		myMeeting.addUser(layoverUser)
+		# meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('availability', meeting_id=meeting_id, email=email))
 
 
