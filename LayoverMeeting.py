@@ -29,5 +29,8 @@ class LayoverMeeting:
 	def getDateType(self):
 		return self.date_type
 
+	def addUser(self, newUser):
+		self.users[newUser.getID()] = newUser
+
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

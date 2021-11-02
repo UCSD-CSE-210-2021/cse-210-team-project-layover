@@ -6,6 +6,7 @@ from flask import render_template, redirect, url_for
 from flask import Response, request, jsonify
 
 from LayoverMeeting import LayoverMeeting
+from LayoverUser import LayoverUser
 
 app = Flask(__name__)
 
@@ -56,6 +57,16 @@ def meeting(meeting_id):
 def handle_availability_info():
 	user_name = request.form['display_name']
 	email = request.form['email']
+	meeting_id = request.form['meeting_id']
+	layoverUser = LayoverUser(user_name, email, meeting_id)
+	myMeeting = meeting_db[meeting_id]
+	myMeeting.addUser(layoverUser)
+	meeting_db[meeting_id] = myMeeting
+	return redirect(url_for('availability', meeting_id=meeting_id, email=email))
+
+
+@app.route('/availability/<meeting_id>/<email>')
+def availability(meeting_id, email):
 	return email
 
 
