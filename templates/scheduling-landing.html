@@ -9,13 +9,33 @@
 .center-text{
 	text-align: center;
 }
+tr { 
+	border: solid;
+	border-width: 1px 1px;
+}
+th { 
+	border: solid;
+	border-width: 1px 1px;
+}
+td { 
+	border: solid;
+	border-width: 1px 1px;
+}
+#topDiv{
+	margin: 20px;
+}
+.clickable { 
+	cursor: pointer; 
+}
+
+
 {% endblock %}
 
 {% block content %}
 
 <div class="row center-text">{{data.name}}</div>
 
-<div class="row">
+<div id="topDiv" class="row">
 	<div class="col-6">
 		<div class="row">
 			If you'd like to add or edit your availability, enter your info below!
@@ -40,22 +60,29 @@
 
 				<br>
 
+				<!-- I'm not sure what's supposed to go for value... -->
 				<input id="meeting_id" type="hidden" name="meeting_id" value="foobar" />
 
 				<button type="submit" class="btn btn-primary row">Submit</button>
 			</form>
 		</div>
 	</div>
-	<div class="col-6">
+	<div class="col-5">
+		<div id="schedule" class="row">
+			
+		</div>
 		<div class="row">
 			If you would like to see the results, click below!
 		</div>
 		<div class="row">
 			<div class="col-3">
-				<a href="/results/" role="button" class="btn btn-info" id="results_btn">Results</a>
+				<!-- <a href="/results/" role="button" class="btn btn-info" id="results_btn">Results</a> -->
+				<!-- <a role="button" id="results_btn">ddd</a> -->
+				<button type="button" class="btn btn-primary" id="abab">Primary</button>
 			</div>
 		</div>
 	</div>
+	
 </div>
 
 {% endblock %}
