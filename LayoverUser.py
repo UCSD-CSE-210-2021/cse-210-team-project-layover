@@ -7,5 +7,11 @@ class LayoverUser:
 		self.meeting_id = meeting_id
 		self.availability = []
 
+	def setAvailability(self, availability_schedule):
+		self.availability = availability_schedule
+
 	def getID(self):
 		return self.email
+
+	def getAvailability(self):
+		return self.availability
