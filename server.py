@@ -36,6 +36,13 @@ def handle_meeting_creation():
 	meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('meeting', meeting_id=meeting_id))
 
+@app.route('/submitAvailability', methods=['POST'])
+def submitAvailability():
+	data = request.get_json(force=True)
+	print(data)
+	table = data['tableStructure']
+	print(table)
+
 
 def getUniqueRandomHash():
 	available = string.ascii_letters + string.digits
