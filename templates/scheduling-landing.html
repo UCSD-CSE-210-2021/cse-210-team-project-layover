@@ -6,26 +6,22 @@
 {% endblock %}
 
 {% block styling %}
-.center-text{
+.center-text {
 	text-align: center;
 }
-tr { 
-	border: solid;
-	border-width: 1px 1px;
+table {
+	table-layout: fixed;
+	text-align: center;
 }
-th { 
+tr, th, td {
 	border: solid;
-	border-width: 1px 1px;
+	border-width: 2px 2px;
 }
-td { 
-	border: solid;
-	border-width: 1px 1px;
-}
-#topDiv{
+#topDiv {
 	margin: 20px;
 }
-.clickable { 
-	cursor: pointer; 
+.clickable {
+	cursor: pointer;
 }
 
 
@@ -33,7 +29,7 @@ td {
 
 {% block content %}
 
-<div class="row center-text">{{data.name}}</div>
+<div class="row center-text">{{data}}</div>
 
 <div id="topDiv" class="row">
 	<div class="col-6">
@@ -67,7 +63,7 @@ td {
 			</form>
 		</div>
 	</div>
-	<div class="col-5">
+	<div class="col-4">
 		<div id="schedule" class="row">
 			
 		</div>
@@ -82,7 +78,6 @@ td {
 			</div>
 		</div>
 	</div>
-	
 </div>
 
 {% endblock %}
