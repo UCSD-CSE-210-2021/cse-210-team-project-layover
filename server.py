@@ -67,7 +67,8 @@ def handle_availability_info():
 
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
-	return email
+	return render_template('scheduling-availability.html')
+	# return email
 
 
 @app.route('/results/<meeting_id>')
