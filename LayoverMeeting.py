@@ -3,11 +3,12 @@ import numpy as np
 
 
 class LayoverMeeting:
-	def __init__(self, meeting_id, name, meeting_type, date_type, start_date, end_date):
+	def __init__(self, meeting_id: str, name: str, meeting_type: str, meeting_length: int, date_type: str, start_date, end_date):
 		self.meeting_id = meeting_id
 		self.name = name
 		self.users = dict()
 		self.meeting_type = meeting_type
+		self.meeting_length = meeting_length
 		self.date_type = date_type
 		self.start_date = start_date
 		self.end_date = end_date
@@ -30,6 +31,9 @@ class LayoverMeeting:
 			return self.users[userKey]
 		except KeyError:
 			return None
+
+	def getLength(self):
+		return self.meeting_length
 
 	def getMeetingType(self):
 		return self.meeting_type

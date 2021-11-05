@@ -23,15 +23,20 @@ def handle_meeting_creation():
 	# Read form results
 	meeting_name = request.form['meeting_name']
 	meeting_type = request.form['meeting_type']
-	date_type = request.form['date_type']
-	start_date = request.form['start_date']
-	end_date = request.form['end_date']
+	meeting_length = int(request.form['meeting_length'])
+	# date_type = request.form['date_type']  			# Uncomment for milestone 2
+	# start_date = request.form['start_date']  		# Uncomment for milestone 2
+	# end_date = request.form['end_date']  			# Uncomment for milestone 2
+
+	date_type = 'general_week'  					# Remove for milestone 2
+	start_date = ''  								# Remove for milestone 2
+	end_date = ''  									# Remove for milestone 2
 
 	# Create unique Calendar ID
 	meeting_id = getUniqueRandomHash()
 
 	# Create initial meeting
-	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, date_type, start_date, end_date)
+	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date)
 
 	meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('meeting', meeting_id=meeting_id))
