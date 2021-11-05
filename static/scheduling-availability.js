@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    console.log("We out here");
     var all_data = jQuery.parseJSON(data);
     $("#user_name").html(all_data.name + "'s availability");
 
@@ -113,13 +112,26 @@ $(document).ready(function() {
 
     $("#submit_availability").click(function(){
         console.log("submitting availability");
-        $.ajax
-        ({
+        $.ajax({
             type: "POST",
             url: '/submitAvailability',
-            data : JSON.stringify({tableStructure: tableStructure, "meeting_id": all_data.meeting_id}),
+            data : JSON.stringify(
+                {tableStructure: tableStructure,
+                "meeting_id": all_data.meeting_id,
+                "email": all_data.email}
+            ),
             contentType : 'application/json',
-            dataType: 'json'
+            dataType: 'text',
+            success: function(result){
+                console.log("Successfully submitted availability")
+                window.location = '/results/' + all_data.meeting_id
+            },
+            error: function(request, status, error){
+                console.log("Error");
+                console.log(request);
+                console.log(status);
+                console.log(error);
+            }
         })
     });
 

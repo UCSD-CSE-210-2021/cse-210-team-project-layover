@@ -3,7 +3,7 @@ import random
 
 from flask import Flask
 from flask import render_template, redirect, url_for
-from flask import Response, request, jsonify
+from flask import Response, request
 
 from LayoverMeeting import LayoverMeeting
 from LayoverUser import LayoverUser
@@ -37,19 +37,22 @@ def handle_meeting_creation():
 	return redirect(url_for('meeting', meeting_id=meeting_id))
 
 
-@app.route('/submitAvailability', methods=['POST'])
+@app.route('/submitAvailability', methods=['POST', 'GET'])
 def submitAvailability():
-	data = request.get_json(force=True)
-	table = data['tableStructure']
+	data = request.get_json()
+	myTable = data['tableStructure']
 	meeting_id = data['meeting_id']
+	email = data['email']
+	meeting_db[meeting_id].getUser(email).setAvailability(myTable)
+	return Response("Success", status=200)
 
 
 def getUniqueRandomHash():
 	available = string.ascii_letters + string.digits
-	result = ''.join(random.choice(available) for i in range(6))
+	result = ''.join(random.choice(available) for _ in range(6))
 	myKeys = meeting_db.keys()
 	while result in myKeys:
-		result = ''.join(random.choice(available) for i in range(6))
+		result = ''.join(random.choice(available) for _ in range(6))
 	return result
 
 
@@ -81,7 +84,7 @@ def availability(meeting_id, email):
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
 	myMeeting = meeting_db[meeting_id]
-	return myMeeting.toJSON()
+	return render_template('results.html', data=myMeeting.toJSON())
 
 
 if __name__ == "__main__":
