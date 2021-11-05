@@ -1,6 +1,7 @@
 import json
 import numpy as np
 
+
 class LayoverMeeting:
 	def __init__(self, meeting_id, name, meeting_type, date_type, start_date, end_date):
 		self.meeting_id = meeting_id
@@ -25,7 +26,10 @@ class LayoverMeeting:
 		return self.users.keys()
 
 	def getUser(self, userKey):
-		return self.users[userKey]
+		try:
+			return self.users[userKey]
+		except KeyError:
+			return None
 
 	def getMeetingType(self):
 		return self.meeting_type

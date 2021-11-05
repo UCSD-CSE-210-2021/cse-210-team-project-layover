@@ -1,13 +1,43 @@
 {% extends "layout.html" %}
 
 {% block scripts %}
-
+<script>var data = {{data|tojson}}</script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
 {% endblock %}
 
 {% block styling %}
-
+.center-text {
+	text-align: center;
+}
+table {
+	table-layout: fixed;
+	text-align: center;
+}
+tr, th, td {
+	border: solid;
+	border-width: 2px 2px;
+}
+#topDiv {
+	margin: 20px;
+}
+.clickable {
+	cursor: pointer;
+}
 {% endblock %}
 
 {% block content %}
+
+<h1 id="user_name" class="text-center text-capitalize"></h1>
+
+<div id="topDiv" class="row">
+	<div id="schedule" class="row">
+
+	</div>
+	<div class="row">
+		<div class="col-3">
+			<button type="button" class="btn btn-primary" id="submit_availability">Submit</button>
+		</div>
+	</div>
+</div>
 
 {% endblock %}

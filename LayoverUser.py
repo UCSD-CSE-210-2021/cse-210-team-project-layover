@@ -1,3 +1,6 @@
+import json
+
+
 class LayoverUser:
 	def __init__(self, name, email, meeting_id):
 		self.name = name
@@ -13,3 +16,6 @@ class LayoverUser:
 
 	def getAvailability(self):
 		return self.availability
+
+	def toJSON(self):
+		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

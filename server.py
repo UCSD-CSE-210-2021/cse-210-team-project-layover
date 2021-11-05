@@ -36,12 +36,12 @@ def handle_meeting_creation():
 	meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('meeting', meeting_id=meeting_id))
 
+
 @app.route('/submitAvailability', methods=['POST'])
 def submitAvailability():
 	data = request.get_json(force=True)
-	print(data)
 	table = data['tableStructure']
-	print(table)
+	meeting_id = data['meeting_id']
 
 
 def getUniqueRandomHash():
@@ -69,14 +69,13 @@ def handle_user_info():
 	if email not in myMeeting.getUsers():
 		layoverUser = LayoverUser(user_name, email, meeting_id)
 		myMeeting.addUser(layoverUser)
-		# meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('availability', meeting_id=meeting_id, email=email))
 
 
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
-	return render_template('scheduling-availability.html')
-	# return email
+	myUser = meeting_db[meeting_id].getUser(email)
+	return render_template('scheduling-availability.html', data=myUser.toJSON())
 
 
 @app.route('/results/<meeting_id>')
