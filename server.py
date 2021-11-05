@@ -45,10 +45,11 @@ def handle_meeting_creation():
 @app.route('/submitAvailability', methods=['POST', 'GET'])
 def submitAvailability():
 	data = request.get_json()
-	myTable = data['tableStructure']
+	inPersonMeetingTable = data['inPersonMeetingTable']
+	virtualMeetingTable = data['virtualMeetingTable']
 	meeting_id = data['meeting_id']
 	email = data['email']
-	meeting_db[meeting_id].getUser(email).setAvailability(myTable)
+	meeting_db[meeting_id].getUser(email).setAvailability(inPersonMeetingTable, virtualMeetingTable)
 	return Response("Success", status=200)
 
 
@@ -83,7 +84,9 @@ def handle_user_info():
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
 	myUser = meeting_db[meeting_id].getUser(email)
-	return render_template('scheduling-availability.html', data=myUser.toJSON())
+	meeting_type = meeting_db[meeting_id].meeting_type
+	return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
+	# return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
 
 @app.route('/results/<meeting_id>')

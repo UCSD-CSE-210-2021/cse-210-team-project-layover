@@ -2,6 +2,7 @@
 
 {% block scripts %}
 <script>var data = {{data|tojson}}</script>
+<script>var meetingType = {{meetingType|tojson}}</script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
 {% endblock %}
 
@@ -30,9 +31,19 @@ tr, th, td {
 <h1 id="user_name" class="text-center text-capitalize"></h1>
 
 <div id="topDiv" class="row">
+	<div class="row" id="curr_table_type">
+		Current table: In-person availability
+	</div>
+	<div class="row" id="change_table_div">
+		<div class="col-3">
+			<button type="button" class="btn btn-primary" id="change_table">Click to go to virtual availability</button>
+		</div>
+	</div>
+
 	<div id="schedule" class="row">
 
 	</div>
+
 	<div class="row">
 		<div class="col-3">
 			<button type="button" class="btn btn-primary" id="submit_availability">Submit</button>

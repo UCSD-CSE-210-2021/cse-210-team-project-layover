@@ -54,12 +54,12 @@ class LayoverMeeting:
 
 		# initializing template via first key
 		user0 = self.getUser(userKeys[0])
-		user0_availabiliy = np.array(user0.getAvailability())
-		compiled_schedule = np.zeros(user0_availabiliy.shape)
+		user0_availability = np.array(user0.getInPersonAvailability())
+		compiled_schedule = np.zeros(user0_availability.shape)
 		
 		for userKey in userKeys:
 			user = self.getUser(userKey)
-			user_availability = user.getAvailability()
+			user_availability = user.getInPersonAvailability()
 			compiled_schedule += user_availability
 
 		max_val = np.max(compiled_schedule)
