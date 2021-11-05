@@ -5,8 +5,8 @@ $(document).ready(function() {
 
 	// Variable initialization
 	const numCol = 8;
-	const numTimes = 24;	
-	var currTime = new Date('December 17, 1995 00:00:00');
+	const numTimes = 16;	
+	var currTime = new Date('December 17, 1995 7:00:00');
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var currTable = true; // true for in-person. false for virtual
