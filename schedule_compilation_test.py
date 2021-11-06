@@ -8,7 +8,7 @@ if __name__ == '__main__':
     meeting_id = 'asdf_id'
     name = 'dummy_name'
     meeting_type = 'remote'
-    meeting_length = 4
+    meeting_length = 2
     date_type = 'general'
     start_date = None
     end_date = None
@@ -43,24 +43,31 @@ if __name__ == '__main__':
 
     weights = list([0, 0.75, 1])
 
-    for i in range(96):
-        avail_1.append(random.choices(weights, k = 7))
-        avail_2.append(random.choices(weights, k = 7))
-        avail_3.append(random.choices(weights, k = 7))
-        avail_4.append(random.choices(weights, k = 7))
-        avail_5.append(random.choices(weights, k = 7))
+    for i in range(3):
+        avail_1.append(random.choices(weights, k = 3))
+        avail_2.append(random.choices(weights, k = 3))
+        avail_3.append(random.choices(weights, k = 3))
+        avail_4.append(random.choices(weights, k = 3))
+        avail_5.append(random.choices(weights, k = 3))
+    
+    print('\n', avail_1, '\n')
+    print('\n', avail_2, '\n')
+    # print('\n', avail_3, '\n')
+    # print('\n', avail_4, '\n')
+    # print('\n', avail_5, '\n')
 
-    user1.setAvailability(avail_1)
-    user2.setAvailability(avail_2)
-    user3.setAvailability(avail_3)
-    user4.setAvailability(avail_4)
-    user5.setAvailability(avail_5)
+
+    user1.setAvailability(avail_1, avail_2)
+    user2.setAvailability(avail_2, avail_2)
+    user3.setAvailability(avail_3, avail_3)
+    user4.setAvailability(avail_4, avail_4)
+    user5.setAvailability(avail_5, avail_5)
 
     myMeeting.addUser(user1)
     myMeeting.addUser(user2)
-    myMeeting.addUser(user3)
-    myMeeting.addUser(user4)
-    myMeeting.addUser(user5)
+    # myMeeting.addUser(user3)
+    # myMeeting.addUser(user4)
+    # myMeeting.addUser(user5)
 
     # myMeeting.compiledAvailability()
     myMeeting.bestMeetingTimes()

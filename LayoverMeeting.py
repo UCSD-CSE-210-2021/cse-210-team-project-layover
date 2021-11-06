@@ -78,6 +78,7 @@ class LayoverMeeting:
 
 	def bestMeetingTimes(self):
 		compiled_list = self.compiledAvailability()
+		# print(compiled_list)
 
 		start_ind = 0
 		end_ind = start_ind + self.meeting_length
@@ -90,14 +91,16 @@ class LayoverMeeting:
 		best_five = {}
 		for day_idx, day in enumerate(compiled_list.T):
 			start_ind = 0
-			end_ind = start_ind + self.meeting_length
+			end_ind = start_ind + int((self.meeting_length/15))
 			while end_ind <= len(day):
 				curr_sum = sum(day[start_ind:end_ind])
 
 				if best_five:
-					# check if curr sum is greater than any of the current top 5
+					#check if curr sum is greater than any of the current top 5 or list does not have 5 times yet
 					for i in sorted(best_five):
-						if curr_sum > i:
+						if curr_sum > i or len(best_five) < 5:
+							while curr_sum in best_five:
+								curr_sum += 0.0001
 							best_five[curr_sum] = (day_idx, start_ind)
 
 							# if length is larger than 5, pop the smallest key
@@ -116,6 +119,5 @@ class LayoverMeeting:
 		for i in sorted(best_five):
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-		return best_times
-		# self.schedule_results = best_times
+		return(best_times)
 
