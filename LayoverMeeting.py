@@ -99,7 +99,7 @@ class LayoverMeeting:
 						if curr_sum > i or len(best_five) < 5:
 							best_five[curr_sum] = (day_idx, start_ind)
 
-							#if length is larger than 5, pop the smallest key
+							# if length is larger than 5, pop the smallest key
 							if len(best_five) > 5:
 								best_five.pop(sorted(best_five)[0])
 							# break out of loop so we don't pop more than one
@@ -115,6 +115,6 @@ class LayoverMeeting:
 		for i in sorted(best_five):
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-		return(best_times)
+		return best_times
 		# self.schedule_results = best_times
 
