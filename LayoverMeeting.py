@@ -93,9 +93,9 @@ class LayoverMeeting:
 				curr_sum = sum(day[start_ind:end_ind])
 
 				if best_five:
-					#check if curr sum is greater than any of the current top 5
+					#check if curr sum is greater than any of the current top 5 or list does not have 5 times yet
 					for i in sorted(best_five):
-						if curr_sum > i:
+						if curr_sum > i or len(best_five) < 5:
 							best_five[curr_sum] = (day_idx, start_ind)
 
 							#if length is larger than 5, pop the smallest key
