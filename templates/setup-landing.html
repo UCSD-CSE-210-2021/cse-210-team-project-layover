@@ -31,7 +31,7 @@
 
 		<fieldset class="form-group">
 			<div class="row">
-				<legend class="col-form-label col-3 pt-0">Meeting Type:</legend>
+				<div class="col-form-label col-3 pt-0">Meeting Type:</div>
 				<div class="col-6">
 					<div class="form-check">
 						<input type="radio" id="in-person" class="form-check-input" name="meeting_type" value="in_person" required>
@@ -55,38 +55,59 @@
 
 		<fieldset class="form-group">
 			<div class="row">
-				<legend class="col-form-label col-3 pt-0">Date Type:</legend>
+				<div class="col-form-label col-3 pt-0">Meeting Length:</div>
 				<div class="col-6">
-					<div class="form-check">
-						<input type="radio" id="general_week" class="form-check-input" name="date_type" value="general_week" required>
-						<label class="form-check-label" for="general_week">General Date</label>
-					</div>
-
-					<div class="form-check">
-						<input type="radio" id="specific_date" class="form-check-input" name="date_type" value="specific_date" required>
-						<label class="form-check-label" for="specific_date">Specific Date</label>
-					</div>
+					<select id="meeting_length" class="form-control" name="meeting_length">
+						<option value="15">15 minutes</option>
+						<option value="30">30 minutes</option>
+						<option value="45">45 minutes</option>
+						<option value="60">1 hour</option>
+						<option value="75">1 hour 15 minutes</option>
+						<option value="90">1 hour 30 minutes</option>
+						<option value="105">1 hour 45 minutes</option>
+						<option value="120">2 hours</option>
+					</select>
 				</div>
 			</div>
 		</fieldset>
 
 		<br>
 
-		<div id="start_date_div" class="row form-group hideDiv">
-			<label class="col-3 col-form-label" for="start_date">Start Date:</label>
-			<div class="col-7">
-				<input type="date" id="start_date" class="form-control" name="start_date">
-			</div>
-		</div>
+<!--		TODO: Uncomment below for milestone 2-->
+<!--		<fieldset class="form-group">-->
+<!--			<div class="row">-->
+<!--				<div class="col-form-label col-3 pt-0">Date Type:</div>-->
+<!--				<div class="col-6">-->
+<!--					<div class="form-check">-->
+<!--						<input type="radio" id="general_week" class="form-check-input" name="date_type" value="general_week" required>-->
+<!--						<label class="form-check-label" for="general_week">General Date</label>-->
+<!--					</div>-->
 
-		<br>
+<!--					<div class="form-check">-->
+<!--						<input type="radio" id="specific_date" class="form-check-input" name="date_type" value="specific_date" required>-->
+<!--						<label class="form-check-label" for="specific_date">Specific Date</label>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</fieldset>-->
 
-		<div id="end_date_div" class="row form-group hideDiv">
-			<label class="col-3 col-form-label" for="end_date">End Date:</label>
-			<div class="col-7">
-				<input type="date" id="end_date" class="form-control" name="end_date">
-			</div>
-		</div>
+<!--		<br>-->
+
+<!--		<div id="start_date_div" class="row form-group hideDiv">-->
+<!--			<label class="col-3 col-form-label" for="start_date">Start Date:</label>-->
+<!--			<div class="col-7">-->
+<!--				<input type="date" id="start_date" class="form-control" name="start_date">-->
+<!--			</div>-->
+<!--		</div>-->
+
+<!--		<br>-->
+
+<!--		<div id="end_date_div" class="row form-group hideDiv">-->
+<!--			<label class="col-3 col-form-label" for="end_date">End Date:</label>-->
+<!--			<div class="col-7">-->
+<!--				<input type="date" id="end_date" class="form-control" name="end_date">-->
+<!--			</div>-->
+<!--		</div>-->
 
 		<button type="submit" class="btn btn-primary row">Submit</button>
 	</form>

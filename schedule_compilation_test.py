@@ -8,10 +8,11 @@ if __name__ == '__main__':
     meeting_id = 'asdf_id'
     name = 'dummy_name'
     meeting_type = 'remote'
+    meeting_length = 4
     date_type = 'general'
     start_date = None
     end_date = None
-    myMeeting = LayoverMeeting(meeting_id, name, meeting_type, date_type, start_date, end_date)
+    myMeeting = LayoverMeeting(meeting_id, name, meeting_type, meeting_length, date_type, start_date, end_date)
 
     name_1 = 'Alex'
     email_1 = 'alex@alex.com'
@@ -61,4 +62,5 @@ if __name__ == '__main__':
     myMeeting.addUser(user4)
     myMeeting.addUser(user5)
 
-    myMeeting.compiledAvailability()
+    # myMeeting.compiledAvailability()
+    myMeeting.bestMeetingTimes()

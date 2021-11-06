@@ -6,30 +6,14 @@
 {% endblock %}
 
 {% block styling %}
-.center-text {
-	text-align: center;
-}
-table {
-	table-layout: fixed;
-	text-align: center;
-}
-tr, th, td {
-	border: solid;
-	border-width: 2px 2px;
-}
 #topDiv {
 	margin: 20px;
 }
-.clickable {
-	cursor: pointer;
-}
-
-
 {% endblock %}
 
 {% block content %}
 
-<div class="row center-text">{{data}}</div>
+<h1 id="meeting_name" class="text-center text-capitalize"></h1>
 
 <div id="topDiv" class="row">
 	<div class="col-6">
@@ -56,25 +40,20 @@ tr, th, td {
 
 				<br>
 
-				<!-- I'm not sure what's supposed to go for value... -->
+				<!--Value for below is overwritten in the javascript -->
 				<input id="meeting_id" type="hidden" name="meeting_id" value="foobar" />
 
 				<button type="submit" class="btn btn-primary row">Submit</button>
 			</form>
 		</div>
 	</div>
-	<div class="col-4">
-		<div id="schedule" class="row">
-			
-		</div>
+	<div class="col-6">
 		<div class="row">
 			If you would like to see the results, click below!
 		</div>
 		<div class="row">
 			<div class="col-3">
-				<!-- <a href="/results/" role="button" class="btn btn-info" id="results_btn">Results</a> -->
-				<!-- <a role="button" id="results_btn">ddd</a> -->
-				<button type="button" class="btn btn-primary" id="abab">Primary</button>
+				 <a href="/results/" role="button" class="btn btn-info" id="results_btn">Results</a>
 			</div>
 		</div>
 	</div>
