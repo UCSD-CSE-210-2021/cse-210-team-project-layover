@@ -2,6 +2,8 @@ $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);                  // Read in data
 	$("#meeting_name").html(all_data.meeting_info.name + " Results")     // Write the heading dynamically
 
+	console.log(all_data)
+
 	// TODO: Use data to calculate table to display
 	// var fullList = "<ul>"
 	// $.each(all_data.meeting_info.users, function(i, value){              // Iterate through users
@@ -55,9 +57,10 @@ $(document).ready(function() {
 			}
 			i++;
 			result += "</tr>"
-			}
 		}
-		result += '</table>'
+	}
+
+	result += '</table>'
 
 	function createBlankCellWithId(currCellId, cellVal){
 		ret = "<td id=" + currCellId + " class=clickable bgcolor=" ;

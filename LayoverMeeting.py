@@ -81,9 +81,9 @@ class LayoverMeeting:
 		start_ind = 0
 		end_ind = start_ind + self.meeting_length
 
-		start_time = datetime(2021, 11, 4, hour=7) #dummy values, must change in future
+		start_time = datetime(2021, 11, 4, hour=7)  # dummy values, must change in future
 		end_time = datetime(2021, 11, 4, hour=22)
-		week_dict = {0:'Sunday', 1:'Monday', 2: 'Tuesday', 3:'Wednesday', 4:'Thursday', 5:'Friday', 6:'Saturday'}
+		week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
 
 
 		best_five = {} #k:v where k = sum of compiled availabilities over the potential meeting times, and v = (day index, time index) tuple
@@ -102,10 +102,10 @@ class LayoverMeeting:
 							#if length is larger than 5, pop the smallest key
 							if len(best_five) > 5:
 								best_five.pop(sorted(best_five)[0])
-							#break out of loop so we don't pop more than one
+							# break out of loop so we don't pop more than one
 							break
 
-				else: #if dict is empty add in first value
+				else:  # if dict is empty add in first value
 					best_five[curr_sum] = (day_idx, start_ind)
 
 				start_ind += 1
