@@ -84,16 +84,23 @@ $(document).ready(function() {
 		return ret;
 	}
 	
-	$("#sched-results").html(result)                             	// Display the overlaid availabilities as a table
+	$("#sched-results").html(result)                            // Display the overlaid availabilities as a table
 
 	var fullList = "<ul>"
-	$.each(all_data.meeting_info.users, function(i, value){         // Iterate through users
-		fullList += "<li>" + i + "</li>"                            // End list for individual user
+	$.each(all_data.meeting_info.users, function(i, value){     // Iterate through users
+		fullList += "<li>" + i + "</li>"                        // End list for individual user
 	});
 	fullList += "</ul>"                                     	// End list for all users
 
 	$("#users-list").html(fullList)                             // Display list of users
-	$("#best-times").html(all_data.best_times)                 // Display list of Top 5 best times
+
+    // Display list of Top 5 best times
+	var bestTimes = "<ul>"
+	$.each(all_data.best_times, function(i, value){
+	    bestTimes += "<li>" + value + "</li>"
+	})
+	bestTimes += "</ul>"
+	$("#best-times").html(bestTimes);
 
 	//Link to Meeting
 	$("#meetingId").html($(location).attr('href').split('/').slice(0,-2).join('/') + "/meeting/" + all_data.meeting_info.meeting_id);
@@ -109,6 +116,6 @@ $(document).ready(function() {
 
 	//Link to first's users (for now) editing page
 	$('#editingPage').click(function(){
-		window.location.href = ($(location).attr('href').split('/').slice(0,-2).join('/') + "/availability/" + all_data.meeting_info.meeting_id + "/" + all_data.meeting_info.users[Object.keys(all_data.meeting_info.users)[0]].name);
+		window.location.href = ($(location).attr('href').split('/').slice(0,-2).join('/') + "/availability/" + all_data.meeting_info.meeting_id + "/" + all_data.meeting_info.users[Object.keys(all_data.meeting_info.users)[0]].email);
 	  });
 });
