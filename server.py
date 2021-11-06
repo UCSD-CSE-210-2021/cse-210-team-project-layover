@@ -92,20 +92,20 @@ def availability(meeting_id, email):
 
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
-	#Meeting Information
+	# Meeting Information
 	myMeeting = meeting_db[meeting_id]
-	json_str = myMeeting.toJSON()
+	meeting_json = myMeeting.toJSON()
 
-	#Overlay of user availabilities
+	# Overlay of user availabilities
 	combined_results = meeting_db[meeting_id].compiledAvailability()
 	lists = combined_results.tolist()
-	json_str2 = json.dumps(lists)
+	compiled_availability = json.dumps(lists)
 
-	#Top 5 best timings
+	# Top 5 best timings
 	schedule_results = meeting_db[meeting_id].bestMeetingTimes()
-	json_str3 = json.dumps(schedule_results)
+	best_times = json.dumps(schedule_results)
 	
-	data = '{"meeting_info":'+json_str+',"compiled_avail":'+json_str2+',"best_times":'+json_str3+'}'
+	data = '{"meeting_info":' + meeting_json + ',"compiled_avail":' + compiled_availability + ',"best_times":' + best_times + '}'
 	return render_template('results.html', data=data)
 
 
