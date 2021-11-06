@@ -51,11 +51,12 @@ class LayoverMeeting:
 	def compiledAvailability(self):
 		userKeys = list(self.getUsers())
 
-		# initializing template via first key
-		user0 = self.getUser(userKeys[0])
-		user0_availability = np.array(user0.getInPersonAvailability())
-		compiled_schedule = np.zeros(user0_availability.shape)
-		
+		# Initializing template via hard coding
+		# TODO: make compiled schedule dynamic, but not reliant on a key in case no availabilities added yet
+		# user0 = self.getUser(userKeys[0])
+		# user0_availability = np.array(user0.getInPersonAvailability())
+		compiled_schedule = np.zeros((64, 7))
+
 		for userKey in userKeys:
 			user = self.getUser(userKey)
 			user_availability = user.getInPersonAvailability()
