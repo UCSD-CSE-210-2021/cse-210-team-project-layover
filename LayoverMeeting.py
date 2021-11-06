@@ -60,6 +60,8 @@ class LayoverMeeting:
 		for userKey in userKeys:
 			user = self.getUser(userKey)
 			user_availability = user.getInPersonAvailability()
+			if user_availability is None:
+				continue
 			compiled_schedule += user_availability
 
 		if len(userKeys) > 0:
