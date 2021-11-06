@@ -99,7 +99,7 @@ class LayoverMeeting:
 					for i in sorted(best_five):
 						if curr_sum > i or len(best_five) < 5:
 							while curr_sum in best_five:
-									curr_sum += 0.0001
+								curr_sum += 0.0001
 							best_five[curr_sum] = (day_idx, start_ind)
 
 							# if length is larger than 5, pop the smallest key
