@@ -17,7 +17,6 @@ class LayoverMeeting:
 		if self.date_type == "general_week":
 			self.start_date = ""
 			self.end_date = ""
-		self.schedule_results = None
 
 	def getMeetingID(self):
 		return self.meeting_id
@@ -65,6 +64,7 @@ class LayoverMeeting:
 		max_val = np.max(compiled_schedule)
 		compiled_schedule /= max_val
 
+		# self.combined_results = compiled_schedule
 		# if want list of lists,
 		# comment the following line and uncomment the rest of the code
 		return compiled_schedule
@@ -114,6 +114,6 @@ class LayoverMeeting:
 		for i in sorted(best_five):
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-		print(best_times)
-		self.schedule_results = best_times
+		return(best_times)
+		# self.schedule_results = best_times
 

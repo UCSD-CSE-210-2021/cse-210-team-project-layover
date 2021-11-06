@@ -1,5 +1,6 @@
 import string
 import random
+import json
 
 from flask import Flask
 from flask import render_template, redirect, url_for
@@ -91,8 +92,21 @@ def availability(meeting_id, email):
 
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
+	#Meeting Information
 	myMeeting = meeting_db[meeting_id]
-	return render_template('results.html', data=myMeeting.toJSON())
+	json_str = myMeeting.toJSON()
+
+	#Overlay of user availabilities
+	combined_results = meeting_db[meeting_id].compiledAvailability()
+	lists = combined_results.tolist()
+	json_str2 = json.dumps(lists)
+
+	#Top 5 best timings
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes()
+	json_str3 = json.dumps(schedule_results)
+	
+	data = '{"meeting_info":'+json_str+',"compiled_avail":'+json_str2+',"best_times":'+json_str3+'}'
+	return render_template('results.html', data=data)
 
 
 if __name__ == "__main__":

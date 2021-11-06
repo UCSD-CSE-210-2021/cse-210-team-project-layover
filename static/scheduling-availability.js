@@ -6,7 +6,7 @@ $(document).ready(function() {
 	// Variable initialization
 	const numCol = 8;
 	const numTimes = 16;	
-	var currTime = new Date('December 17, 1995 7:00:00');
+	// var currTime = new Date('December 17, 1995 7:00:00');
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var currTable = true; // true for in-person. false for virtual
@@ -41,7 +41,8 @@ $(document).ready(function() {
 
 	// Builds HTML table using the table Structure
 	function buildTableHTML(availability){
-
+		
+		var currTime = new Date('December 17, 1995 7:00:00');
 		var currCellId = 0;
 		// Initialize backend data structure to store times. Fill with 0's
 		// inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
@@ -60,7 +61,7 @@ $(document).ready(function() {
 		for(var aTime = 0 ; aTime < numTimes ; aTime++){
 			// append time or blank cell
 			table += "<tr>"
-			table += createTimeCell()
+			table += createTimeCell(currTime)
 			// append remaining cells
 			for(var j = 0 ; j < availability[0].length ; j++){
 				table += createBlankCellWithId(currCellId, availability[i][j]);
@@ -94,9 +95,9 @@ $(document).ready(function() {
 		if(cellVal === 0){
 			ret += "white";
 		}else if( cellVal === 0.75){
-			ret += "yellow";
+			ret += "#F4F569";
 		}else{
-			ret += "green";
+			ret += "#65EC59";
 		}
 
 		ret += "><br></td>";
@@ -108,7 +109,7 @@ $(document).ready(function() {
 		return ret
 	}
 
-	function createTimeCell(){
+	function createTimeCell(currTime){
 		ret = "<td>" + currTime.getHours() + ":00</td>";
 		currTime.setHours(currTime.getHours() + 1);
 		return ret;
@@ -121,11 +122,11 @@ $(document).ready(function() {
 		var row = Math.floor(currId / (numCol - 1))
 		var col = currId %(numCol - 1)
 		if(currColor === "white"){
-			$(this).attr("bgcolor","green");
+			$(this).attr("bgcolor","#65EC59");
 			toUpdate[row][col] = 1;
 		}
-		else if(currColor === "green"){
-			$(this).attr("bgcolor","yellow");
+		else if(currColor === "#65EC59"){
+			$(this).attr("bgcolor","#F4F569");
 			toUpdate[row][col] = 0.75;
 		}else{
 			$(this).attr("bgcolor","white");
