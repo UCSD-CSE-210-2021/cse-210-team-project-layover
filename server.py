@@ -1,5 +1,6 @@
 import string
 import random
+import json
 
 from flask import Flask
 from flask import render_template, redirect, url_for
@@ -45,10 +46,11 @@ def handle_meeting_creation():
 @app.route('/submitAvailability', methods=['POST', 'GET'])
 def submitAvailability():
 	data = request.get_json()
-	myTable = data['tableStructure']
+	inPersonMeetingTable = data['inPersonMeetingTable']
+	virtualMeetingTable = data['virtualMeetingTable']
 	meeting_id = data['meeting_id']
 	email = data['email']
-	meeting_db[meeting_id].getUser(email).setAvailability(myTable)
+	meeting_db[meeting_id].getUser(email).setAvailability(inPersonMeetingTable, virtualMeetingTable)
 	return Response("Success", status=200)
 
 
@@ -83,13 +85,28 @@ def handle_user_info():
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
 	myUser = meeting_db[meeting_id].getUser(email)
-	return render_template('scheduling-availability.html', data=myUser.toJSON())
+	meeting_type = meeting_db[meeting_id].meeting_type
+	return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
+	# return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
 
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
+	#Meeting Information
 	myMeeting = meeting_db[meeting_id]
-	return render_template('results.html', data=myMeeting.toJSON())
+	json_str = myMeeting.toJSON()
+
+	#Overlay of user availabilities
+	combined_results = meeting_db[meeting_id].compiledAvailability()
+	lists = combined_results.tolist()
+	json_str2 = json.dumps(lists)
+
+	#Top 5 best timings
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes()
+	json_str3 = json.dumps(schedule_results)
+	
+	data = '{"meeting_info":'+json_str+',"compiled_avail":'+json_str2+',"best_times":'+json_str3+'}'
+	return render_template('results.html', data=data)
 
 
 if __name__ == "__main__":
