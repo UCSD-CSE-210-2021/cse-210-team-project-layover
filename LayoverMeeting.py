@@ -62,8 +62,9 @@ class LayoverMeeting:
 			user_availability = user.getInPersonAvailability()
 			compiled_schedule += user_availability
 
-		max_val = np.max(compiled_schedule)
-		compiled_schedule /= max_val
+		if len(userKeys) > 0:
+			max_val = np.max(compiled_schedule)
+			compiled_schedule /= max_val
 
 		# self.combined_results = compiled_schedule
 		# if want list of lists,
@@ -85,18 +86,20 @@ class LayoverMeeting:
 		end_time = datetime(2021, 11, 4, hour=22)
 		week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
 
-
-		best_five = {} #k:v where k = sum of compiled availabilities over the potential meeting times, and v = (day index, time index) tuple
+		# key = sum of compiled availabilities over the potential meeting times, and val = (day index, time index) tuple
+		best_five = {}
 		for day_idx, day in enumerate(compiled_list.T):
 			start_ind = 0
-			end_ind = start_ind + self.meeting_length
+			end_ind = start_ind + int((self.meeting_length/15))
 			while end_ind <= len(day):
 				curr_sum = sum(day[start_ind:end_ind])
 
 				if best_five:
-					#check if curr sum is greater than any of the current top 5 or list does not have 5 times yet
+					# check if curr sum is greater than any of the current top 5
 					for i in sorted(best_five):
 						if curr_sum > i or len(best_five) < 5:
+							while curr_sum in best_five:
+									curr_sum += 0.0001
 							best_five[curr_sum] = (day_idx, start_ind)
 
 							# if length is larger than 5, pop the smallest key
@@ -116,5 +119,3 @@ class LayoverMeeting:
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
 		return best_times
-		# self.schedule_results = best_times
-
