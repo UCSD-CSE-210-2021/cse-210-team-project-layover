@@ -2,6 +2,8 @@
 
 {% block scripts %}
 <script>var data = {{data|tojson}}</script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'results.js') }}"></script>
 {% endblock %}
 

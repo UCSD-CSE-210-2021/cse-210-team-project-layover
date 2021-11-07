@@ -37,132 +37,159 @@ $(document).ready(function() {
 	// Determines which table should be rendered
 	if(currTable){
 		$('#sched-results').append(buildTableHTML(inPersonResultTable));
+		colorTable(inPersonResultTable);
 		// Binds jquery clickable function to clickable class
 		// registerClickable(inPersonMeetingTable);
 	}else{
-		$('#sched-results').append(buildTableHTML(virtualMeetingTable));
+		$('#sched-results').append(buildTableHTML(virtualResultTable));
+		colorTable(inPersonResultTable);
 		// Binds jquery clickable function to clickable class
 		// registerClickable(virtualMeetingTable);
 	}
 
+
+
 	// Builds HTML table using the table Structure
-	function buildTableHTML(availability){
+	// function buildTableHTML(availability){
 	
-		var currTime = new Date('December 17, 1995 7:00:00');
-		var currCellId = 0;
-		// Initialize backend data structure to store times. Fill with 0's
-		// inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
-		var table = '<table id=tableSchedule>';
+	// 	var currTime = new Date('December 17, 1995 7:00:00');
+	// 	var currCellId = 0;
+	// 	// Initialize backend data structure to store times. Fill with 0's
+	// 	// inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
+	// 	var table = '<table id=tableSchedule>';
 
-		table += [
-			"<tr>",
-			"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-			"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
-			"</tr> "
-		].join("\n")
+	// 	table += [
+	// 		"<tr>",
+	// 		"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
+	// 		"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
+	// 		"</tr> "
+	// 	].join("\n")
 
-		var i = 0; // Tracks the current row we're on
+	// 	// var i = 0; // Tracks the current row we're on
 
-		// Loop through all the times we want
-		for(var aTime = 0 ; aTime < numTimes ; aTime++){
-			// append time or blank cell
-			table += "<tr>"
-			table += createTimeCell(currTime)
-			// append remaining cells
+	// 	// Loop through all the times we want
+	// 	for(var aTime = 0 ; aTime < numTimes ; aTime++){
+	// 		// append time or blank cell
+	// 		table += "<tr>"
+	// 		table += createTimeCell(currTime)
+	// 		// append remaining cells
+	// 		for(var j = 0 ; j < availability[0].length ; j++){
+	// 			table += createBlankCellWithId(currCellId);
+	// 			currCellId++;
+	// 		}
+	// 		// i++;
+
+	// 		table += "</tr>"
+
+	// 		// Create three rows of empty cells below time cell
+	// 		for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
+	// 			table += "<tr>"
+	// 			table += createBlankCellWithoutId()
+
+	// 			// append remaining rows
+	// 			for(var j = 0 ; j < availability[0].length ; j++){
+	// 				table += createBlankCellWithId(currCellId);
+	// 				currCellId++;
+	// 			}
+	// 			// i++;
+	// 			table += "</tr>"
+	// 		}
+	// 	}
+	// 	table += '</table>'
+	// 	return table
+	// }
+
+	function colorTable(availability){
+		console.log("called")
+		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
-				table += createBlankCellWithId(currCellId, availability[i][j]);
-				currCellId++;
-			}
-			i++;
-
-			table += "</tr>"
-
-			// Create three rows of empty cells below time cell
-			for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
-				table += "<tr>"
-				table += createBlankCellWithoutId()
-
-				// append remaining rows
-				for(var j = 0 ; j < availability[0].length ; j++){
-					table += createBlankCellWithId(currCellId, availability[i][j]);
-					currCellId++;
-				}
-				i++;
-				table += "</tr>"
+				var currId = i * availability[0].length + j;
+				var cellVal = availability[i][j];
+				var color = color = "rgba(101, 236, 89, " + cellVal + ")";
+				// if(cellVal === 0){
+				// 	color = "white";
+				// }else if( cellVal === 0.75){
+				// 	color = "#F4F569";
+				// 	// ret += "rgba(101, 236, 89, 0.5)"
+				// }else{
+				// 	// color = "#65EC59";
+				// 	// console.log("run")
+				// 	color = "rgba(101, 236, 89, 0.5)";
+				// }
+				// console.log("id is: " + "#"+currId);
+				$("#"+currId).css('background-color', color)
 			}
 		}
-		table += '</table>'
-		return table
-
 	}
 
 	// $("#sched-results").html(result) 
 
-	var currTime = new Date('December 17, 1995 7:00:00');
-	var currCellId = 0;
-	var result = '<table id=tableSchedule>';
+	// var currTime = new Date('December 17, 1995 7:00:00');
+	// var currCellId = 0;
+	// var result = '<table id=tableSchedule>';
 
-	result += [
-		"<tr>",
-		"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-		"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
-		"</tr> "
-	].join("\n")
+	// result += [
+	// 	"<tr>",
+	// 	"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
+	// 	"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
+	// 	"</tr> "
+	// ].join("\n")
 
-	var i = 0; // Tracks the current row we're on
+	// var i = 0; // Tracks the current row we're on
 
-	// Loop through all the times we want
-	for(var aTime = 0 ; aTime < numTimes ; aTime++){
-		// append time or blank cell
-		result += "<tr>"
-		result += createTimeCell(currTime)
-		// append remaining cells
-		for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
-			result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
-			currCellId++;
-		}
-		i++;
+	// // Loop through all the times we want
+	// for(var aTime = 0 ; aTime < numTimes ; aTime++){
+	// 	// append time or blank cell
+	// 	result += "<tr>"
+	// 	result += createTimeCell(currTime)
+	// 	// append remaining cells
+	// 	for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
+	// 		result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
+	// 		currCellId++;
+	// 	}
+	// 	i++;
 
-		result += "</tr>"
+	// 	result += "</tr>"
 
-		// Create three rows of empty cells below time cell
-		for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
-			result += "<tr>"
-			result += createBlankCellWithoutId()
+	// 	// Create three rows of empty cells below time cell
+	// 	for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
+	// 		result += "<tr>"
+	// 		result += createBlankCellWithoutId()
 
-			// append remaining rows
-			for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
-				result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
-				// console.log(result); 
-				// console.log("tagg is: " + '#'+currCellId)
-				// $('#'+currCellId).css('background-color', 'black');
-				// $('#10').css('background-color', 'red');
-				currCellId++;
-			}
-			i++;
-			result += "</tr>"
-		}
-	}
+	// 		// append remaining rows
+	// 		for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
+	// 			result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
+	// 			// console.log(result); 
+	// 			// console.log("tagg is: " + '#'+currCellId)
+	// 			// $('#'+currCellId).css('background-color', 'black');
+	// 			// $('#10').css('background-color', 'red');
+	// 			currCellId++;
+	// 		}
+	// 		i++;
+	// 		result += "</tr>"
+	// 	}
+	// }
 
-	result += '</table>'
+	// result += '</table>'
 
-	function createBlankCellWithId(currCellId, cellVal){
-
-		ret = "<td id=" + currCellId + " class=clickable bgcolor=" ;
-		// ret = "<td id=" + currCellId;
-		if(cellVal === 0){
-			ret += "white";
-		}else if( cellVal === 0.75){
-			ret += "#F4F569";
-			// ret += "rgba(101, 236, 89, 0.5)"
-		}else{
-			ret += "#65EC59";
-			// console.log("run")
-			// ret += "rgb(0,0,0)";
-		}
-		// #\30 
-		ret += "><br></td>";
-		console.log(ret)
+	function createBlankCellWithId(currCellId){
+		
+		ret = "<td id=" + currCellId + "><br></td>";
+		// ret = "<td id=" + currCellId + " class=clickable bgcolor=" ;
+		// // ret = "<td id=" + currCellId;
+		// if(cellVal === 0){
+		// 	ret += "white";
+		// }else if( cellVal === 0.75){
+		// 	ret += "#F4F569";
+		// 	// ret += "rgba(101, 236, 89, 0.5)"
+		// }else{
+		// 	ret += "#65EC59";
+		// 	// console.log("run")
+		// 	// ret += "rgb(0,0,0)";
+		// }
+		// // #\30 
+		// ret += "";
+		// console.log(ret)
 		return ret
 	}
 
