@@ -64,6 +64,9 @@ class LayoverMeeting:
 			# If virtual availability is desired, use the getVirtualAvailability item
 			if not inPerson:
 				user_availability = user.getVirtualAvailability()
+
+			if user_availability is None:
+				continue
 			compiled_schedule += user_availability
 
 		if len(userKeys) > 0:
@@ -101,7 +104,7 @@ class LayoverMeeting:
 				curr_sum = sum(day[start_ind:end_ind])
 
 				if best_five:
-					#check if curr sum is greater than any of the current top 5 or list does not have 5 times yet
+					# check if curr sum is greater than any of the current top 5
 					for i in sorted(best_five):
 						if curr_sum > i or len(best_five) < 5:
 							while curr_sum in best_five:
@@ -124,5 +127,4 @@ class LayoverMeeting:
 		for i in sorted(best_five):
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-		return(best_times)
-
+		return best_times
