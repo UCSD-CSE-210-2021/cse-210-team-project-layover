@@ -3,8 +3,6 @@ function buildTableHTML(availability){
 	
     var currTime = new Date(startingTimeStr);
     var currCellId = 0;
-    // Initialize backend data structure to store times. Fill with 0's
-    // inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
     var table = '<table id=tableSchedule>';
 
     table += [

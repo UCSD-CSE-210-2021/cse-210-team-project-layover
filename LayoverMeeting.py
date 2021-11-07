@@ -48,7 +48,7 @@ class LayoverMeeting:
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-	def compiledAvailability(self):
+	def compiledAvailability(self, inPerson: bool):
 		userKeys = list(self.getUsers())
 
 		# Initializing template via hard coding
@@ -60,11 +60,16 @@ class LayoverMeeting:
 		for userKey in userKeys:
 			user = self.getUser(userKey)
 			user_availability = user.getInPersonAvailability()
+
+			# If virtual availability is desired, use the getVirtualAvailability item
+			if not inPerson:
+				user_availability = user.getVirtualAvailability()
 			compiled_schedule += user_availability
 
 		if len(userKeys) > 0:
 			max_val = np.max(compiled_schedule)
-			compiled_schedule /= max_val
+			if max_val > 0:
+				compiled_schedule /= max_val
 
 		# self.combined_results = compiled_schedule
 		# if want list of lists,
@@ -76,8 +81,8 @@ class LayoverMeeting:
 		# 	compiled_schedule_list.append(compiled_schedule[i])
 		# self.schedule_results = compiled_schedule_list
 
-	def bestMeetingTimes(self):
-		compiled_list = self.compiledAvailability()
+	def bestMeetingTimes(self, compiled_list):
+		# compiled_list = self.compiledAvailability()
 		# print(compiled_list)
 
 		start_ind = 0

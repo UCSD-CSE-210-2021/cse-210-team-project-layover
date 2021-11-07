@@ -4,9 +4,6 @@ $(document).ready(function() {
 
 
 	// Variable initialization
-	// const numCol = 8;
-	// const numTimes = 16;	
-	// var currTime = new Date('December 17, 1995 7:00:00');
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var currTable = true; // true for in-person. false for virtual
@@ -41,57 +38,6 @@ $(document).ready(function() {
 		registerClickable(virtualMeetingTable);
 	}	
 
-	// // Builds HTML table using the table Structure
-	// function buildTableHTML(availability){
-	
-	// 	var currTime = new Date('December 17, 1995 7:00:00');
-	// 	var currCellId = 0;
-	// 	// Initialize backend data structure to store times. Fill with 0's
-	// 	// inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
-	// 	var table = '<table id=tableSchedule>';
-
-	// 	table += [
-	// 		"<tr>",
-	// 		"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-	// 		"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
-	// 		"</tr> "
-	// 	].join("\n")
-
-	// 	// Loop through all the times we want
-	// 	for(var aTime = 0 ; aTime < numTimes ; aTime++){
-	// 		// append time or blank cell
-	// 		table += "<tr>"
-	// 		table += createTimeCell(currTime)
-	// 		// append remaining cells
-	// 		for(var j = 0 ; j < availability[0].length ; j++){
-	// 			table += createBlankCellWithId(currCellId);
-	// 			currCellId++;
-	// 		}
-
-	// 		table += "</tr>"
-
-	// 		// Create three rows of empty cells below time cell
-	// 		for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
-	// 			table += "<tr>"
-	// 			table += createBlankCellWithoutId()
-
-	// 			// append remaining rows
-	// 			for(var j = 0 ; j < availability[0].length ; j++){
-	// 				table += createBlankCellWithId(currCellId);
-	// 				currCellId++;
-	// 			}
-	// 			table += "</tr>"
-	// 		}
-	// 	}
-	// 	table += '</table>'
-	// 	return table
-	// }
-
-	// function createBlankCellWithId(currCellId){
-	// 	ret = "<td id=" + currCellId + " class=clickable><br></td>";
-	// 	return ret
-	// }
-
 	function colorTable(availability){
 		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
@@ -109,17 +55,6 @@ $(document).ready(function() {
 			}
 		}
 	}
-
-	// function createBlankCellWithoutId(){
-	// 	ret = "<td><br></td>";
-	// 	return ret
-	// }
-
-	// function createTimeCell(currTime){
-	// 	ret = "<td>" + currTime.getHours() + ":00</td>";
-	// 	currTime.setHours(currTime.getHours() + 1);
-	// 	return ret;
-	// }
 
 	function updateTable(event){
 		toUpdate = event.data.tableName
