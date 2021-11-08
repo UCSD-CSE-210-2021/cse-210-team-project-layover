@@ -92,20 +92,31 @@ def availability(meeting_id, email):
 
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
-	#Meeting Information
+	# Meeting Information
 	myMeeting = meeting_db[meeting_id]
-	json_str = myMeeting.toJSON()
+	meeting_json = myMeeting.toJSON()
 
-	#Overlay of user availabilities
-	combined_results = meeting_db[meeting_id].compiledAvailability()
-	lists = combined_results.tolist()
-	json_str2 = json.dumps(lists)
+	# compile in-person availability
+	combined_results_inperson = meeting_db[meeting_id].compiledAvailability(True)
+	lists = combined_results_inperson.tolist()
+	compiled_inperson = json.dumps(lists)
 
-	#Top 5 best timings
-	schedule_results = meeting_db[meeting_id].bestMeetingTimes()
-	json_str3 = json.dumps(schedule_results)
+	# Top 5 best timings for in-person
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_inperson)
+	best_times_inperson = json.dumps(schedule_results)
+
+	# compile virtual availability
+	combined_results_virtual = meeting_db[meeting_id].compiledAvailability(False)
+	lists = combined_results_virtual.tolist()
+	compiled_virtual = json.dumps(lists)
+
+	# Top 5 best timings for virtual
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_virtual)
+	best_times_virtual = json.dumps(schedule_results)
 	
-	data = '{"meeting_info":'+json_str+',"compiled_avail":'+json_str2+',"best_times":'+json_str3+'}'
+	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
+			+ best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
+				',"best_times_virtual":' + best_times_virtual+ '}'
 	return render_template('results.html', data=data)
 
 

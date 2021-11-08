@@ -14,86 +14,89 @@ $(document).ready(function() {
 	// fullList += "</ul>"                                     // End list for all users
 	// $("#topDiv").html(fullList)                             // Display list in topDiv id from HTML file
 
-	const numCol = 8;
-	const numTimes = 16;
-	var currTime = new Date('December 17, 1995 7:00:00');
-	var currCellId = 0;
-	var result = '<table id=tableSchedule>';
+	console.log(all_data);
 
-	result += [
-		"<tr>",
-		"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-		"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
-		"</tr> "
-	].join("\n")
+	// Uncomment this
+	var inPersonResultTable = all_data.compiled_inperson;
+	var virtualResultTable = all_data.compiled_virtual;
+	var currTable = true; // true for in-person. false for virtual
+	var meetingType = all_data.meeting_info.meeting_type;
+	var bestTimesInPerson = all_data.best_times_inperson
+	var bestTimesVirtual = all_data.best_times_virtual
+	if(meetingType === "remote"){
+		$("#curr_table_type").html("Current table: virtual availability")
+		currTable = false;
+	}
 
-	var i = 0; // Tracks the current row we're on
+	if(meetingType !== "either"){
+		$('#change_table_div').hide()
+	}
 
-	// Loop through all the times we want
-	for(var aTime = 0 ; aTime < numTimes ; aTime++){
-		// append time or blank cell
-		result += "<tr>"
-		result += createTimeCell(currTime)
-		// append remaining cells
-		for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
-			result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
-			currCellId++;
-		}
-		i++;
+	// Must be after variable initialization
+	// Determines which table should be rendered
+	if(currTable){
+		$('#sched-results').append(buildTableHTML(inPersonResultTable));
+		colorTable(inPersonResultTable);
+		$("#best-times").html(buildRecommendationList(bestTimesInPerson));
+		// Binds jquery clickable function to clickable class
+		// registerClickable(inPersonMeetingTable);
+	}else{
+		$('#sched-results').append(buildTableHTML(virtualResultTable));
+		colorTable(virtualResultTable);
+		$("#best-times").html(buildRecommendationList(bestTimesVirtual));
+		// Binds jquery clickable function to clickable class
+		// registerClickable(virtualMeetingTable);
+	}
 
-		result += "</tr>"
 
-		// Create three rows of empty cells below time cell
-		for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
-			result += "<tr>"
-			result += createBlankCellWithoutId()
-
-			// append remaining rows
-			for(var j = 0 ; j < all_data.compiled_avail[0].length ; j++){
-				result += createBlankCellWithId(currCellId, all_data.compiled_avail[i][j]);
-				currCellId++;
+	function colorTable(availability){
+		for(var i = 0 ; i < availability.length ; i++){
+			for(var j = 0 ; j < availability[0].length ; j++){
+				var currId = i * availability[0].length + j;
+				var cellVal = availability[i][j];
+				var color = color = "rgba(101, 236, 89, " + cellVal + ")";
+				$("#"+currId).css('background-color', color)
 			}
-			i++;
-			result += "</tr>"
-			}
 		}
-		result += '</table>'
+	}
 
-	function createBlankCellWithId(currCellId, cellVal){
-		ret = "<td id=" + currCellId + " class=clickable bgcolor=" ;
-		if(cellVal === 0){
-			ret += "white";
-		}else if( cellVal === 0.75){
-			ret += "#F4F569";
+	$("#change_table").click(function(){
+		// Remove current HTML table
+		$('#tableSchedule').remove();
+		currTable = !currTable;
+		if(currTable){
+			$('#sched-results').append(buildTableHTML(inPersonResultTable));
+			$("#best-times").html(buildRecommendationList(bestTimesInPerson));
+			colorTable(inPersonResultTable);
+			$('#change_table').html("Click to go to virtual availability");
+			$("#curr_table_type").html("Current table: in-person availability");
 		}else{
-			ret += "#65EC59";
+			$('#sched-results').append(buildTableHTML(virtualResultTable));
+			$("#best-times").html(buildRecommendationList(bestTimesVirtual));
+			colorTable(virtualResultTable);
+			$('#change_table').html("Click to go to in-person availability");
+			$("#curr_table_type").html("Current table: virtual availability");
 		}
+	});
 
-		ret += "><br></td>";
-		return ret
-	}
-
-	function createBlankCellWithoutId(){
-		ret = "<td><br></td>";
-		return ret
-	}
-
-	function createTimeCell(currTime){
-		ret = "<td>" + currTime.getHours() + ":00</td>";
-		currTime.setHours(currTime.getHours() + 1);
-		return ret;
-	}
-	
-	$("#sched-results").html(result)                             	// Display the overlaid availabilities as a table
 
 	var fullList = "<ul>"
-	$.each(all_data.meeting_info.users, function(i, value){         // Iterate through users
-		fullList += "<li>" + i + "</li>"                            // End list for individual user
+	$.each(all_data.meeting_info.users, function(i, value){     // Iterate through users
+		fullList += "<li>" + i + "</li>"                        // End list for individual user
 	});
 	fullList += "</ul>"                                     	// End list for all users
 
 	$("#users-list").html(fullList)                             // Display list of users
-	$("#best-times").html(all_data.best_times)                 // Display list of Top 5 best times
+
+	function buildRecommendationList(recommendationList){
+    // Display list of Top 5 best times
+		var bestTimes = "<ul>"
+		$.each(recommendationList, function(i, value){
+			bestTimes += "<li>" + value + "</li>"
+		})
+		bestTimes += "</ul>"
+		return bestTimes;
+	}
 
 	//Link to Meeting
 	$("#meetingId").html($(location).attr('href').split('/').slice(0,-2).join('/') + "/meeting/" + all_data.meeting_info.meeting_id);
@@ -109,6 +112,6 @@ $(document).ready(function() {
 
 	//Link to first's users (for now) editing page
 	$('#editingPage').click(function(){
-		window.location.href = ($(location).attr('href').split('/').slice(0,-2).join('/') + "/availability/" + all_data.meeting_info.meeting_id + "/" + all_data.meeting_info.users[Object.keys(all_data.meeting_info.users)[0]].name);
+		window.location.href = document.referrer;
 	  });
 });

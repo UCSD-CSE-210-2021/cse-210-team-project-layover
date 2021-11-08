@@ -19,5 +19,8 @@ class LayoverUser:
 	def getInPersonAvailability(self):
 		return self.inPersonAvailability
 
+	def getVirtualAvailability(self):
+		return self.virtualAvailability
+
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
