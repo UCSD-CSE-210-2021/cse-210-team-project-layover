@@ -1,5 +1,6 @@
 import string
 import random
+import json
 
 from flask import Flask
 from flask import render_template, redirect, url_for
@@ -45,10 +46,11 @@ def handle_meeting_creation():
 @app.route('/submitAvailability', methods=['POST', 'GET'])
 def submitAvailability():
 	data = request.get_json()
-	myTable = data['tableStructure']
+	inPersonMeetingTable = data['inPersonMeetingTable']
+	virtualMeetingTable = data['virtualMeetingTable']
 	meeting_id = data['meeting_id']
 	email = data['email']
-	meeting_db[meeting_id].getUser(email).setAvailability(myTable)
+	meeting_db[meeting_id].getUser(email).setAvailability(inPersonMeetingTable, virtualMeetingTable)
 	return Response("Success", status=200)
 
 
@@ -83,13 +85,39 @@ def handle_user_info():
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
 	myUser = meeting_db[meeting_id].getUser(email)
-	return render_template('scheduling-availability.html', data=myUser.toJSON())
+	meeting_type = meeting_db[meeting_id].meeting_type
+	return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
+	# return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
 
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
+	# Meeting Information
 	myMeeting = meeting_db[meeting_id]
-	return render_template('results.html', data=myMeeting.toJSON())
+	meeting_json = myMeeting.toJSON()
+
+	# compile in-person availability
+	combined_results_inperson = meeting_db[meeting_id].compiledAvailability(True)
+	lists = combined_results_inperson.tolist()
+	compiled_inperson = json.dumps(lists)
+
+	# Top 5 best timings for in-person
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_inperson)
+	best_times_inperson = json.dumps(schedule_results)
+
+	# compile virtual availability
+	combined_results_virtual = meeting_db[meeting_id].compiledAvailability(False)
+	lists = combined_results_virtual.tolist()
+	compiled_virtual = json.dumps(lists)
+
+	# Top 5 best timings for virtual
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_virtual)
+	best_times_virtual = json.dumps(schedule_results)
+	
+	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
+			+ best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
+				',"best_times_virtual":' + best_times_virtual+ '}'
+	return render_template('results.html', data=data)
 
 
 if __name__ == "__main__":

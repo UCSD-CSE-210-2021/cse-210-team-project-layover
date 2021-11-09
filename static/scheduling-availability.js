@@ -2,113 +2,104 @@ $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
 	$("#user_name").html(all_data.name + "'s availability");
 
-	$('#schedule').append(buildTableHTML());
 
-	var tableStructure;
-	var currCellId;
-	var currTime;
-	var numCol;
-	var numTimes;
-	// Builds HTML table using the table Structure
-	function buildTableHTML(){
-		currCellId = 0;
-		numCol = 8;
-		numTimes = 24;
-		currTime = new Date('December 17, 1995 00:00:00');
+	// Variable initialization
+	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
+	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
+	var currTable = true; // true for in-person. false for virtual
+	if(meetingType === "remote"){
+		$("#curr_table_type").html("Current table: virtual availability")
+		currTable = false;
+	}
 
-		// Initialize backend data structure to store times. Fill with 0's
-		tableStructure = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
-		var table = '<table id=schedule>';
+	if(meetingType !== "either"){
+		$('#change_table_div').hide()
+	}
 
-		table += [
-			"<tr>",
-			"  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-			"  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
-			"</tr> "
-		  ].join("\n")
+	// If user already has data, then load that
+	if(all_data.inPersonAvailability !== null){
+		inPersonMeetingTable = all_data.inPersonAvailability;
+	}
+	if(all_data.virtualAvailability !== null){
+		virtualMeetingTable = all_data.virtualAvailability;
+	}
 
-		// Loop through all the times we want
-		for(var i = 0 ; i < numTimes ; i++){
-			// append time or blank cell
-			table += "<tr>"
-			table += createTimeCell()
-			// append remaining cells
-			for(var j = 0 ; j < numCol - 1 ; j++){
-				table += createBlankCellWithId();
-			}
+	// Must be after variable initialization
+	// Determines which table should be rendered
+	if(currTable){
+		$('#schedule').append(buildTableHTML(inPersonMeetingTable));
+		colorTable(inPersonMeetingTable);
+		// Binds jquery clickable function to clickable class
+		registerClickable(inPersonMeetingTable);
+	}else{
+		$('#schedule').append(buildTableHTML(virtualMeetingTable));
+		colorTable(virtualMeetingTable);
+		// Binds jquery clickable function to clickable class
+		registerClickable(virtualMeetingTable);
+	}	
 
-			table += "</tr>"
-
-			// Create three rows of empty cells below time cell
-			for(var numSlots = 0 ; numSlots < 3 ; numSlots++){
-				table += "<tr>"
-				table += createBlankCellWithoutId()
-
-				// append remaining rows
-				for(var j = 0 ; j < numCol - 1 ; j++){
-					table += createBlankCellWithId();
+	function colorTable(availability){
+		for(var i = 0 ; i < availability.length ; i++){
+			for(var j = 0 ; j < availability[0].length ; j++){
+				var currId = i * availability[0].length + j;
+				var cellVal = availability[i][j];
+				var color = 'white';
+				if(cellVal === 0){
+					color = "white";
+				}else if( cellVal === 0.75){
+					color = "#F4F569";
+				}else{
+					color = "#65EC59";
 				}
-				table += "</tr>"
+				$("#"+currId).css('background-color', color)
 			}
 		}
-		table += '</table>'
-		return table
 	}
 
-	function createBlankCellWithId(){
-		var currId = currCellId
-		var row = Math.floor(currId / (numCol - 1))
-		var col = currId %(numCol - 1)
-		var cellVal = tableStructure[row][col]
-
-		ret = "<td id=" + currCellId + " class=clickable bgcolor=" ;
-		if(cellVal === 0){
-			ret += "white";
-		}else if( cellVal === 0.75){
-			ret += "yellow";
-		}else{
-			ret += "green";
-		}
-
-		ret += "><br></td>";
-		currCellId++;
-		return ret
-	}
-
-	function createBlankCellWithoutId(){
-		ret = "<td><br></td>";
-		return ret
-	}
-
-	function createTimeCell(){
-		ret = "<td>" + currTime.getHours() + ":00</td>";
-		currTime.setHours(currTime.getHours() + 1);
-		return ret;
-	}
-
-	$(".clickable").click(function(){
-		var currColor = $(this).attr("bgcolor")
+	function updateTable(event){
+		toUpdate = event.data.tableName
 		var currId = parseInt($(this).attr("id"))
 		var row = Math.floor(currId / (numCol - 1))
 		var col = currId %(numCol - 1)
-		console.log("currColor is: " + currColor);
-		if(currColor === "white"){
-			$(this).attr("bgcolor","green");
-			tableStructure[row][col] = 1;
+		var color = 'white';
+		if(toUpdate[row][col] === 0){
+			color = "#65EC59";
+			toUpdate[row][col] = 1;
 		}
-		else if(currColor === "green"){
-			$(this).attr("bgcolor","yellow");
-			tableStructure[row][col] = 0.75;
+		else if(toUpdate[row][col] === 1){
+			color = "#F4F569";
+			toUpdate[row][col] = 0.75;
 		}else{
-			$(this).attr("bgcolor","white");
-			tableStructure[row][col] = 0;
+			color = "white";
+			toUpdate[row][col] = 0;
 		}
+		$(this).css('background-color', color)
+	}
 
-		console.log("changing cell color");
-		console.log($(this));
-		console.log(tableStructure);
+	function registerClickable(tableName){
+		console.log(tableName);
+		$(".clickable").click({tableName: tableName}, updateTable);
+	}
 
+	$("#change_table").click(function(){
+		// Remove current HTML table
+		$('#tableSchedule').remove();
+		currTable = !currTable;
+		if(currTable){
+			$('#schedule').append(buildTableHTML(inPersonMeetingTable));
+			colorTable(inPersonMeetingTable);
+			registerClickable(inPersonMeetingTable);
+			$('#change_table').html("Click to go to virtual availability");
+			$("#curr_table_type").html("Current table: in-person availability");
+		}else{
+			$('#schedule').append(buildTableHTML(virtualMeetingTable));
+			colorTable(virtualMeetingTable);
+			registerClickable(virtualMeetingTable);
+			$('#change_table').html("Click to go to in-person availability");
+			$("#curr_table_type").html("Current table: virtual availability");
+		}
 	});
+
 
 	$("#submit_availability").click(function(){
 		console.log("submitting availability");
@@ -116,7 +107,8 @@ $(document).ready(function() {
 			type: "POST",
 			url: '/submitAvailability',
 			data : JSON.stringify(
-				{tableStructure: tableStructure,
+				{inPersonMeetingTable: inPersonMeetingTable,
+				 virtualMeetingTable: virtualMeetingTable,
 				"meeting_id": all_data.meeting_id,
 				"email": all_data.email}
 			),

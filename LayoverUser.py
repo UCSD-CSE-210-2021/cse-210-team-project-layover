@@ -6,16 +6,21 @@ class LayoverUser:
 		self.name = name
 		self.email = email
 		self.meeting_id = meeting_id
-		self.availability = []
+		self.inPersonAvailability = None
+		self.virtualAvailability = None
 
-	def setAvailability(self, availability_schedule: list):
-		self.availability = availability_schedule
+	def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
+		self.inPersonAvailability = inPersonAvailability
+		self.virtualAvailability = virtualAvailability
 
 	def getID(self):
 		return self.email
 
-	def getAvailability(self):
-		return self.availability
+	def getInPersonAvailability(self):
+		return self.inPersonAvailability
+
+	def getVirtualAvailability(self):
+		return self.virtualAvailability
 
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
