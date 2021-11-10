@@ -1,22 +1,37 @@
 import json
 import numpy as np
+from itertools import groupby
 from datetime import time, timedelta
 from datetime import datetime
 
 
 class LayoverMeeting:
 	def __init__(self, meeting_id: str, name: str, meeting_type: str, meeting_length: int, date_type: str, start_date: None, end_date: None):
+		# meeting ID (randomized characters)
 		self.meeting_id = meeting_id
+
+		# meeting name
 		self.name = name
+
+		# intitialize dictionary of users
 		self.users = dict()
+
+		# in-person or remote
 		self.meeting_type = meeting_type
+
+		# this variable refers to the time interval (e.g. 15 minutes)
 		self.meeting_length = meeting_length
+
 		self.date_type = date_type
 		self.start_date = start_date
 		self.end_date = end_date
 		if self.date_type == "general_week":
 			self.start_date = ""
 			self.end_date = ""
+		
+		# hard coding these values initially; start and end times for the day
+		self.day_start_time = 7
+		self.day_end_time = 23
 
 	def getMeetingID(self):
 		return self.meeting_id
@@ -53,17 +68,24 @@ class LayoverMeeting:
 
 		# Initializing template via hard coding
 		# TODO: make compiled schedule dynamic, but not reliant on a key in case no availabilities added yet
+
+		# Alex: why would you call this function though if there are no user availabilities to compile...?
+
 		# user0 = self.getUser(userKeys[0])
 		# user0_availability = np.array(user0.getInPersonAvailability())
-		compiled_schedule = np.zeros((64, 7))
+		num_blocks_in_day = int((self.day_end_time - self.day_start_time) * (60 / self.meeting_length))
+
+		# WARNING: FOLLOWING VALUE IS HARD CODED
+		num_days = 7
+		compiled_schedule = np.zeros((num_blocks_in_day, num_days))
 
 		for userKey in userKeys:
 			user = self.getUser(userKey)
-			user_availability = user.getInPersonAvailability()
+			user_availability = np.array(user.getInPersonAvailability())
 
 			# If virtual availability is desired, use the getVirtualAvailability item
 			if not inPerson:
-				user_availability = user.getVirtualAvailability()
+				user_availability = np.array(user.getVirtualAvailability())
 
 			if user_availability is None:
 				continue
@@ -128,3 +150,26 @@ class LayoverMeeting:
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
 		return best_times
+
+	def bestMeetingTimesV2(self, compiled_schedule):
+		start_time = self.day_start_time
+		end_time = self.day_end_time
+		num_blocks_in_hour = 60 / self.meeting_length #60 is hard coded b/c 60min in hour
+		week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
+		transposed_schedule = compiled_schedule.T # now each index is ordered by day; shape should be (7,64)
+		assert (end_time - start_time)*num_blocks_in_hour == transposed_schedule.shape[1]
+
+		best_times_list = list()
+		corresponding_string_list = list()
+		for i in range(transposed_schedule.shape[0]):
+			indices = np.arange(0, transposed_schedule.shape[1], 1)
+			zipped_value_index = list(zip(indices, transposed_schedule[i]))
+			nonzero_ranges_zipped = [list(g) for k, g in groupby(zipped_value_index, lambda x: x[1] != 0) if k]
+			for zipped_range in nonzero_ranges_zipped:
+				index_range, value_range = list(zip(*zipped_range))
+				print(index_range)
+				print(value_range)
+				print()
+
+				#TODO: get sum and corresponding string, and append them to lists
+			
