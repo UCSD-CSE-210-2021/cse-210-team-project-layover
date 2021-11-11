@@ -36,7 +36,326 @@ $(document).ready(function() {
 	colorTable(virtualMeetingTable, "virtualSchedule");
 
 	// Tie updateTable function to clickable cells
-	$(".clickable").click(updateTable);
+	var isDragging = false;
+	var toUpdate;
+	var startI;
+	var startJ;
+	var prevEndI;
+	var prevEndJ;
+	var endI;
+	var endJ;
+	var colorVal;
+	var tableName;
+
+	// $("#tableSchedule").mousedown(function(){
+
+	// 	console.log("called")
+	// 	// Determine which table was clicked
+	// 	console.log($(this));
+	// 	tableName = $(this).parent().parent().parent().parent().attr("id");
+	// 	console.log(tableName);
+	// 	if(tableName === "inPersonSchedule"){
+	// 		toUpdate = inPersonMeetingTable
+	// 	}else{
+	// 		toUpdate = virtualMeetingTable
+	// 	}
+	// 	var currId = parseInt($(this).attr("id"))
+	// 	var row = Math.floor(currId / (numCol - 1))
+	// 	var col = currId %(numCol - 1)
+	// 	startI = row;
+	// 	startJ = col;
+	// 	endI = row;
+	// 	endJ = col;
+	// 	prevEndI = row;
+	// 	prevEndJ = col;
+
+	// 	// var color = 'white';
+	// 	if(toUpdate[row][col] === 0){
+	// 		colorVal = 1;
+	// 		// color = "#65EC59";
+	// 		toUpdate[row][col] = 1;
+	// 	}
+	// 	else if(toUpdate[row][col] === 1){
+	// 		colorVal = 0.75;
+	// 		// color = "#F4F569";
+	// 		toUpdate[row][col] = 0.75;
+	// 	}else{
+	// 		colorVal = 0;
+	// 		// color = "white";
+	// 		toUpdate[row][col] = 0;
+	// 	}
+	// 	// $(this).css('background-color', color)
+
+	// 	colorTable(toUpdate, tableName);
+	// 	// set 
+	// 	// colorVal
+	// 	// startI
+	// 	// startJ
+	// 	// endI
+	// 	// endJ
+
+	// 	$(".clickable").mousemove(function(){
+	// 		console.log("mouse moved");
+	// 		// repeatedly try to update endI and endJ
+	
+	// 		var currId = parseInt($(this).attr("id"))
+	// 		var row = Math.floor(currId / (numCol - 1))
+	// 		var col = currId %(numCol - 1)
+	
+			
+	// 		endI = row;
+	// 		endJ = col;
+	
+	// 		// update if we have a new selection
+	// 		if(endI != prevEndI || endJ != prevEndJ){
+	// 			prevEndI = endI;
+	// 			prevEndJ = endJ;
+	// 			console.log("new:");
+	// 			console.log("row: " + row + " col: " + col);
+	
+	// 			for(var i = startI ; i <= endI ; i++){
+	// 				for(var j = startJ ; j <= endJ ; j++){
+	// 					toUpdate[row][col] = colorVal;
+	// 				}
+	// 			}
+	
+	// 			colorTable(toUpdate, tableName);
+	// 		}
+	// 		// if endI and endJ changed then:
+	// 		// modify grid
+	// 		// call color grid
+	
+	// 		isDragging = true;
+	// 	})
+
+	// 	// modify grid
+	// 	// call color grid
+
+	// 	isDragging = false;
+	// })
+	// .mouseup(function(){
+	// 	$(".clickable").unbind('mousemove');
+	// })
+	// .mouseout(function () {
+	// 	$(".clickable").unbind('mousemove');
+	// });
+
+	$(".clickable").mousedown(function(){
+
+		console.log("called")
+		// Determine which table was clicked
+		tableName = $(this).parent().parent().parent().parent().attr("id");
+		if(tableName === "inPersonSchedule"){
+			toUpdate = inPersonMeetingTable
+		}else{
+			toUpdate = virtualMeetingTable
+		}
+		var currId = parseInt($(this).attr("id"))
+		var row = Math.floor(currId / (numCol - 1))
+		var col = currId %(numCol - 1)
+		startI = row;
+		startJ = col;
+		endI = row;
+		endJ = col;
+		console.log("setting prev");
+		prevEndI = row;
+		prevEndJ = col;
+
+		// var color = 'white';
+		if(toUpdate[row][col] === 0){
+			colorVal = 1;
+			// color = "#65EC59";
+			toUpdate[row][col] = 1;
+		}
+		else if(toUpdate[row][col] === 1){
+			colorVal = 0.75;
+			// color = "#F4F569";
+			toUpdate[row][col] = 0.75;
+		}else{
+			colorVal = 0;
+			// color = "white";
+			toUpdate[row][col] = 0;
+		}
+		// $(this).css('background-color', color)
+
+		colorTable(toUpdate, tableName);
+		// set 
+		// colorVal
+		// startI
+		// startJ
+		// endI
+		// endJ
+
+		$(".clickable").mousemove(function(event){
+			// event.preventDefault();
+			console.log("mouse moved");
+			// repeatedly try to update endI and endJ
+	
+			var currId = parseInt($(this).attr("id"))
+			var row = Math.floor(currId / (numCol - 1))
+			var col = currId %(numCol - 1)
+	
+			
+			endI = row;
+			endJ = col;
+	
+			// update if we have a new selection
+			if(endI != prevEndI || endJ != prevEndJ){
+				console.log("startI: " + startI + " startJ: " + startJ);
+				console.log("endI: " + endI + " endJ: " + endJ);
+				console.log("prevEndI: " + prevEndI + " prevEndJ: " + prevEndJ);
+
+				var tmp
+
+				// if(startI > prevEndI){
+				// 	tmp = startI;
+				// 	startI = prevEndI;
+				// 	prevEndI = tmp;
+				// }
+
+				// if(startJ > prevEndJ){
+				// 	tmp = startJ;
+				// 	startJ = prevEndJ;
+				// 	prevEndJ = tmp;
+				// }
+
+				var topLeftI = startI;
+				var bottomRightI = prevEndI;
+				var topLeftJ = startJ;
+				var bottomRightJ = prevEndJ;
+
+				if(topLeftI > bottomRightI){
+					tmp = topLeftI;
+					topLeftI = bottomRightI;
+					bottomRightI = tmp;
+				}
+
+				if(topLeftJ > bottomRightJ){
+					tmp = topLeftJ;
+					topLeftJ = bottomRightJ;
+					bottomRightJ = tmp;
+				}
+
+				console.log("topLeftI: " + topLeftI + " bottomRightI: " + bottomRightI);
+				console.log("topLeftJ: " + topLeftJ + " bottomRightJ: " + bottomRightJ);
+				// console.log("prevEndI: " + prevEndI + " prevEndJ: " + prevEndJ);
+
+				for(var i = topLeftI ; i <= bottomRightI ; i++){
+					for(var j = topLeftJ ; j <= bottomRightJ ; j++){
+						toUpdate[i][j] = 0;
+					}
+				}
+
+				
+
+				prevEndI = endI;
+				prevEndJ = endJ;
+				
+				topLeftI = startI;
+				bottomRightI = endI;
+				topLeftJ = startJ;
+				bottomRightJ = endJ;
+
+
+				if(topLeftI > bottomRightI){
+					tmp = topLeftI;
+					topLeftI = bottomRightI;
+					bottomRightI = tmp;
+				}
+
+				if(topLeftJ > bottomRightJ){
+					tmp = topLeftJ;
+					topLeftJ = bottomRightJ;
+					bottomRightJ = tmp;
+				}
+
+				console.log("topLeftI: " + topLeftI + " bottomRightI: " + bottomRightI);
+				console.log("topLeftJ: " + topLeftJ + " bottomRightJ: " + bottomRightJ);
+
+				for(var i = topLeftI ; i <= bottomRightI ; i++){
+					for(var j = topLeftJ ; j <= bottomRightJ ; j++){
+						toUpdate[i][j] = colorVal;
+					}
+				}
+
+				// for(var i = startI ; i <= endI ; i++){
+				// 	for(var j = startJ ; j <= endJ ; j++){
+				// 		toUpdate[i][j] = colorVal;
+				// 	}
+				// }
+	
+				console.log(toUpdate);
+
+				colorTable(toUpdate, tableName);
+			}
+			// if endI and endJ changed then:
+			// modify grid
+			// call color grid
+	
+			isDragging = true;
+		})
+
+		// modify grid
+		// call color grid
+
+		isDragging = false;
+	})
+	.mouseup(function(){
+		$(".clickable").unbind('mousemove');
+	})
+
+
+	// .mouseout(function () {
+	// 	$(".clickable").unbind('mousemove');
+	// });
+
+	// .mousemove(function(){
+	// 	console.log("mouse moved");
+	// 	// repeatedly try to update endI and endJ
+
+	// 	var currId = parseInt($(this).attr("id"))
+	// 	var row = Math.floor(currId / (numCol - 1))
+	// 	var col = currId %(numCol - 1)
+
+	// 	console.log("row: " + row + " col: " + col);
+	// 	endI = row;
+	// 	endJ = col;
+
+	// 	// update if we have a new selection
+	// 	if(endI != prevEndI || endJ != prevEndJ){
+	// 		prevEndI = endI;
+	// 		prevEndJ = endJ;
+
+
+	// 		for(var i = startI ; i <= endI ; i++){
+	// 			for(var j = startJ ; j <= endJ ; j++){
+	// 				toUpdate[row][col] = colorVal;
+	// 			}
+	// 		}
+
+	// 		colorTable(toUpdate, tableName);
+	// 	}
+	// 	// if endI and endJ changed then:
+	// 	// modify grid
+	// 	// call color grid
+
+	// 	isDragging = true;
+	// })
+
+
+
+	// .mouseup(function(){
+	// 	var wasDragging = isDragging;
+	// 	isDragging = false;
+	// 	if (!wasDragging) {
+	// 		console.log("no drag");
+	// 		// $("#throbble").toggle();
+	// 	}else{
+	// 		console.log("dragging");
+	// 	}
+	// });
+	
+	// $(".clickable").click(updateTable);
 
 	// Bind copyTable function to the correct button
 	$("#copyToVirtual").click({from: inPersonMeetingTable, to: virtualMeetingTable, tableType: "virtualSchedule"}, copyTable);
@@ -81,32 +400,32 @@ $(document).ready(function() {
 		}
 	}
 
-	function updateTable(event){
-		var toUpdate;
-		// Determine which table was clicked
-		tableName = $(this).parent().parent().parent().parent().attr("id");
-		if(tableName === "inPersonSchedule"){
-			toUpdate = inPersonMeetingTable
-		}else{
-			toUpdate = virtualMeetingTable
-		}
-		var currId = parseInt($(this).attr("id"))
-		var row = Math.floor(currId / (numCol - 1))
-		var col = currId %(numCol - 1)
-		var color = 'white';
-		if(toUpdate[row][col] === 0){
-			color = "#65EC59";
-			toUpdate[row][col] = 1;
-		}
-		else if(toUpdate[row][col] === 1){
-			color = "#F4F569";
-			toUpdate[row][col] = 0.75;
-		}else{
-			color = "white";
-			toUpdate[row][col] = 0;
-		}
-		$(this).css('background-color', color)
-	}
+	// function updateTable(event){
+	// 	var toUpdate;
+	// 	// Determine which table was clicked
+	// 	tableName = $(this).parent().parent().parent().parent().attr("id");
+	// 	if(tableName === "inPersonSchedule"){
+	// 		toUpdate = inPersonMeetingTable
+	// 	}else{
+	// 		toUpdate = virtualMeetingTable
+	// 	}
+	// 	var currId = parseInt($(this).attr("id"))
+	// 	var row = Math.floor(currId / (numCol - 1))
+	// 	var col = currId %(numCol - 1)
+	// 	var color = 'white';
+	// 	if(toUpdate[row][col] === 0){
+	// 		color = "#65EC59";
+	// 		toUpdate[row][col] = 1;
+	// 	}
+	// 	else if(toUpdate[row][col] === 1){
+	// 		color = "#F4F569";
+	// 		toUpdate[row][col] = 0.75;
+	// 	}else{
+	// 		color = "white";
+	// 		toUpdate[row][col] = 0;
+	// 	}
+	// 	$(this).css('background-color', color)
+	// }
 
 	
 

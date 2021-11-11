@@ -53,7 +53,7 @@ function createBlankCellWithoutId(){
 }
 
 function createTimeCell(currTime){
-    ret = "<td>" + currTime.getHours() + ":00</td>";
+    ret = "<td class=aaa>" + currTime.getHours() + ":00</td>";
     currTime.setHours(currTime.getHours() + 1);
     return ret;
 }
