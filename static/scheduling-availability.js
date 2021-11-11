@@ -78,7 +78,8 @@ $(document).ready(function() {
 
 	function registerClickable(tableName){
 		console.log(tableName);
-		$(".clickable").click({tableName: tableName}, updateTable);
+		$(".clickable").on('click', {tableName: tableName}, updateTable);
+		
 	}
 
 	$("#change_table").click(function(){
@@ -100,6 +101,45 @@ $(document).ready(function() {
 		}
 	});
 
+	$(function () {
+        isMouseDown = false;		
+		$('#schedule').on('mousedown', '#tableSchedule td', function(){
+            isMouseDown = true;            
+                if ($('input[name="radio"]:checked').val() == 'none') {
+                  $(this).css('background-color', 'white');
+                }
+                else if ($('input[name="radio"]:checked').val() == 'green') { 
+                  $(this).css('background-color', '#65EC59');
+                }
+                else if ($('input[name="radio"]:checked').val() == 'yellow') {    
+                  $(this).css('background-color', '#F4F569');              
+                }
+
+            return false; // prevent text selection
+          })
+
+		  $('#schedule').on('mouseover', '#tableSchedule td', function(){
+            if (isMouseDown) {    
+                if ($('input[name="radio"]:checked').val() == 'none') { 
+                  $(this).css('background-color', 'white');
+                }
+                else if ($('input[name="radio"]:checked').val() == 'green') { 
+                  $(this).css('background-color', '#65EC59');
+                }
+                else if ($('input[name="radio"]:checked').val() == 'yellow') {  
+                  $(this).css('background-color', '#F4F569');              
+                }
+          }})
+
+		  $('#schedule').bind('selectstart', '#tableSchedule td', function(){
+            return false; // prevent text selection in IE
+          });
+
+        $(document)
+          .mouseup(function () {
+            isMouseDown = false;
+          });
+      });
 
 	$("#submit_availability").click(function(){
 		console.log("submitting availability");
@@ -126,5 +166,7 @@ $(document).ready(function() {
 			}
 		})
 	});
+
+	
 
 });
