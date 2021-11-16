@@ -30,7 +30,6 @@ class LayoverMeeting:
 			self.start_date = ""
 			self.end_date = ""
 		
-		# hard coding these values initially; start and end times for the day
 		self.day_start_time = day_start_time
 		self.day_end_time = day_end_time
 
@@ -57,6 +56,12 @@ class LayoverMeeting:
 
 	def getDateType(self):
 		return self.date_type
+
+	def getStartTime(self):
+		return self.day_start_time
+
+	def getEndTime(self):
+		return self.day_end_time
 
 	def addUser(self, newUser):
 		self.users[newUser.getID()] = newUser
