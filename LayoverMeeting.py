@@ -73,7 +73,7 @@ class LayoverMeeting:
 
 		# user0 = self.getUser(userKeys[0])
 		# user0_availability = np.array(user0.getInPersonAvailability())
-		num_blocks_in_day = int((self.day_end_time - self.day_start_time) * (60 / self.meeting_length))
+		num_blocks_in_day = int((self.day_end_time - self.day_start_time) * (60 / 15))
 
 		# WARNING: FOLLOWING VALUE IS HARD CODED
 		num_days = 7
