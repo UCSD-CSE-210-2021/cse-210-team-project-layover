@@ -427,7 +427,116 @@ $(document).ready(function() {
 	// 	$(this).css('background-color', color)
 	// }
 
-	
+	function registerClickable(tableName){
+		$(".clickable").on('click', {tableName: tableName}, updateTable);
+	}
+
+	$("#change_table").click(function(){
+		// Remove current HTML table
+		$('#tableSchedule').remove();
+		currTable = !currTable;
+		if(currTable){
+			$('#schedule').append(buildTableHTML(inPersonMeetingTable));
+			colorTable(inPersonMeetingTable);
+			registerClickable(inPersonMeetingTable);
+			$('#change_table').html("Click to go to virtual availability");
+			$("#curr_table_type").html("Current table: in-person availability");
+		}else{
+			$('#schedule').append(buildTableHTML(virtualMeetingTable));
+			colorTable(virtualMeetingTable);
+			registerClickable(virtualMeetingTable);
+			$('#change_table').html("Click to go to in-person availability");
+			$("#curr_table_type").html("Current table: virtual availability");
+		}
+	});
+
+	var isMouseDown = false;
+
+	$(function () {
+        isMouseDown = false;		
+		$('#schedule').on('mousedown', '#tableSchedule td', function(){
+            isMouseDown = true; 
+			
+			var currId = parseInt($(this).attr("id"));
+			var row = Math.floor(currId / (numCol - 1));
+			var col = currId %(numCol - 1);
+
+                if ($('input[name="radio"]:checked').val() == 'none') {
+                  $(this).css('background-color', 'white');
+				  if(currTable){
+					inPersonMeetingTable[row][col] = 0;
+				  }
+				  else{
+					  virtualMeetingTable[row][col] = 0;
+				  }
+                }
+                else if ($('input[name="radio"]:checked').val() == 'green') { 
+                  $(this).css('background-color', '#65EC59');
+				  if(currTable){
+					inPersonMeetingTable[row][col] = 1;
+				  }
+				  else{
+					  virtualMeetingTable[row][col] = 1;
+				  }
+                }
+                else if ($('input[name="radio"]:checked').val() == 'yellow') {    
+                  $(this).css('background-color', '#F4F569'); 
+				  if(currTable){
+					inPersonMeetingTable[row][col] = 0.75;
+				  }
+				  else{
+					  virtualMeetingTable[row][col] = 0.75;
+				  }
+                }				
+
+            return false; // prevent text selection
+          })
+
+		  $('#schedule').on('mouseover', '#tableSchedule td', function(){
+            if (isMouseDown) {    
+				
+			var currId = parseInt($(this).attr("id"));
+			var row = Math.floor(currId / (numCol - 1));
+			var col = currId %(numCol - 1);
+                
+                if ($('input[name="radio"]:checked').val() == 'none') {
+					$(this).css('background-color', 'white');
+					if(currTable){
+					  inPersonMeetingTable[row][col] = 0;
+					}
+					else{
+						virtualMeetingTable[row][col] = 0;
+					}
+				  }
+				  else if ($('input[name="radio"]:checked').val() == 'green') { 
+					$(this).css('background-color', '#65EC59');
+					if(currTable){
+					  inPersonMeetingTable[row][col] = 1;
+					}
+					else{
+						virtualMeetingTable[row][col] = 1;
+					}
+				  }
+				  else if ($('input[name="radio"]:checked').val() == 'yellow') {    
+					$(this).css('background-color', '#F4F569'); 
+					if(currTable){
+					  inPersonMeetingTable[row][col] = 0.75;
+					}
+					else{
+						virtualMeetingTable[row][col] = 0.75;
+					}
+				  }
+          }})
+
+		  $('#schedule').bind('selectstart', '#tableSchedule td', function(){
+            return false; // prevent text selection in IE
+          });
+
+        $(document)
+          .mouseup(function () {
+            isMouseDown = false;
+          });
+      });
 
 	$("#submit_availability").click(function(){
 		console.log("submitting availability");
