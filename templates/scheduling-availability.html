@@ -34,7 +34,9 @@ tr, th, td {
 	margin-top: 10px;
 	margin-left: -10px;
 }
-
+.noClick{
+	pointer-events: none;
+}
 
 {% endblock %}
 
@@ -67,6 +69,22 @@ tr, th, td {
 		</div>
 
 	</div> -->
+
+	<div class="row">
+		<div class="row col-8"></div>
+		<div class="btn-group col-4" data-toggle="buttons">
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="green"> Yes </input>
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="yellow"> If I have to </input>
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="none"> No </input>
+			</label>
+		</div>
+	</div>
+
 	<!-- For in-person or virtual. NOT BOTH -->
 	<!-- <div id="schedule" class="row"></div> -->
 	
@@ -76,7 +94,7 @@ tr, th, td {
 			In-person Availability
 		</div>
 
-		<div id="buttonWrapper" class="col-1">
+		<div id="buttonWrapper" class="col-2">
 			<!-- Button here -->
 			<!-- Cheap hack to make the button in the middle. Probably should be refactored to use CSS instead. -->
 			<br><br><br><br><br><br><br><br><br>
