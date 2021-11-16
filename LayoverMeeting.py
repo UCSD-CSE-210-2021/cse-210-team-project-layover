@@ -6,7 +6,8 @@ from datetime import datetime
 
 
 class LayoverMeeting:
-	def __init__(self, meeting_id: str, name: str, meeting_type: str, meeting_length: int, date_type: str, start_date: None, end_date: None):
+	def __init__(self, meeting_id: str, name: str, meeting_type: str, meeting_length: int, date_type: str,
+				start_date: None, end_date: None, day_start_time: int, day_end_time: int):
 		# meeting ID (randomized characters)
 		self.meeting_id = meeting_id
 
@@ -30,8 +31,8 @@ class LayoverMeeting:
 			self.end_date = ""
 		
 		# hard coding these values initially; start and end times for the day
-		self.day_start_time = 7
-		self.day_end_time = 23
+		self.day_start_time = day_start_time
+		self.day_end_time = day_end_time
 
 	def getMeetingID(self):
 		return self.meeting_id
