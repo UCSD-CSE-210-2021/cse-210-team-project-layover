@@ -13,17 +13,19 @@ import numpy as np
 class BaseCase(unittest.TestCase):
 	def setUp(self):
 		self.simpleMeeting = LayoverMeeting(
-			"4K93mf", "MyMeeting", "in_person", 15, "general_week", "", "")
+			"4K93mf", "MyMeeting", "in_person", 15, "general_week", "", "", 8, 18)
 
 		self.meetingWithUser = LayoverMeeting(
-			"8Uk4mL", "Andrea's Meeting", "in_person", 30, "general_week", "", "")
+			"8Uk4mL", "Andrea's Meeting", "in_person", 30, "general_week", "", "", 8, 18)
 		self.newUser = LayoverUser("John Doe", "jd@gmail.com", "K92fke")
 		self.newUser2 = LayoverUser("Jane Street", "js@gmail.com", "K92fke")
 		self.meetingWithUser.addUser(self.newUser)
 		self.meetingWithUser.addUser(self.newUser2)
 
 		self.meetingHrLong = LayoverMeeting(
-			"93k2lf", "Eric's Meeting", "in_person", 60, "general_week", "", "")
+			"93k2lf", "Eric's Meeting", "in_person", 60, "general_week", "", "", 8, 18)
+
+		self.numRows = (18-8) * 4
 
 		# this statement will be executed before testing
 
@@ -54,13 +56,21 @@ class TestLayoverMeeting(BaseCase):
 		meeting = self.simpleMeeting
 		self.assertEqual(meeting.getDateType(), "general_week")
 
+	def testSimpleGetStartTime(self):
+		meeting = self.simpleMeeting
+		self.assertEqual(meeting.getStartTime(), 8)
+
+	def testSimpleGetEndTime(self):
+		meeting = self.simpleMeeting
+		self.assertEqual(meeting.getEndTime(), 18)
+
 	def testSimpleToJSON(self):
 		meeting = self.simpleMeeting
 		actualDict = json.loads(meeting.toJSON())
 		expectedJSON = {
 			"date_type": "general_week",
-			"day_end_time": 23,
-			"day_start_time": 7,
+			"day_end_time": 18,
+			"day_start_time": 8,
 			"end_date": "",
 			"meeting_id": "4K93mf",
 			"meeting_length": 15,
@@ -92,17 +102,17 @@ class TestLayoverMeeting(BaseCase):
 	def testCompiledAvailWithNoUsers(self):
 		meeting = self.simpleMeeting
 		self.assertTrue(np.array_equal(
-			meeting.compiledAvailability(True), np.zeros((64, 7))))
+			meeting.compiledAvailability(True), np.zeros((self.numRows, 7))))
 
 	def testCompiledAvailNoUserInputAvail(self):
 		meeting = self.simpleMeeting
 		meeting.addUser(self.newUser)
 		self.assertTrue(np.array_equal(
-			meeting.compiledAvailability(True), np.zeros((64, 7))))
+			meeting.compiledAvailability(True), np.zeros((self.numRows, 7))))
 
 	def testCompiledAvailSingleUser(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -110,7 +120,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 
 		actual = meeting.compiledAvailability(True)
-		expected = np.zeros((64, 7))
+		expected = np.zeros((self.numRows, 7))
 		expected[0][0] = 1
 		expected[1][0] = 1
 		expected[2][0] = 1
@@ -119,7 +129,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserFullOverlap(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -129,7 +139,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.compiledAvailability(True)
-		expected = np.zeros((64, 7))
+		expected = np.zeros((self.numRows, 7))
 		expected[0][0] = 1
 		expected[1][0] = 1
 		expected[2][0] = 1
@@ -138,12 +148,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserPartialOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[1][0] = 1
 		avail2[2][0] = 1
 		avail2[3][0] = 1
@@ -155,7 +165,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.compiledAvailability(True)
-		expected = np.zeros((64, 7))
+		expected = np.zeros((self.numRows, 7))
 
 		expected[0][0] = 0.5
 		expected[1][0] = 1
@@ -166,12 +176,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserNoOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[0][1] = 1
 		avail2[1][1] = 1
 		avail2[2][1] = 1
@@ -183,7 +193,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.compiledAvailability(True)
-		expected = np.zeros((64, 7))
+		expected = np.zeros((self.numRows, 7))
 
 		expected[0][0] = 1
 		expected[1][0] = 1
@@ -195,12 +205,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserPartialOverlapVirtual(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[1][0] = 1
 		avail2[2][0] = 1
 		avail2[3][0] = 1
@@ -212,7 +222,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.compiledAvailability(False)
-		expected = np.zeros((64, 7))
+		expected = np.zeros((self.numRows, 7))
 
 		expected[0][0] = 0.5
 		expected[1][0] = 1
@@ -231,7 +241,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesSingleUser(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -246,12 +256,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserNoOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[1][1] = 1
 		avail2[2][1] = 1
 		avail2[3][1] = 1
@@ -270,13 +280,13 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserSingleOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 		avail1[5][6] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[1][1] = 1
 		avail2[2][1] = 1
 		avail2[3][1] = 1
@@ -296,7 +306,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserMultipleOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail1[0][2] = 1
 		avail1[1][2] = 1
 		avail1[2][2] = 1
@@ -308,7 +318,7 @@ class TestLayoverMeeting(BaseCase):
 		avail1[2][6] = 0.75
 		avail1[3][6] = 0.75
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		avail2[2][0] = 1
 		avail2[3][0] = 1
 		avail2[0][2] = 1
@@ -333,7 +343,7 @@ class TestLayoverMeeting(BaseCase):
 		# If user wants a 1hr meeting but only 15 or 30 minute slots open
 
 		meeting = self.meetingHrLong
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 
 		# Sun
 		avail1[0][0] = 1
@@ -359,7 +369,7 @@ class TestLayoverMeeting(BaseCase):
 		avail1[1][6] = 1
 		avail1[3][6] = 0.75
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(64)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
 		# Sun
 		avail2[0][0] = 1
 		avail2[1][0] = 0.75
