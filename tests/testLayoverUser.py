@@ -13,6 +13,7 @@ class BaseCase(unittest.TestCase):
         self.simpleUser = LayoverUser("John Doe", "jd@gmail.com", "K92fke")
         self.userWithAvail = LayoverUser(
             "Jane Street", "js@gmail.com", "k28F34")
+
         # this statement will be executed before testing
 
     def tearDown(self):
