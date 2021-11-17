@@ -48,12 +48,12 @@ function createBlankCellWithId(currCellId){
 }
 
 function createBlankCellWithoutId(){
-    ret = "<td><br></td>";
+    ret = "<td class='noClick'><br></td>";
     return ret
 }
 
 function createTimeCell(currTime){
-    ret = "<td class=aaa>" + currTime.getHours() + ":00</td>";
+    ret = "<td class='noClick'>" + currTime.getHours() + ":00</td>";
     currTime.setHours(currTime.getHours() + 1);
     return ret;
 }
