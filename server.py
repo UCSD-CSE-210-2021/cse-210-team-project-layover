@@ -125,16 +125,5 @@ def results(meeting_id):
         ',"best_times_virtual":' + best_times_virtual + '}'
     return render_template('results.html', data=data)
 
-
-def sum(arg):
-    try:
-        total = 0
-        for val in arg:
-            total += val
-    except Exception:
-        return "Error occured!", 500
-    return total
-
-
 if __name__ == "__main__":
     app.run(debug=True)
