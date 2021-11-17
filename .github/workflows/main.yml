@@ -7,7 +7,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        # python-version: [3.6, 3.7, 3.8] # If we need to test with multiple python version
+        python-version: [3.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -21,5 +22,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Test
-        run: python -m unittest discover tests
+      # - name: Run Test
+      #   run: python -m unittest discover tests
+
+      - name: Run Test & Generate Coverage
+        run: coverage run -m unittest
+        run: coverage report
