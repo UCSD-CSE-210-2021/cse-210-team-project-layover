@@ -73,7 +73,7 @@ class LayoverMeeting:
 
 		# user0 = self.getUser(userKeys[0])
 		# user0_availability = np.array(user0.getInPersonAvailability())
-		num_blocks_in_day = int((self.day_end_time - self.day_start_time) * (60 / self.meeting_length))
+		num_blocks_in_day = int((self.day_end_time - self.day_start_time) * (60 / 15))
 
 		# WARNING: FOLLOWING VALUE IS HARD CODED
 		num_days = 7
@@ -151,8 +151,10 @@ class LayoverMeeting:
 			best_times.insert(0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
 		return best_times
 
+
+	# this might be useful from above... datetime_tostr.strftime("%H:%M") (can knock off some code)
 	def bestMeetingTimesV2(self, compiled_schedule):
-		# print(compiled_schedule)
+		print(compiled_schedule)
 
 		start_time = self.day_start_time
 		end_time = self.day_end_time
@@ -164,10 +166,14 @@ class LayoverMeeting:
 
 		scores_list = list()
 		corresponding_string_list = list()
+		# outer for loop is by day; i corresponds to the index of the day (to be used with week_dict)
 		for i in range(transposed_schedule.shape[0]):
 			zipped_value_index = list(zip(indices, transposed_schedule[i]))
 			# https://stackoverflow.com/questions/38277182/splitting-numpy-array-based-on-value
 			nonzero_ranges_zipped = [list(g) for k, g in groupby(zipped_value_index, lambda x: x[1] != 0) if k]
+
+			print(nonzero_ranges_zipped)
+
 			for zipped_range in nonzero_ranges_zipped:
 				index_range, value_range = np.array(list(zip(*zipped_range)))
 
@@ -191,7 +197,7 @@ class LayoverMeeting:
 				start_string = str(start_hour) + ':' + string_start_minute				
 
 				# there will always be a start minute, so checking is index_range only has one value
-				# NEED TO ADD {self.meeting_length} TO END MINUTE BECAUSE END TIME MUST INCLUDE LAST BLOCK OF TIME
+				# NEED TO ADD {self.meeting_length} TO END MINUTE BECAUSE END TIME MUST ***INCLUDE*** LAST BLOCK OF TIME
 				if len(index_range) == 1:
 					end_minute = start_minute + self.meeting_length
 					end_hour = start_hour
@@ -234,7 +240,7 @@ class LayoverMeeting:
 		sorted_meeting_times = sorted(meeting_times, key = lambda x: x[0], reverse=True)
 		best_time_list, corresponding_time_list = list(zip(*sorted_meeting_times))
 
-		# temporary code just to show that we can output best meeting times
+		# temporary code just to show that we can output best meeting times; need to include info on the day too
 		n = 5
 		print(f"Top {n} meeting times:")
 		for i in range(n):

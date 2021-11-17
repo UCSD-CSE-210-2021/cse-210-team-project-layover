@@ -75,6 +75,8 @@ if __name__ == '__main__':
     myMeeting.addUser(user5)
 
     compiled_schedule = myMeeting.compiledAvailability(True)
+    # print(compiled_schedule)
+    # print()
     # the following code is purely for testing - Alex
     transposed_schedule = compiled_schedule.T
     num_zeros = transposed_schedule.shape[1] - transposed_schedule.shape[0]
@@ -82,5 +84,5 @@ if __name__ == '__main__':
     for i in range(transposed_schedule.shape[0]):
         zeros = np.zeros((num_zeros))
         transposed_schedule[i][i:num_zeros+i] = zeros
-    new_compiled_schedule = transposed_schedule.T
-    myMeeting.bestMeetingTimesV2(new_compiled_schedule)
+    # new_compiled_schedule = transposed_schedule.T
+    # myMeeting.bestMeetingTimesV2(new_compiled_schedule)
