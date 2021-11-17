@@ -1,5 +1,12 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
+	var meetingDetails = jQuery.parseJSON(meeting);
+	var meetingType = meetingDetails.meeting_type;
+
+	var startTime = meetingDetails.day_start_time;
+	var endTime = meetingDetails.day_end_time;
+	var numTimes = meetingDetails.day_end_time - meetingDetails.day_start_time;
+
 	$("#user_name").html(all_data.name + "'s availability");
 
 	// Variable initialization
@@ -30,9 +37,9 @@ $(document).ready(function() {
 	}
 
 	// Render both tables regardless. Rely on above logic to hide appropriate table
-	$('#inPersonSchedule').append(buildTableHTML(inPersonMeetingTable));
+	$('#inPersonSchedule').append(buildTableHTML(startTime, endTime));
 	colorTable(inPersonMeetingTable, "inPersonSchedule");
-	$('#virtualSchedule').append(buildTableHTML(virtualMeetingTable));
+	$('#virtualSchedule').append(buildTableHTML(startTime, endTime));
 	colorTable(virtualMeetingTable, "virtualSchedule");
 
 	// Tie updateTable function to clickable cells

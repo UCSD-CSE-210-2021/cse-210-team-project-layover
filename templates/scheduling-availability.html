@@ -2,7 +2,7 @@
 
 {% block scripts %}
 <script>var data = {{data|tojson}}</script>
-<script>var meetingType = {{meetingType|tojson}}</script>
+<script>var meeting = {{meeting|tojson}}</script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
