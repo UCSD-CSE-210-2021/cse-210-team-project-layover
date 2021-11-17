@@ -7,8 +7,8 @@ function buildTableHTML(availability){
 
     table += [
         "<tr>",
-        "  <th></th> <th>Sunday</th> <th>Monday</th> <th>Tuesday</th>",
-        "  <th>Wednesday</th> <th>Thursday</th> <th>Friday</th> <th>Saturday</th>",
+        "  <th></th> <th>Sun</th> <th>Mon</th> <th>Tue</th>",
+        "  <th>Wed</th> <th>Thu</th> <th>Fri</th> <th>Sat</th>",
         "</tr> "
     ].join("\n")
 
@@ -48,12 +48,12 @@ function createBlankCellWithId(currCellId){
 }
 
 function createBlankCellWithoutId(){
-    ret = "<td><br></td>";
+    ret = "<td class='noClick'><br></td>";
     return ret
 }
 
 function createTimeCell(currTime){
-    ret = "<td>" + currTime.getHours() + ":00</td>";
+    ret = "<td class='noClick'>" + currTime.getHours() + ":00</td>";
     currTime.setHours(currTime.getHours() + 1);
     return ret;
 }
