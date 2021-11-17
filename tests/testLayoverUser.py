@@ -1,5 +1,4 @@
 import unittest
-from server import sum
 from LayoverUser import LayoverUser
 import json
 # from app.routes import sum
