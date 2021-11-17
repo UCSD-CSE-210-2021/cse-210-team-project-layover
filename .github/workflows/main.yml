@@ -27,4 +27,6 @@ jobs:
 
       - name: Run Test & Generate Coverage
         run: coverage run -m unittest
+
+      - name: Show Coverage
         run: coverage report
