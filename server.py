@@ -114,9 +114,9 @@ def results(meeting_id):
 	compiled_inperson = json.dumps(lists)
 
 	# Top 5 best timings for in-person
-	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
-		combined_results_inperson)[1]
-	best_times_inperson = json.dumps(schedule_results)
+	best_times_idx_inperson, best_times_inperson = meeting_db[meeting_id].bestMeetingTimes(combined_results_inperson)
+	best_times_inperson = json.dumps(best_times_inperson)
+	best_times_idx_inperson = json.dumps(best_times_idx_inperson)
 
 	# compile virtual availability
 	combined_results_virtual = meeting_db[meeting_id].compiledAvailability(
@@ -125,13 +125,13 @@ def results(meeting_id):
 	compiled_virtual = json.dumps(lists)
 
 	# Top 5 best timings for virtual
-	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
-		combined_results_virtual)[1]
-	best_times_virtual = json.dumps(schedule_results)
+	best_times_idx_virtual, best_times_virtual = meeting_db[meeting_id].bestMeetingTimes(combined_results_virtual)
+	best_times_virtual = json.dumps(best_times_virtual)
+	best_times_idx_virtual = json.dumps(best_times_idx_virtual)
 
 	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
-		+ best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
-		',"best_times_virtual":' + best_times_virtual + '}'
+		+ best_times_inperson + ',"best_times_idx_inperson":' + best_times_idx_inperson + ',"compiled_virtual":' + compiled_virtual + \
+		',"best_times_virtual":' + best_times_virtual + ',"best_times_idx_virtual":' + best_times_idx_virtual + '}'
 	return render_template('results.html', data=data)
 
 

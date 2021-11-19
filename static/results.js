@@ -21,8 +21,11 @@ $(document).ready(function() {
 	var meetingType = all_data.meeting_info.meeting_type;
 	var startTime = all_data.meeting_info.day_start_time;
 	var endTime = all_data.meeting_info.day_end_time;
-	var bestTimesInPerson = all_data.best_times_inperson
-	var bestTimesVirtual = all_data.best_times_virtual
+	var bestTimesInPerson = all_data.best_times_inperson;
+	var bestTimesIdxInPerson = all_data.best_times_idx_inperson;
+	var bestTimesVirtual = all_data.best_times_virtual;
+	var bestTimesIdxVirtual = all_data.best_times_idx_virtual;
+	
 	if(meetingType === "remote"){
 		$("#curr_table_type").html("Current table: virtual availability")
 		currTable = false;
@@ -37,22 +40,43 @@ $(document).ready(function() {
 	if(currTable){
 		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(inPersonResultTable);
+		highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
 		$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 	}else{
 		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(virtualResultTable);
+		highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
 		$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 	}
-
 
 	function colorTable(availability){
 		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
 				var currId = i * availability[0].length + j;
 				var cellVal = availability[i][j];
-				var color = color = "rgba(101, 236, 89, " + cellVal + ")";
-				$("#"+currId).css('background-color', color)
+
+				// if(currTable){
+				// 	var color = "rgba(255, 153, 102, " + cellVal + ")";
+				// } 
+				// else{
+				// 	var color = "rgba(0, 112, 192, " + cellVal + ")";
+				// }
+
+				var color = "rgba(101, 236, 89, " + cellVal + ")";
+				$("#"+currId).css('background-color', color);
 			}
+		}
+	}
+	
+	function highlightBestTimes(availability, bestTimesIdxList){
+		for(var i = 0 ; i < bestTimesIdxList.length ; i++){
+			var col = bestTimesIdxList[i][0];
+			var row = bestTimesIdxList[i][1];
+			var currId = row * availability[0].length + col;
+			var cellVal = availability[row][col];
+			var color = "rgba(255, 215, 0, " + cellVal + ")";
+			// console.log(currId);
+			$("#"+currId).css('background-color', color);
 		}
 	}
 
@@ -64,12 +88,14 @@ $(document).ready(function() {
 			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 			colorTable(inPersonResultTable);
+			highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
 			$('#change_table').html("Click to go to virtual availability");
 			$("#curr_table_type").html("Current table: in-person availability");
 		}else{
 			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 			colorTable(virtualResultTable);
+			highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
 			$('#change_table').html("Click to go to in-person availability");
 			$("#curr_table_type").html("Current table: virtual availability");
 		}
