@@ -117,12 +117,12 @@ class LayoverMeeting:
 		# compiled_list = self.compiledAvailability()
 		# print(compiled_list)
 
-		start_ind = 0
-		end_ind = start_ind + self.meeting_length
+		# start_ind = 0
+		# end_ind = start_ind + self.meeting_length
 
 		# dummy values, must change in future
-		start_time = datetime(2021, 11, 4, hour=7)
-		end_time = datetime(2021, 11, 4, hour=22)
+		start_time = datetime(2021, 11, 4, hour=self.day_start_time)
+		end_time = datetime(2021, 11, 4, hour=self.day_end_time)
 		week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday',
 					 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
 
@@ -137,9 +137,9 @@ class LayoverMeeting:
 				if best_five:
 					# check if curr sum is greater than any of the current top 5
 					for i in sorted(best_five):
-						if curr_sum > i or len(best_five) < 5:
+						if curr_sum > i or len(best_five) < 5 and curr_sum != 0:
 							while curr_sum in best_five:
-								curr_sum += 0.0001
+								curr_sum -= 0.0001
 							best_five[curr_sum] = (day_idx, start_ind)
 
 							# if length is larger than 5, pop the smallest key
