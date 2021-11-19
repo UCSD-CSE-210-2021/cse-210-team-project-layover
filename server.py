@@ -18,9 +18,15 @@ meeting_db = dict()
 def home():
 	return render_template('setup-landing.html')
 
+@app.route('/abc')
+def abc():
+	# print("de")
+	return {'hello': 'world'}
+
 
 @app.route('/handle_meeting_creation', methods=['POST'])
 def handle_meeting_creation():
+
 	# Read form results
 	meeting_name = request.form['meeting_name']
 	meeting_type = request.form['meeting_type']

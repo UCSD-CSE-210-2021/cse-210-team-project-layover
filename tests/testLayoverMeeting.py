@@ -1,14 +1,8 @@
 import unittest
-from unittest.case import expectedFailure
 from LayoverMeeting import LayoverMeeting
 from LayoverUser import LayoverUser
 import json
 import numpy as np
-# from app.routes import sum
-# import BaseCase
-# from routes import sum
-# from app import routes
-
 
 class BaseCase(unittest.TestCase):
 	def setUp(self):
@@ -112,7 +106,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailSingleUser(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -129,7 +123,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserFullOverlap(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -148,12 +142,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserPartialOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[1][0] = 1
 		avail2[2][0] = 1
 		avail2[3][0] = 1
@@ -176,12 +170,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserNoOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[0][1] = 1
 		avail2[1][1] = 1
 		avail2[2][1] = 1
@@ -205,12 +199,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testCompiledAvailTwoUserPartialOverlapVirtual(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[1][0] = 1
 		avail2[2][0] = 1
 		avail2[3][0] = 1
@@ -240,7 +234,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesSingleUser(self):
 		meeting = self.simpleMeeting
-		avail = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail[0][0] = 1
 		avail[1][0] = 1
 		avail[2][0] = 1
@@ -255,12 +249,12 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserNoOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[1][1] = 1
 		avail2[2][1] = 1
 		avail2[3][1] = 1
@@ -279,13 +273,13 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserSingleOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][0] = 1
 		avail1[1][0] = 1
 		avail1[2][0] = 1
 		avail1[5][6] = 1
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[1][1] = 1
 		avail2[2][1] = 1
 		avail2[3][1] = 1
@@ -305,7 +299,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesTwoUserMultipleOverlap(self):
 		meeting = self.simpleMeeting
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail1[0][2] = 1
 		avail1[1][2] = 1
 		avail1[2][2] = 1
@@ -317,7 +311,7 @@ class TestLayoverMeeting(BaseCase):
 		avail1[2][6] = 0.75
 		avail1[3][6] = 0.75
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		avail2[2][0] = 1
 		avail2[3][0] = 1
 		avail2[0][2] = 1
@@ -342,7 +336,7 @@ class TestLayoverMeeting(BaseCase):
 		# If user wants a 1hr meeting but only 15 or 30 minute slots open
 
 		meeting = self.meetingHrLong
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail1 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 
 		# Sun
 		avail1[0][0] = 1
@@ -368,7 +362,7 @@ class TestLayoverMeeting(BaseCase):
 		avail1[1][6] = 1
 		avail1[3][6] = 0.75
 
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(self.numRows)]
+		avail2 = [[0, 0, 0, 0, 0, 0, 0] for _ in range(self.numRows)]
 		# Sun
 		avail2[0][0] = 1
 		avail2[1][0] = 0.75

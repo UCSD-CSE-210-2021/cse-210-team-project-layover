@@ -34,7 +34,7 @@ class LayoverUser:
 
 	def __eq__(self, other):
 
-		if isinstance(other, LayoverUser) and other.toJSON == self.toJSON:
+		if isinstance(other, LayoverUser) and other.toJSON() == self.toJSON():
 			return True
 
 		return False

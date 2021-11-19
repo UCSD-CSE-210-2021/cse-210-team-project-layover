@@ -70,6 +70,14 @@ class LayoverMeeting:
 	def toJSON(self):
 		return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
+	def __eq__(self, other):
+		# print(other.toJSON())
+		# print(self.toJSON())
+		if isinstance(other, LayoverMeeting) and other.toJSON() == self.toJSON():
+			return True
+
+		return False
+
 	def compiledAvailability(self, inPerson: bool):
 		userKeys = list(self.getUsers())
 
