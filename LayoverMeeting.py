@@ -149,17 +149,21 @@ class LayoverMeeting:
 							break
 
 				else:  # if dict is empty add in first value
-					best_five[curr_sum] = (day_idx, start_ind)
+					if curr_sum != 0:
+						best_five[curr_sum] = (day_idx, start_ind)
 
 				start_ind += 1
 				end_ind += 1
 
 		best_times = []
+		best_times_idx = []
 		for i in sorted(best_five):
 			datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
 			best_times.insert(
 				0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-		return best_times
+			best_times_idx.insert(0, best_five[i])
+
+		return best_times_idx, best_times
 
 	def bestMeetingTimesV2(self, compiled_schedule):
 		# print(compiled_schedule)

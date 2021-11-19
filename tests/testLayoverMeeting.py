@@ -233,7 +233,7 @@ class TestLayoverMeeting(BaseCase):
 
 	def testBestTimesEmptyAvail(self):
 		meeting = self.simpleMeeting
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Sunday 08:00', 'Sunday 07:45',
 					'Sunday 07:30', 'Sunday 07:15', 'Sunday 07:00']
 		# Order is not relevant so use countEqual
@@ -248,7 +248,7 @@ class TestLayoverMeeting(BaseCase):
 		self.newUser.setAvailability(avail, None)
 		meeting.addUser(self.newUser)
 
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Sunday 08:00', 'Sunday 07:45',
 					'Sunday 07:30', 'Sunday 07:15', 'Sunday 07:00']
 		# Order is not relevant so use countEqual
@@ -272,7 +272,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 		meeting.addUser(self.newUser2)
 
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Monday 07:30', 'Monday 07:15',
 					'Sunday 07:30', 'Sunday 07:15', 'Sunday 07:00']
 		# Order is not relevant so use countEqual
@@ -298,7 +298,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 		meeting.addUser(self.newUser2)
 
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Saturday 08:15', 'Monday 07:30',
 					'Monday 07:15', 'Sunday 07:30', 'Sunday 07:15']
 		# Order is not relevant so use countEqual
@@ -333,7 +333,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 		meeting.addUser(self.newUser2)
 
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Tuesday 07:00', 'Tuesday 07:15',
 					'Wednesday 07:45', 'Wednesday 08:00', 'Saturday 07:30']
 		# Order is not relevant so use countEqual
@@ -401,7 +401,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 		meeting.addUser(self.newUser2)
 
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))
+		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
 		expected = ['Friday 07:00', 'Sunday 07:00',
 					'Friday 07:15', 'Sunday 07:15', 'Friday 07:30']  # <- these are slightly suspect. 
 																	 # for example friday 8am 1 user can't 

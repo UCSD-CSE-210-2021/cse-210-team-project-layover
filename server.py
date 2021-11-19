@@ -109,7 +109,7 @@ def results(meeting_id):
 
 	# Top 5 best timings for in-person
 	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
-		combined_results_inperson)
+		combined_results_inperson)[1]
 	best_times_inperson = json.dumps(schedule_results)
 
 	# compile virtual availability
@@ -120,7 +120,7 @@ def results(meeting_id):
 
 	# Top 5 best timings for virtual
 	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
-		combined_results_virtual)
+		combined_results_virtual)[1]
 	best_times_virtual = json.dumps(schedule_results)
 
 	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
