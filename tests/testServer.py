@@ -400,10 +400,10 @@ class TestServer(BaseCase):
 				expectedMeetingInfo = meeting.toJSON()
 				combinedResultsInPerson = meeting.compiledAvailability(True)
 				expectedCompiledInPerson = json.dumps(combinedResultsInPerson.tolist())
-				expectedBestInPersonTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsInPerson))
+				expectedBestInPersonTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsInPerson)[1])
 				combinedResultsVirtual = meeting.compiledAvailability(False)
 				expectedCompiledVirtual = json.dumps(combinedResultsVirtual.tolist())
-				expectedBestVirtualTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsVirtual))
+				expectedBestVirtualTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsVirtual)[1])
 
 				expectedData = '{"meeting_info":' + expectedMeetingInfo + ',"compiled_inperson":' + expectedCompiledInPerson + ',"best_times_inperson":' \
 				+ expectedBestInPersonTimes + ',"compiled_virtual":' + expectedCompiledVirtual + \
