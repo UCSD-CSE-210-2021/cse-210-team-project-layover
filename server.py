@@ -18,16 +18,24 @@ meeting_db = dict()
 def home():
 	return render_template('setup-landing.html')
 
+@app.route('/abc')
+def abc():
+	# print("de")
+	return {'hello': 'world'}
+
 
 @app.route('/handle_meeting_creation', methods=['POST'])
 def handle_meeting_creation():
+
 	# Read form results
 	meeting_name = request.form['meeting_name']
 	meeting_type = request.form['meeting_type']
 	meeting_length = int(request.form['meeting_length'])
-	# date_type = request.form['date_type']  			# Uncomment for milestone 2
+	# date_type = request.form['date_type']  		# Uncomment for milestone 2
 	# start_date = request.form['start_date']  		# Uncomment for milestone 2
 	# end_date = request.form['end_date']  			# Uncomment for milestone 2
+	day_start_time = int(request.form['start_time'])
+	day_end_time = int(request.form['end_time'])
 
 	date_type = 'general_week'  					# Remove for milestone 2
 	start_date = ''  								# Remove for milestone 2
@@ -37,7 +45,8 @@ def handle_meeting_creation():
 	meeting_id = getUniqueRandomHash()
 
 	# Create initial meeting
-	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date)
+	myMeeting = LayoverMeeting(meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date,
+							   day_start_time, day_end_time)
 
 	meeting_db[meeting_id] = myMeeting
 	return redirect(url_for('meeting', meeting_id=meeting_id))
@@ -50,7 +59,8 @@ def submitAvailability():
 	virtualMeetingTable = data['virtualMeetingTable']
 	meeting_id = data['meeting_id']
 	email = data['email']
-	meeting_db[meeting_id].getUser(email).setAvailability(inPersonMeetingTable, virtualMeetingTable)
+	meeting_db[meeting_id].getUser(email).setAvailability(
+		inPersonMeetingTable, virtualMeetingTable)
 	return Response("Success", status=200)
 
 
@@ -84,9 +94,10 @@ def handle_user_info():
 
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
+	meeting = meeting_db[meeting_id]
 	myUser = meeting_db[meeting_id].getUser(email)
-	meeting_type = meeting_db[meeting_id].meeting_type
-	return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
+	# meeting_type = meeting_db[meeting_id].meeting_type
+	return render_template('scheduling-availability.html', data=myUser.toJSON(), meeting=meeting.toJSON())
 	# return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
 
@@ -97,26 +108,30 @@ def results(meeting_id):
 	meeting_json = myMeeting.toJSON()
 
 	# compile in-person availability
-	combined_results_inperson = meeting_db[meeting_id].compiledAvailability(True)
+	combined_results_inperson = meeting_db[meeting_id].compiledAvailability(
+		True)
 	lists = combined_results_inperson.tolist()
 	compiled_inperson = json.dumps(lists)
 
 	# Top 5 best timings for in-person
-	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_inperson)
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
+		combined_results_inperson)[1]
 	best_times_inperson = json.dumps(schedule_results)
 
 	# compile virtual availability
-	combined_results_virtual = meeting_db[meeting_id].compiledAvailability(False)
+	combined_results_virtual = meeting_db[meeting_id].compiledAvailability(
+		False)
 	lists = combined_results_virtual.tolist()
 	compiled_virtual = json.dumps(lists)
 
 	# Top 5 best timings for virtual
-	schedule_results = meeting_db[meeting_id].bestMeetingTimes(combined_results_virtual)
+	schedule_results = meeting_db[meeting_id].bestMeetingTimes(
+		combined_results_virtual)[1]
 	best_times_virtual = json.dumps(schedule_results)
-	
+
 	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
-			+ best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
-				',"best_times_virtual":' + best_times_virtual+ '}'
+		+ best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
+		',"best_times_virtual":' + best_times_virtual + '}'
 	return render_template('results.html', data=data)
 
 
