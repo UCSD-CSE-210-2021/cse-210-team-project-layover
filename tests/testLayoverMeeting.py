@@ -401,100 +401,10 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Friday 07:00', 'Sunday 07:00',
-					'Friday 07:15', 'Sunday 07:15', 'Friday 07:30']  # <- these are slightly suspect. 
+		expected = ['Friday 08:00', 'Sunday 08:00', 
+					'Friday 08:15', 'Sunday 08:15', 'Friday 08:30']  # <- these are slightly suspect. 
 																	 # for example friday 8am 1 user can't 
 																	 # make it and the other is maybe
 																	 # yet we recommend 7:15-8:15
 		# Order is not relevant so use countEqual
 		self.assertCountEqual(actual, expected)
-
-if __name__ == '__main__':
-	simpleMeeting = LayoverMeeting(
-		"4K93mf", "MyMeeting", "in_person", 15, "general_week", "", "", 8, 18)
-
-	meetingWithUser = LayoverMeeting(
-		"8Uk4mL", "Andrea's Meeting", "in_person", 30, "general_week", "", "", 8, 18)
-	newUser = LayoverUser("John Doe", "jd@gmail.com", "K92fke")
-	newUser2 = LayoverUser("Jane Street", "js@gmail.com", "K92fke")
-	meetingWithUser.addUser(newUser)
-	meetingWithUser.addUser(newUser2)
-
-	meetingHrLong = LayoverMeeting(
-		"93k2lf", "Eric's Meeting", "in_person", 60, "general_week", "", "", 8, 18)
-
-	numRows = (18-8) * 4
-
-	def testGoodTimesShorterThanMeetingInterval():
-		# If user wants a 1hr meeting but only 15 or 30 minute slots open
-
-		meeting = meetingHrLong
-		avail1 = [[0, 0, 0, 0, 0, 0, 0] for i in range(numRows)]
-
-		# Sun
-		avail1[0][0] = 1
-		avail1[1][0] = 0.75
-		avail1[2][0] = 1
-		avail1[3][0] = 0.75
-
-		# Tue
-		avail1[0][2] = 1
-		avail1[1][2] = 1
-
-		# Wed
-		avail1[3][3] = 0.75
-		avail1[4][3] = 0.75
-
-		# Fri
-		avail1[0][5] = 1
-		avail1[1][5] = 1
-		avail1[2][5] = 1
-		avail1[3][5] = 1
-
-		# Sat
-		avail1[1][6] = 1
-		avail1[3][6] = 0.75
-
-		avail2 = [[0, 0, 0, 0, 0, 0, 0] for i in range(numRows)]
-		# Sun
-		avail2[0][0] = 1
-		avail2[1][0] = 0.75
-		avail2[2][0] = 1
-		avail2[3][0] = 0.75
-
-		# Tue
-		avail2[0][2] = 1
-		avail2[1][2] = 1
-
-		# Wed
-		avail2[3][3] = 0.75
-		avail2[4][3] = 0.75
-
-		# Fri
-		avail2[0][5] = 1
-		avail2[1][5] = 1
-		avail2[2][5] = 1
-		avail2[3][5] = 1
-		avail2[4][5] = 0.75
-
-		# Sat
-		avail1[1][6] = 1
-		avail1[3][6] = 1
-
-		newUser.setAvailability(avail1, None)
-		newUser2.setAvailability(avail2, None)
-
-		meeting.addUser(newUser)
-		meeting.addUser(newUser2)
-
-		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		print(actual)
-		expected = ['Friday 07:00', 'Sunday 07:00',
-					'Friday 07:15', 'Sunday 07:15', 'Friday 07:30']  # <- these are slightly suspect. 
-																	 # for example friday 8am 1 user can't 
-																	 # make it and the other is maybe
-																	 # yet we recommend 7:15-8:15
-		# Order is not relevant so use countEqual
-		# self.assertCountEqual(actual, expected)
-
-	testGoodTimesShorterThanMeetingInterval()
