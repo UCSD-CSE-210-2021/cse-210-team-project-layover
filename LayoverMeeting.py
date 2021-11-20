@@ -154,6 +154,8 @@ class LayoverMeeting:
                 0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
         return best_times
 
+
+	# meeting length
     def bestMeetingTimesV2(self, compiled_schedule):
         # print(compiled_schedule)
 
