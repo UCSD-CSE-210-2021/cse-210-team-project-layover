@@ -127,7 +127,7 @@ $(document).ready(function() {
 			var col = currId %(numCol - 1);
 			tableName = $(this).parent().parent().parent().parent().attr("id");
 
-                if ($('input[name="radio"]:checked').val() == 'none') {
+                if ($('#availabilitySelector > label > input:checked').val() == 'none') {
 					$(this).css('background-color', 'white');
 
 					if(tableName === "inPersonSchedule"){
@@ -139,7 +139,7 @@ $(document).ready(function() {
 					
 					toUpdate[row][col] = 0;
                 }
-                else if ($('input[name="radio"]:checked').val() == 'green') { 
+                else if ($('#availabilitySelector > label > input:checked').val() == 'green') { 
                   $(this).css('background-color', '#65EC59');
 
 					if(tableName === "inPersonSchedule"){
@@ -151,7 +151,7 @@ $(document).ready(function() {
 					
 					toUpdate[row][col] = 1;
                 }
-                else if ($('input[name="radio"]:checked').val() == 'yellow') {    
+                else if ($('#availabilitySelector > label > input:checked').val() == 'yellow') {    
 					$(this).css('background-color', '#F4F569');
 
 					if(tableName === "inPersonSchedule"){
@@ -175,7 +175,7 @@ $(document).ready(function() {
 			var col = currId %(numCol - 1);
 			tableName = $(this).parent().parent().parent().parent().attr("id");
 
-                if ($('input[name="radio"]:checked').val() == 'none') {
+                if ($('#availabilitySelector > label > input:checked').val() == 'none') {
 					$(this).css('background-color', 'white');
 
 					if(tableName === "inPersonSchedule"){
@@ -187,7 +187,7 @@ $(document).ready(function() {
 					
 					toUpdate[row][col] = 0;
 				  }
-				  else if ($('input[name="radio"]:checked').val() == 'green') { 
+				  else if ($('#availabilitySelector > label > input:checked').val() == 'green') { 
 					$(this).css('background-color', '#65EC59');
 		
 					if(tableName === "inPersonSchedule"){
@@ -199,7 +199,7 @@ $(document).ready(function() {
 					
 					toUpdate[row][col] = 1;
 				  }
-				  else if ($('input[name="radio"]:checked').val() == 'yellow') {    
+				  else if ($('#availabilitySelector > label > input:checked').val() == 'yellow') {    
 					$(this).css('background-color', '#F4F569'); 
 		
 					if(tableName === "inPersonSchedule"){
