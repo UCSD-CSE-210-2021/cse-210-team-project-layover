@@ -57,7 +57,6 @@ function createTimeCell(currTime, timeFormat){
     let displayTime
     let meridiem
     if (timeFormat == '12h') {
-        console.log(typeof currTime)
         if (currTime < 12) {
             displayTime = currTime == 0 ? 12: currTime
             meridiem = 'AM'
