@@ -2,7 +2,7 @@
 
 {% block scripts %}
 <script>var data = {{data|tojson}}</script>
-<script>var meetingType = {{meetingType|tojson}}</script>
+<script>var meeting = {{meeting|tojson}}</script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
@@ -34,6 +34,10 @@ tr, th, td {
 	margin-top: 10px;
 	margin-left: -10px;
 }
+.noClick{
+	pointer-events: none;
+}
+
 {% endblock %}
 
 {% block content %}
@@ -41,17 +45,10 @@ tr, th, td {
 <h1 id="user_name" class="text-center text-capitalize"></h1>
 
 <div id="topDiv" class="row">
-	<div  class="row">
-		<div class="col-4">
-			<div class="row" id="curr_table_type">
-				Current table: In-person availability
-			</div>
-			<div class="row" id="change_table_div">
-					<button type="button" class="btn btn-primary" id="change_table">Click to go to virtual availability</button>
-			
-			</div>
-		</div>
-		<div class="col-5"></div>
+	<!-- <div class="row" id="curr_table_type">
+		Current table: In-person availability
+	</div> -->
+	<!-- <div class="row" id="change_table_div">
 
 		<div class="col-3">
 			
@@ -70,9 +67,46 @@ tr, th, td {
 					</label>
 			</div>
 		</div>
+
+	</div> -->
+
+	<div class="row">
+		<div class="row col-8"></div>
+		<div class="btn-group col-4" data-toggle="buttons">
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="green"> Yes </input>
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="yellow"> If I have to </input>
+			</label>
+			<label class="btn btn-primary">
+				<input type="radio" name="radio" value="none"> No </input>
+			</label>
+		</div>
 	</div>
+
+	<!-- For in-person or virtual. NOT BOTH -->
+	<!-- <div id="schedule" class="row"></div> -->
 	
-	<div id="schedule" class="row">
+	<div class="row">
+		<!-- In person table -->
+		<div id="inPersonSchedule" class="row col-5">
+			In-person Availability
+		</div>
+
+		<div id="buttonWrapper" class="col-2">
+			<!-- Button here -->
+			<!-- Cheap hack to make the button in the middle. Probably should be refactored to use CSS instead. -->
+			<br><br><br><br><br><br><br><br><br>
+			<button type="button" class="btn btn-primary" id="copyToVirtual">Copy In-Person Availability To Virtual Availability</button>
+			<br><br>
+			<button type="button" class="btn btn-primary" id="copyToInPerson">Copy Virtual Availability To In-Person Availability</button>
+		</div>
+	
+		<!-- Virtual table -->
+		<div id="virtualSchedule" class="row col-5">
+			Virtual Availability
+		</div>
 	</div>
 
 	<div class="row">

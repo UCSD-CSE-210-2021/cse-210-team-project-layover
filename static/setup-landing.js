@@ -46,11 +46,11 @@ $(document).ready(function() {
 
 	// Disallow end time before start time
 	$("#start_time").on("change", function(){
-		var i = $(this).val();
+		var i = parseInt($(this).val()) + 1;
 		var myEndTime = $("#end_time");
 		myEndTime.empty();
-		for(i; i < 24; i++){
-			var AMPM = i <= 11 ? "am" : "pm";
+		for(i; i <= 24; i++){
+			var AMPM = i <= 11 || i == 24 ? "am" : "pm";
 			var displayTime;
 
 			if (i == 0){ displayTime = 12; }
@@ -60,7 +60,8 @@ $(document).ready(function() {
 			var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
 			myEndTime.append(endTimeOption);
 		}
-		var setEndTime = $(this).val() == 23 ? 23 : parseInt($(this).val()) + 1;
+		// var setEndTime = $(this).val() == 23 ? 23 : parseInt($(this).val()) + 1;
+		var setEndTime = parseInt($(this).val()) + 1;
 		myEndTime.val(setEndTime);
 	})
 
