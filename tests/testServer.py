@@ -400,13 +400,15 @@ class TestServer(BaseCase):
 				expectedMeetingInfo = meeting.toJSON()
 				combinedResultsInPerson = meeting.compiledAvailability(True)
 				expectedCompiledInPerson = json.dumps(combinedResultsInPerson.tolist())
+				expectedBestInPersonTimesIdx = json.dumps(meeting.bestMeetingTimes(combinedResultsInPerson)[0])
 				expectedBestInPersonTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsInPerson)[1])
 				combinedResultsVirtual = meeting.compiledAvailability(False)
 				expectedCompiledVirtual = json.dumps(combinedResultsVirtual.tolist())
+				expectedBestVirtualTimesIdx = json.dumps(meeting.bestMeetingTimes(combinedResultsVirtual)[0])
 				expectedBestVirtualTimes = json.dumps(meeting.bestMeetingTimes(combinedResultsVirtual)[1])
 
 				expectedData = '{"meeting_info":' + expectedMeetingInfo + ',"compiled_inperson":' + expectedCompiledInPerson + ',"best_times_inperson":' \
-				+ expectedBestInPersonTimes + ',"compiled_virtual":' + expectedCompiledVirtual + \
-				',"best_times_virtual":' + expectedBestVirtualTimes + '}'
+				+ expectedBestInPersonTimes + ',"best_times_idx_inperson":' + expectedBestInPersonTimesIdx + ',"compiled_virtual":' + expectedCompiledVirtual + \
+				',"best_times_virtual":' + expectedBestVirtualTimes  + ',"best_times_idx_virtual":' + expectedBestVirtualTimesIdx + '}'
 
 				self.assertEqual(context['data'], expectedData)
