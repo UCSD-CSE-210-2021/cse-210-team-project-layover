@@ -1,19 +1,31 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
-	$("#user_name").html(all_data.name + "'s availability");
+	var meetingDetails = jQuery.parseJSON(meeting);
+	var meetingType = meetingDetails.meeting_type;
 
+	var startTime = meetingDetails.day_start_time;
+	var endTime = meetingDetails.day_end_time;
+	var numTimes = meetingDetails.day_end_time - meetingDetails.day_start_time;
+
+	$("#user_name").html(all_data.name + "'s availability");
 
 	// Variable initialization
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
-	var currTable = true; // true for in-person. false for virtual
-	if(meetingType === "remote"){
-		$("#curr_table_type").html("Current table: virtual availability")
-		currTable = false;
+
+	// If meetingType is strictly in-person, then hide all virtual tables and extend in-person table. 
+	// Also hide buttons
+	if(meetingType === "in_person"){
+		$("#buttonWrapper").hide();
+		$("#virtualSchedule").hide();
+		$("#inPersonSchedule").attr("class", "row");
 	}
 
-	if(meetingType !== "either"){
-		$('#change_table_div').hide()
+	// If meetingType is strictly virtual, then hide all in-person tables. Also hide buttons
+	if(meetingType === "remote"){
+		$("#buttonWrapper").hide();
+		$("#inPersonSchedule").hide();
+		$("#virtualSchedule").attr("class", "row");
 	}
 
 	// If user already has data, then load that
@@ -24,21 +36,41 @@ $(document).ready(function() {
 		virtualMeetingTable = all_data.virtualAvailability;
 	}
 
-	// Must be after variable initialization
-	// Determines which table should be rendered
-	if(currTable){
-		$('#schedule').append(buildTableHTML(inPersonMeetingTable));
-		colorTable(inPersonMeetingTable);
-		// Binds jquery clickable function to clickable class
-		registerClickable(inPersonMeetingTable);
-	}else{
-		$('#schedule').append(buildTableHTML(virtualMeetingTable));
-		colorTable(virtualMeetingTable);
-		// Binds jquery clickable function to clickable class
-		registerClickable(virtualMeetingTable);
-	}	
+	// Render both tables regardless. Rely on above logic to hide appropriate table
+	$('#inPersonSchedule').append(buildTableHTML(startTime, endTime));
+	colorTable(inPersonMeetingTable, "inPersonSchedule");
+	$('#virtualSchedule').append(buildTableHTML(startTime, endTime));
+	colorTable(virtualMeetingTable, "virtualSchedule");
 
-	function colorTable(availability){
+	// Tie updateTable function to clickable cells
+	$(".clickable").click(updateTable);
+
+	// Bind copyTable function to the correct button
+	$("#copyToVirtual").click({from: inPersonMeetingTable, to: virtualMeetingTable, tableType: "virtualSchedule"}, copyTable);
+	$("#copyToInPerson").click({from: virtualMeetingTable, to: inPersonMeetingTable, tableType: "inPersonSchedule"}, copyTable);
+
+	// Handle copying 1 table to another
+	function copyTable(event){
+		var from = event.data.from;
+		var to = event.data.to;
+		var tableType = event.data.tableType;
+		deepCopyArr(from, to);
+		colorTable(to, tableType);
+	}
+
+	// Deep copy the values of 'from' to 'to'
+	function deepCopyArr(from, to){
+		for(var i = 0 ; i < from.length ; i++){
+			for(var j = 0 ; j < from[0].length ; j++){
+				to[i][j] = from[i][j];
+			}
+		}
+	}
+
+	// Color the table. availIdStr is either "inPersonSchedule"
+	// or "virtualSchedule". Represents the id of the wrapper div around 
+	// each table
+	function colorTable(availability, availIdStr){
 		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
 				var currId = i * availability[0].length + j;
@@ -51,13 +83,20 @@ $(document).ready(function() {
 				}else{
 					color = "#65EC59";
 				}
-				$("#"+currId).css('background-color', color)
+				$("#" + availIdStr + " #"+currId).css('background-color', color)
 			}
 		}
 	}
 
 	function updateTable(event){
-		toUpdate = event.data.tableName
+		var toUpdate;
+		// Determine which table was clicked
+		tableName = $(this).parent().parent().parent().parent().attr("id");
+		if(tableName === "inPersonSchedule"){
+			toUpdate = inPersonMeetingTable
+		}else{
+			toUpdate = virtualMeetingTable
+		}
 		var currId = parseInt($(this).attr("id"))
 		var row = Math.floor(currId / (numCol - 1))
 		var col = currId %(numCol - 1)
@@ -76,108 +115,105 @@ $(document).ready(function() {
 		$(this).css('background-color', color)
 	}
 
-	function registerClickable(tableName){
-		$(".clickable").on('click', {tableName: tableName}, updateTable);
-	}
-
-	$("#change_table").click(function(){
-		// Remove current HTML table
-		$('#tableSchedule').remove();
-		currTable = !currTable;
-		if(currTable){
-			$('#schedule').append(buildTableHTML(inPersonMeetingTable));
-			colorTable(inPersonMeetingTable);
-			registerClickable(inPersonMeetingTable);
-			$('#change_table').html("Click to go to virtual availability");
-			$("#curr_table_type").html("Current table: in-person availability");
-		}else{
-			$('#schedule').append(buildTableHTML(virtualMeetingTable));
-			colorTable(virtualMeetingTable);
-			registerClickable(virtualMeetingTable);
-			$('#change_table').html("Click to go to in-person availability");
-			$("#curr_table_type").html("Current table: virtual availability");
-		}
-	});
-
 	var isMouseDown = false;
 
 	$(function () {
         isMouseDown = false;		
-		$('#schedule').on('mousedown', '#tableSchedule td', function(){
+		$('#inPersonSchedule, #virtualSchedule').on('mousedown', '#tableSchedule td', function(){
             isMouseDown = true; 
 			
 			var currId = parseInt($(this).attr("id"));
 			var row = Math.floor(currId / (numCol - 1));
 			var col = currId %(numCol - 1);
+			tableName = $(this).parent().parent().parent().parent().attr("id");
 
                 if ($('input[name="radio"]:checked').val() == 'none') {
-                  $(this).css('background-color', 'white');
-				  if(currTable){
-					inPersonMeetingTable[row][col] = 0;
-				  }
-				  else{
-					  virtualMeetingTable[row][col] = 0;
-				  }
+					$(this).css('background-color', 'white');
+
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
+					}
+					else{
+						toUpdate = virtualMeetingTable
+					}
+					
+					toUpdate[row][col] = 0;
                 }
                 else if ($('input[name="radio"]:checked').val() == 'green') { 
                   $(this).css('background-color', '#65EC59');
-				  if(currTable){
-					inPersonMeetingTable[row][col] = 1;
-				  }
-				  else{
-					  virtualMeetingTable[row][col] = 1;
-				  }
+
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
+					}
+					else{
+						toUpdate = virtualMeetingTable
+					}
+					
+					toUpdate[row][col] = 1;
                 }
                 else if ($('input[name="radio"]:checked').val() == 'yellow') {    
-                  $(this).css('background-color', '#F4F569'); 
-				  if(currTable){
-					inPersonMeetingTable[row][col] = 0.75;
-				  }
-				  else{
-					  virtualMeetingTable[row][col] = 0.75;
-				  }
+					$(this).css('background-color', '#F4F569');
+
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
+					}
+					else{
+						toUpdate = virtualMeetingTable
+					}
+					
+					toUpdate[row][col] = 0.75;
                 }				
 
             return false; // prevent text selection
           })
 
-		  $('#schedule').on('mouseover', '#tableSchedule td', function(){
+		  $('#inPersonSchedule, #virtualSchedule').on('mouseover', '#tableSchedule td', function(){
             if (isMouseDown) {    
 				
 			var currId = parseInt($(this).attr("id"));
 			var row = Math.floor(currId / (numCol - 1));
 			var col = currId %(numCol - 1);
-                
+			tableName = $(this).parent().parent().parent().parent().attr("id");
+
                 if ($('input[name="radio"]:checked').val() == 'none') {
 					$(this).css('background-color', 'white');
-					if(currTable){
-					  inPersonMeetingTable[row][col] = 0;
+
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
 					}
 					else{
-						virtualMeetingTable[row][col] = 0;
+						toUpdate = virtualMeetingTable
 					}
+					
+					toUpdate[row][col] = 0;
 				  }
 				  else if ($('input[name="radio"]:checked').val() == 'green') { 
 					$(this).css('background-color', '#65EC59');
-					if(currTable){
-					  inPersonMeetingTable[row][col] = 1;
+		
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
 					}
 					else{
-						virtualMeetingTable[row][col] = 1;
+						toUpdate = virtualMeetingTable
 					}
+					
+					toUpdate[row][col] = 1;
 				  }
 				  else if ($('input[name="radio"]:checked').val() == 'yellow') {    
 					$(this).css('background-color', '#F4F569'); 
-					if(currTable){
-					  inPersonMeetingTable[row][col] = 0.75;
+		
+					if(tableName === "inPersonSchedule"){
+						toUpdate = inPersonMeetingTable
 					}
 					else{
-						virtualMeetingTable[row][col] = 0.75;
+						toUpdate = virtualMeetingTable
 					}
+					
+					toUpdate[row][col] = 0.75;
 				  }
           }})
 
-		  $('#schedule').bind('selectstart', '#tableSchedule td', function(){
+		  $('#inPersonSchedule, #virtualSchedule').bind('selectstart', '#tableSchedule td', function(){
             return false; // prevent text selection in IE
           });
 
@@ -212,7 +248,8 @@ $(document).ready(function() {
 			}
 		})
 	});
-
 	
-
+	$('.noClick').on('mouseover mouseenter mouseleave mouseup mousedown', function() {
+		return false
+	 });
 });
