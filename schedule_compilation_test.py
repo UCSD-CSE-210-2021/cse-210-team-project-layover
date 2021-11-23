@@ -1,8 +1,15 @@
 from LayoverMeeting import LayoverMeeting
 from LayoverUser import LayoverUser
+import json
 
 import numpy as np
 import random
+
+def convertNumpyMatrixToListOfLists(numpyMatrix):
+        compiledScheduleList = list()
+        for i in range(numpyMatrix.shape[0]):
+        	compiledScheduleList.append(numpyMatrix[i])
+        return compiledScheduleList
 
 if __name__ == '__main__':
     meeting_id = 'asdf_id'
@@ -73,6 +80,17 @@ if __name__ == '__main__':
     myMeeting.addUser(user3)
     myMeeting.addUser(user4)
     myMeeting.addUser(user5)
+
+    '''
+    TODO: TEST CONVERTING LIST OF LISTS TO JSON AND THEN BACK
+    '''
+    print()
+    user1AvailTest = user1.getInPersonAvailability()
+    # print(user1AvailTest)
+    json_avail = json.dumps(user1AvailTest)
+    print(len(json_avail))
+    json_avail_load = json.loads(json_avail)
+    print(json_avail_load[0][0])
 
     compiled_schedule = myMeeting.compiledAvailability(True)
     # print(compiled_schedule)

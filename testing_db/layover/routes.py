@@ -2,61 +2,11 @@ import string
 import random
 import json
 
-from flask import Flask
 from flask import render_template, redirect, url_for
 from flask import Response, request
-from flask_sqlalchemy import SQLAlchemy
-
-from LayoverMeeting import LayoverMeeting
-from LayoverUser import LayoverUser
-
-app = Flask(__name__)
-
-meeting_db = dict()
-
-app.config['SECRET_KEY'] = 'dev'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sql:///site.db'
-
-db = SQLAlchemy(app)
-
-class LayoverMeeting_SQLAlchemy(db.Model):
-    '''
-    meetingID
-    name
-    meetingType
-    meetingLength
-    dateType
-    startDate
-    endDate
-    '''
-
-    meetingID = db.Column(db.String(20), primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    meetingType = db.Column(db.String(20), nullable=False)
-    meetingLength = db.Column(db.Integer, nullable=False)
-    dateType = db.Column(db.String(20), nullable=False)
-    startDate = db.Column(db.Integer, nullable=False)
-    endDate = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.meetingID}', '{self.name}')"
-
-class LayoverUser_SQLAlchemy(db.Model):
-    '''
-    name
-    email
-    meetingID
-    userAvailability
-    '''
-
-    name = db.Column(db.String(20), unique=False, nullable=False)
-    email = db.Column(db.String(50), primary_key=True)
-    meetingID = db.Column(db.String(20), db.ForeignKey('layovermeeting_sqlalchemy.meetingID'), nullable=False)
-    userAvailability = db.Column(db.String(2000), unique=False, nullable=False) #max 2000 char...?
-
-    def __repr__(self):
-        return f"User('{self.name}', '{self.email}')"
-
+from layover import app, db
+# from layover.models import LayoverUser_SQLAlchemy, LayoverMeeting_SQLAlchemy
+from layover.models import User, Meeting
 
 @app.route('/')
 def home():
@@ -66,26 +16,44 @@ def home():
 @app.route('/handle_meeting_creation', methods=['POST'])
 def handle_meeting_creation():
     # Read form results
-    meeting_name = request.form['meeting_name']
-    meeting_type = request.form['meeting_type']
-    meeting_length = int(request.form['meeting_length'])
+    requestedMeetingName = request.form['meeting_name']
+    requestedMeetingType = request.form['meeting_type']
+    requestedMeetingLength = int(request.form['meeting_length'])
     # date_type = request.form['date_type']  			# Uncomment for milestone 2
     # start_date = request.form['start_date']  		# Uncomment for milestone 2
     # end_date = request.form['end_date']  			# Uncomment for milestone 2
 
-    date_type = 'general_week'  					# Remove for milestone 2
-    start_date = ''  								# Remove for milestone 2
-    end_date = ''  									# Remove for milestone 2
+    requestedDateType = 'general_week'  					# Remove for milestone 2
+    requestedStartDate = ''  								# Remove for milestone 2
+    requestedEndDate = ''  									# Remove for milestone 2
 
     # Create unique Calendar ID
-    meeting_id = getUniqueRandomHash()
+    generatedMeetingID = getUniqueRandomHash()
 
     # Create initial meeting
-    myMeeting = LayoverMeeting(
-        meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date)
+    # myMeeting = LayoverMeeting(
+    #     meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date)
 
-    meeting_db[meeting_id] = myMeeting
-    return redirect(url_for('meeting', meeting_id=meeting_id))
+    '''meetingID
+    name
+    meetingType
+    meetingLength
+    dateType
+    startDate
+    endDate'''
+
+    '''
+    TESTING
+    Meeting(meetingID='aaa', name='bbb', meetingType='ccc', meetingLength=15, dateType='general_week', startDate='', endDate='')
+    '''
+    myMeeting = Meeting(meetingID=generatedMeetingID, name=requestedMeetingName, meetingType=requestedMeetingType,
+        meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate)
+
+    db.session.add(myMeeting)
+    db.session.commit()
+    # meeting_db[meeting_id] = myMeeting
+
+    return redirect(url_for('meeting', meeting_id=generatedMeetingID))
 
 
 @app.route('/submitAvailability', methods=['POST', 'GET'])
@@ -168,6 +136,3 @@ def results(meeting_id):
         + best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
         ',"best_times_virtual":' + best_times_virtual + '}'
     return render_template('results.html', data=data)
-
-if __name__ == "__main__":
-    app.run(debug=True)
