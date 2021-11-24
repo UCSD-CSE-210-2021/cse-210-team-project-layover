@@ -42,10 +42,6 @@ def handle_meeting_creation():
     startDate
     endDate'''
 
-    '''
-    TESTING
-    Meeting(meetingID='aaa', name='bbb', meetingType='ccc', meetingLength=15, dateType='general_week', startDate='', endDate='')
-    '''
     myMeeting = Meeting(meetingID=generatedMeetingID, name=requestedMeetingName, meetingType=requestedMeetingType,
         meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate)
 
@@ -58,20 +54,31 @@ def handle_meeting_creation():
 
 @app.route('/submitAvailability', methods=['POST', 'GET'])
 def submitAvailability():
+
+    '''
+    TESTING
+    User(meetingID='Alex', name='bbb', meetingType='ccc', meetingLength=15, dateType='general_week', startDate='', endDate='')
+    '''
+
     data = request.get_json()
-    inPersonMeetingTable = data['inPersonMeetingTable']
-    virtualMeetingTable = data['virtualMeetingTable']
+    inPersonMeetingTable = json.dumps(data['inPersonMeetingTable'])
+    virtualMeetingTable = json.dumps(data['virtualMeetingTable'])
     meeting_id = data['meeting_id']
-    email = data['email']
-    meeting_db[meeting_id].getUser(email).setAvailability(
-        inPersonMeetingTable, virtualMeetingTable)
+    user_email = data['email']
+    user_name = data['user_name']
+
+    user = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
+
+    db.session.add(user)
+    db.session.commit()
+
     return Response("Success", status=200)
 
 
 def getUniqueRandomHash():
     available = string.ascii_letters + string.digits
     result = ''.join(random.choice(available) for _ in range(6))
-    myKeys = meeting_db.keys()
+    myKeys = list([query.meetingID for query in Meeting.query.all()])
     while result in myKeys:
         result = ''.join(random.choice(available) for _ in range(6))
     return result
@@ -79,17 +86,25 @@ def getUniqueRandomHash():
 
 @app.route('/meeting/<meeting_id>', methods=['GET', 'POST'])
 def meeting(meeting_id):
-    myMeeting = meeting_db[meeting_id]
+    myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+    # myMeeting = meeting_db[meeting_id]
     myData = myMeeting.toJSON()
     return render_template('scheduling-landing.html', data=myData)
 
+
+'''
+THIS IS WHERE ALEX LEFT OFF
+Things I'm not sure how to change right now:
+    1) right now "nullable" is set to False in both Meeting and User classes; can we put in an empty value now and then update it later?
+    2) instead of using getUser, we probably need to use an SQLAlchemy query instead
+'''
 
 @app.route('/handle_user_info', methods=['POST'])
 def handle_user_info():
     user_name = request.form['display_name']
     email = request.form['email']
     meeting_id = request.form['meeting_id']
-    myMeeting = meeting_db[meeting_id]
+    myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
     if email not in myMeeting.getUsers():
         layoverUser = LayoverUser(user_name, email, meeting_id)
         myMeeting.addUser(layoverUser)

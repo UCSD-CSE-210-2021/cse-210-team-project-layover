@@ -225,7 +225,8 @@ $(document).ready(function() {
 				{inPersonMeetingTable: inPersonMeetingTable,
 				 virtualMeetingTable: virtualMeetingTable,
 				"meeting_id": all_data.meeting_id,
-				"email": all_data.email}
+				"email": all_data.email,
+				"user_name": all_data.name}
 			),
 			contentType : 'application/json',
 			dataType: 'text',

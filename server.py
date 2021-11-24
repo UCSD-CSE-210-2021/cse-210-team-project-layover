@@ -14,50 +14,6 @@ app = Flask(__name__)
 
 meeting_db = dict()
 
-app.config['SECRET_KEY'] = 'dev'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sql:///site.db'
-
-db = SQLAlchemy(app)
-
-class LayoverMeeting_SQLAlchemy(db.Model):
-    '''
-    meetingID
-    name
-    meetingType
-    meetingLength
-    dateType
-    startDate
-    endDate
-    '''
-
-    meetingID = db.Column(db.String(20), primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-    meetingType = db.Column(db.String(20), nullable=False)
-    meetingLength = db.Column(db.Integer, nullable=False)
-    dateType = db.Column(db.String(20), nullable=False)
-    startDate = db.Column(db.Integer, nullable=False)
-    endDate = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.meetingID}', '{self.name}')"
-
-class LayoverUser_SQLAlchemy(db.Model):
-    '''
-    name
-    email
-    meetingID
-    userAvailability
-    '''
-
-    name = db.Column(db.String(20), unique=False, nullable=False)
-    email = db.Column(db.String(50), primary_key=True)
-    meetingID = db.Column(db.String(20), db.ForeignKey('layovermeeting_sqlalchemy.meetingID'), nullable=False)
-    userAvailability = db.Column(db.String(2000), unique=False, nullable=False) #max 2000 char...?
-
-    def __repr__(self):
-        return f"User('{self.name}', '{self.email}')"
-
-
 @app.route('/')
 def home():
     return render_template('setup-landing.html')

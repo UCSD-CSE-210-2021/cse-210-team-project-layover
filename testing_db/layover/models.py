@@ -5,6 +5,8 @@ from itertools import groupby
 from datetime import time, timedelta
 from datetime import datetime
 
+# NOTE: IF YOU CHANGE ANY PARAMETER NAME IN EACH CLASS, THAT DATABASE MUST BE RESET (AKA DELETED)
+
 # class LayoverMeeting_SQLAlchemy(db.Model):
 class Meeting(db.Model):
     '''
@@ -16,12 +18,16 @@ class Meeting(db.Model):
     dateType
     startDate
     endDate
+
+    TESTING
+    Meeting(meetingID='aaa', name='bbb', meetingType='ccc', meetingLength=15, dateType='general_week', startDate='', endDate='')
+    Meeting(meetingID='111', name='222', meetingType='333', meetingLength=15, dateType='general_week', startDate='', endDate='')
     '''
 
     # character lengths are hard coded for testing purposes!!!
     meetingID = db.Column(db.String(20), primary_key=True)
     name = db.Column(db.String(20), nullable=False)
-    users = db.relationship('LayoverUser_SQLAlchemy', backref='author', lazy=True)
+    users = db.relationship('User', backref='author', lazy=True)
     meetingType = db.Column(db.String(20), nullable=False)
     meetingLength = db.Column(db.Integer, nullable=False)
     dateType = db.Column(db.String(20), nullable=False)
@@ -29,7 +35,7 @@ class Meeting(db.Model):
     endDate = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"User('{self.meetingID}', '{self.name}')"
+        return f"Meeting('{self.meetingID}', '{self.name}')"
 
     def getMeetingID(self):
         return self.meeting_id
@@ -261,14 +267,24 @@ class User(db.Model):
     name
     email
     meetingID
-    userAvailability
+    inPersonUserAvailability
+    remoteUserAvailability
+
+    TESTING
+    l1 = json.dumps(list(['dummy values']))
+    l2 = json.dumps(list(['dummy values']))
+    User(name='Alex', email='alex@alex.com', meetingID='aaa', inPersonUserAvailability=l1, remoteUserAvailability=l2)
+    User(name='Yen', email='yen@yen.com', meetingID='aaa', inPersonUserAvailability=l1, remoteUserAvailability=l2)
     '''
 
     # character lengths are hard coded for testing purposes!!!
     name = db.Column(db.String(20), unique=False, nullable=False)
     email = db.Column(db.String(50), primary_key=True)
     meetingID = db.Column(db.String(20), db.ForeignKey('meeting.meetingID'), nullable=False)
-    userAvailability = db.Column(db.String(5000), unique=False, nullable=False) #max 2000 char...?
+
+    # input to availability schedules should be a json object!
+    inPersonUserAvailability = db.Column(db.String(5000), unique=False, nullable=False) #max 5000 char...?
+    remoteUserAvailability = db.Column(db.String(5000), unique=False, nullable=False) #max 5000 char...?
 
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
