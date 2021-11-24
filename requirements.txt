@@ -49,7 +49,6 @@ Send2Trash==1.5.0
 six==1.14.0
 soupsieve==2.0.1
 SQLAlchemy==1.4.27
-statsmodels==0.11.1
 terminado==0.8.3
 testpath==0.4.4
 threadpoolctl==2.1.0
