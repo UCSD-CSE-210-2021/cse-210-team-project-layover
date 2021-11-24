@@ -5,7 +5,6 @@ import json
 from flask import render_template, redirect, url_for
 from flask import Response, request
 from layover import app, db
-# from layover.models import LayoverUser_SQLAlchemy, LayoverMeeting_SQLAlchemy
 from layover.models import User, Meeting
 
 @app.route('/')
@@ -35,14 +34,15 @@ def handle_meeting_creation():
     #     meeting_id, meeting_name, meeting_type, meeting_length, date_type, start_date, end_date)
 
     '''meetingID
-    name
+    meetingName
+    meetingUsers
     meetingType
     meetingLength
     dateType
     startDate
     endDate'''
 
-    myMeeting = Meeting(meetingID=generatedMeetingID, name=requestedMeetingName, meetingType=requestedMeetingType,
+    myMeeting = Meeting(meetingID=generatedMeetingID, meetingName=requestedMeetingName, meetingType=requestedMeetingType,
         meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate)
 
     db.session.add(myMeeting)
@@ -67,9 +67,9 @@ def submitAvailability():
     user_email = data['email']
     user_name = data['user_name']
 
-    user = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
+    layoverUser = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
 
-    db.session.add(user)
+    db.session.add(layoverUser)
     db.session.commit()
 
     return Response("Success", status=200)
@@ -78,7 +78,7 @@ def submitAvailability():
 def getUniqueRandomHash():
     available = string.ascii_letters + string.digits
     result = ''.join(random.choice(available) for _ in range(6))
-    myKeys = list([query.meetingID for query in Meeting.query.all()])
+    myKeys = list([query.meetingID for query in Meeting.query.all()]) # gets list of all meetingIDs
     while result in myKeys:
         result = ''.join(random.choice(available) for _ in range(6))
     return result
@@ -91,14 +91,6 @@ def meeting(meeting_id):
     myData = myMeeting.toJSON()
     return render_template('scheduling-landing.html', data=myData)
 
-
-'''
-THIS IS WHERE ALEX LEFT OFF
-Things I'm not sure how to change right now:
-    1) right now "nullable" is set to False in both Meeting and User classes; can we put in an empty value now and then update it later?
-    2) instead of using getUser, we probably need to use an SQLAlchemy query instead
-'''
-
 @app.route('/handle_user_info', methods=['POST'])
 def handle_user_info():
     user_name = request.form['display_name']
@@ -106,15 +98,17 @@ def handle_user_info():
     meeting_id = request.form['meeting_id']
     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
     if email not in myMeeting.getUsers():
-        layoverUser = LayoverUser(user_name, email, meeting_id)
-        myMeeting.addUser(layoverUser)
+        layoverUser = User(userName=user_name, userEmail=email, meetingID=meeting_id)
+        db.session.add(layoverUser)
+        db.session.commit()
     return redirect(url_for('availability', meeting_id=meeting_id, email=email))
 
 
 @app.route('/availability/<meeting_id>/<email>')
 def availability(meeting_id, email):
-    myUser = meeting_db[meeting_id].getUser(email)
-    meeting_type = meeting_db[meeting_id].meeting_type
+    # this is getting the user for the specific meetingID
+    myUser = User.query.filter_by(meetingID=meeting_id, userEmail=email).first()
+    meeting_type = Meeting.query.filter_by(meetingID=meeting_id).first().getMeetingType()
     return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
     # return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
@@ -122,28 +116,28 @@ def availability(meeting_id, email):
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
     # Meeting Information
-    myMeeting = meeting_db[meeting_id]
+    myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
     meeting_json = myMeeting.toJSON()
 
     # compile in-person availability
-    combined_results_inperson = meeting_db[meeting_id].compiledAvailability(
+    combined_results_inperson = myMeeting.compiledAvailability(
         True)
     lists = combined_results_inperson.tolist()
     compiled_inperson = json.dumps(lists)
 
     # Top 5 best timings for in-person
-    schedule_results = meeting_db[meeting_id].bestMeetingTimes(
+    schedule_results = myMeeting.bestMeetingTimes(
         combined_results_inperson)
     best_times_inperson = json.dumps(schedule_results)
 
     # compile virtual availability
-    combined_results_virtual = meeting_db[meeting_id].compiledAvailability(
+    combined_results_virtual = myMeeting.compiledAvailability(
         False)
     lists = combined_results_virtual.tolist()
     compiled_virtual = json.dumps(lists)
 
     # Top 5 best timings for virtual
-    schedule_results = meeting_db[meeting_id].bestMeetingTimes(
+    schedule_results = myMeeting.bestMeetingTimes(
         combined_results_virtual)
     best_times_virtual = json.dumps(schedule_results)
 

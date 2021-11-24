@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
-	$("#user_name").html(all_data.name + "'s availability");
+	$("#user_name").html(all_data.userName + "'s availability");
 
 	// Variable initialization
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
@@ -22,11 +22,11 @@ $(document).ready(function() {
 	}
 
 	// If user already has data, then load that
-	if(all_data.inPersonAvailability !== null){
-		inPersonMeetingTable = all_data.inPersonAvailability;
+	if(all_data.inPersonUserAvailability !== null){
+		inPersonMeetingTable = all_data.inPersonUserAvailability;
 	}
-	if(all_data.virtualAvailability !== null){
-		virtualMeetingTable = all_data.virtualAvailability;
+	if(all_data.remoteUserAvailability !== null){
+		virtualMeetingTable = all_data.remoteUserAvailability;
 	}
 
 	// Render both tables regardless. Rely on above logic to hide appropriate table
@@ -224,15 +224,15 @@ $(document).ready(function() {
 			data : JSON.stringify(
 				{inPersonMeetingTable: inPersonMeetingTable,
 				 virtualMeetingTable: virtualMeetingTable,
-				"meeting_id": all_data.meeting_id,
-				"email": all_data.email,
-				"user_name": all_data.name}
+				"meeting_id": all_data.meetingID,
+				"email": all_data.userEmail,
+				"user_name": all_data.userName}
 			),
 			contentType : 'application/json',
 			dataType: 'text',
 			success: function(result){
 				console.log("Successfully submitted availability")
-				window.location = '/results/' + all_data.meeting_id
+				window.location = '/results/' + all_data.meetingID
 			},
 			error: function(request, status, error){
 				console.log("Error");
