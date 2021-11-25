@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
+	console.log(all_data)
 	$("#user_name").html(all_data.name + "'s availability");
 
 	// Variable initialization

@@ -44,7 +44,7 @@ def handle_meeting_creation():
 
     myMeeting = Meeting(meetingID=generatedMeetingID, meetingName=requestedMeetingName, meetingType=requestedMeetingType,
         meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate)
-
+		
     db.session.add(myMeeting)
     db.session.commit()
     # meeting_db[meeting_id] = myMeeting
@@ -61,15 +61,19 @@ def submitAvailability():
     '''
 
     data = request.get_json()
+    print(data)
     inPersonMeetingTable = json.dumps(data['inPersonMeetingTable'])
     virtualMeetingTable = json.dumps(data['virtualMeetingTable'])
     meeting_id = data['meeting_id']
     user_email = data['email']
-    user_name = data['user_name']
+    # user_name = data['user_name']
 
-    layoverUser = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
+    # layoverUser = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
 
-    db.session.add(layoverUser)
+    currUser = User.query.filter_by(meetingID=meeting_id, userEmail=user_email).first()
+    currUser.inPersonUserAvailability = inPersonMeetingTable
+    currUser.remoteUserAvailability = virtualMeetingTable
+    db.session.add(currUser)
     db.session.commit()
 
     return Response("Success", status=200)
@@ -87,8 +91,12 @@ def getUniqueRandomHash():
 @app.route('/meeting/<meeting_id>', methods=['GET', 'POST'])
 def meeting(meeting_id):
     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+    print("reached")
+    print(myMeeting)
+    print(type(myMeeting))
     # myMeeting = meeting_db[meeting_id]
     myData = myMeeting.toJSON()
+    print("myData is: " , myData)
     return render_template('scheduling-landing.html', data=myData)
 
 @app.route('/handle_user_info', methods=['POST'])
@@ -96,7 +104,9 @@ def handle_user_info():
     user_name = request.form['display_name']
     email = request.form['email']
     meeting_id = request.form['meeting_id']
+    print("meeting id is: " , meeting_id)
     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+    print("myMeeting is: ", myMeeting)
     if email not in myMeeting.getUsers():
         layoverUser = User(userName=user_name, userEmail=email, meetingID=meeting_id)
         db.session.add(layoverUser)

@@ -45,8 +45,10 @@ class Meeting(db.Model):
 
     # THESE METHODS DO NOT WORK ANYMORE
     # ***userKey is by userEmail***
-    def getUsers(self):        
-        return list([user.userEmail for user in self.meetingUsers])
+    def getUsers(self):
+        return self.meetingUsers
+        # Meeting.query.filter_by(meetingID=self.meetingID).first()
+        # return list([user.userEmail for user in self.meetingUsers])
 
     def getUser(self, userKey):
         try:
@@ -65,7 +67,31 @@ class Meeting(db.Model):
 
     # THIS NEEDS TO BE CHANGED!!!
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        print(self.__dict__)
+        print(type(self._sa_instance_state))
+
+        users = self.getUsers()
+        userDict = {}
+        for user in users:
+            userDict[user.getID()] = user.toJSON()
+
+        resultJSON = {
+            "meeting_id" : self.meetingID,
+            "name" : self.meetingName,
+            "users" : userDict,
+            "meeting_type" : self.meetingType,
+            "meeting_length" : self.meetingLength,
+            "date_type" : self.dateType,
+            "start_date" : self.startDate,
+            "end_date" : self.endDate
+		}
+
+        return json.dumps(resultJSON, sort_keys=True, indent=4)
+        # return json.dumps(resultJSON)
+
+
+        # return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        # return json.dumps(self, default=jsonDefaultFunction , sort_keys=True, indent=4)
 
     def compiledAvailability(self, inPerson: bool):
         userKeys = list(self.getUsers())
@@ -310,7 +336,23 @@ class User(db.Model):
         return self.virtualAvailability
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        
+        # First parse back the string into an array
+        parsedInPerson = json.loads(self.inPersonUserAvailability)
+        parsedVirtual = json.loads(self.remoteUserAvailability)
+
+        resultJSON = {
+            "meeting_id" : self.meetingID,
+            "name" : self.userName,
+            "email" : self.userEmail,
+            "inPersonAvailability" : parsedInPerson,
+            "virtualAvailability" : parsedVirtual
+		}
+
+        # START FROM HERE
+        return json.dumps(resultJSON, sort_keys=True, indent=4)
+
+        # return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def __eq__(self, other):
 
