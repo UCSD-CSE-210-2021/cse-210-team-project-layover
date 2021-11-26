@@ -14,67 +14,88 @@
 .hideDiv{
 	display: none;
 }
+.col-form-label{
+	color: darkblue;
+	font-weight: bold;
+}
+.btn {
+	background-color: darkblue;
+
+}
 {% endblock %}
 
 {% block content %}
-<h1 class="center-text">Layover Meeting</h1>
+<h1 class="center-text"></h1>
 <div class="container">
 	<form action="{{ url_for('handle_meeting_creation') }}" method="post">
-		<div class="form-group row">
-			<label class="col-3 col-form-label" for="meeting_name">Meeting name:</label>
-			<div class="col-6">
-				<input type="text" id="meeting_name" class="form-control" name="meeting_name" required>
+		<br>
+
+		<div class="form-group">
+			<div class="row">
+				<div class="col-2"></div>
+				<label class="col-8 col-form-label" for="meeting_name">Meeting name</label>
+				<div class="col-2"></div>
+			</div>
+
+			<div class="row">				
+				<div class="col-2"></div>
+				<div class="col-8">
+					<input type="text" id="meeting_name" class="form-control" name="meeting_name" required>
+				</div>			
+				<div class="col-2"></div>
 			</div>
 		</div>
 
-		<br>
+		<br><br>
 
 		<fieldset class="form-group">
 			<div class="row">
-				<div class="col-form-label col-3 pt-0">Start Time:</div>
-				<div class="col-6" id="start_time_container"></div>
+				<div class="col-2"></div>
+				<div class="col-form-label col-8 pt-0">Meeting Type</div>
+				<div class="col-2"></div>
 			</div>
-		</fieldset>
-
-		<br>
-
-		<fieldset class="form-group">
+			
 			<div class="row">
-				<div class="col-form-label col-3 pt-0">End Time:</div>
-				<div class="col-6" id="end_time_container"></div>
-			</div>
-		</fieldset>
-
-		<br>
-
-		<fieldset class="form-group">
-			<div class="row">
-				<div class="col-form-label col-3 pt-0">Meeting Type:</div>
-				<div class="col-6">
+				<div class="col-2"></div>
+				<div class="col-8">
+					<div class="border rounded" style="border-color: rgb(100, 97, 97); padding: 5px 0px;">
 					<div class="form-check">
+						<label class="col-2"></label>
 						<input type="radio" id="in-person" class="form-check-input" name="meeting_type" value="in_person" required>
-						<label class="form-check-label" for="in-person">In Person</label>
-					</div>
-
-					<div class="form-check">
+						<label class="col-3 form-check-label" for="in-person">In Person</label>
+						
 						<input type="radio" id="remote" class="form-check-input" name="meeting_type" value="remote" required>
-						<label class="form-check-label" for="remote">Remote</label>
-					</div>
+						<label class="col-3 form-check-label" for="remote">Remote</label>
 
-					<div class="form-check">
 						<input type="radio" id="either" class="form-check-input" name="meeting_type" value="either" required>
-						<label class="form-check-label" for="either">Either</label>
+						<label class="col-3 form-check-label" for="either">Either</label>
+						</div>
 					</div>
 				</div>
+				<div class="col-2"></div>
 			</div>
 		</fieldset>
 
-		<br>
+		<br><br>
 
 		<fieldset class="form-group">
 			<div class="row">
-				<div class="col-form-label col-3 pt-0">Meeting Length:</div>
-				<div class="col-6">
+				<div class="col-2"></div>
+				<div class="col-form-label col-2 pt-0">Start Time</div>				
+				<div class="col-1"></div>
+				<div class="col-form-label col-2 pt-0">End Time</div>				
+				<div class="col-1"></div>
+				<div class="col-form-label col-2 pt-0">Meeting Length</div>			
+				<div class="col-2"></div>
+			</div>
+
+			<div class="row">
+				<div class="col-2"></div>
+				<div class="col-2" id="start_time_container"></div>				
+				<div class="col-1"></div>
+				<div class="col-2" id="end_time_container"></div>
+				<div class="col-1"></div>
+				<div class="col-2">
 					<select id="meeting_length" class="form-control" name="meeting_length">
 						<option value="15">15 minutes</option>
 						<option value="30">30 minutes</option>
@@ -85,11 +106,11 @@
 						<option value="105">1 hour 45 minutes</option>
 						<option value="120">2 hours</option>
 					</select>
-				</div>
+				</div>				
+				<div class="col-2"></div>
 			</div>
 		</fieldset>
-
-		<br>
+		<br><br>
 
 <!--		TODO: Uncomment below for milestone 2-->
 <!--		<fieldset class="form-group">-->
@@ -126,8 +147,10 @@
 <!--				<input type="date" id="end_date" class="form-control" name="end_date">-->
 <!--			</div>-->
 <!--		</div>-->
+<div class="row d-flex justify-content-center">
 
-		<button type="submit" class="btn btn-primary row">Submit</button>
+		<button type="submit" class="btn btn-primary col-2">Submit</button>
+		</div>
 	</form>
 </div>
 
