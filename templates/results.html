@@ -11,16 +11,23 @@
 .center-text {
 	text-align: center;
 }
+body {
+    background: #F2F2F2;
+}
 table {
 	table-layout: fixed;
 	text-align: center;
 }
 tr, th, td {
-	border: solid;
-	border-width: 2px 2px;
+    background-clip: padding-box;
 }
 th, td {
     width: 12%;
+}
+tr:not(:first-child) td:not(:first-child) {
+    border-color: transparent;
+    border-width: 2px;
+    border-radius: 8px;
 }
 {% endblock %}
 

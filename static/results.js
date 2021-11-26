@@ -49,20 +49,32 @@ $(document).ready(function() {
 		$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 	}
 
+	function mimic_rgba(r, g, b, a){
+		var bg_rgb = [255, 255, 255];
+
+		if (a > 0){
+			return "rgb(" + (r * a + bg_rgb[0] * (1 - a)) + ", " + (g * a + bg_rgb[1] * (1 - a)) + ", " + (b * a + bg_rgb[2] * (1 - a)) + ")"; 
+		}
+		else{
+			return "rgb(222, 222, 222)";
+		}
+	}
+
 	function colorTable(availability){
 		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
 				var currId = i * availability[0].length + j;
 				var cellVal = availability[i][j];
 
-				// if(currTable){
-				// 	var color = "rgba(255, 153, 102, " + cellVal + ")";
-				// } 
-				// else{
-				// 	var color = "rgba(0, 112, 192, " + cellVal + ")";
-				// }
+				if(currTable){
+					// var color = "rgba(255, 124, 10, " + cellVal + ")";
+					var color = mimic_rgba(255, 124, 10, cellVal**0.8);
+				} 
+				else{
+					// var color = "rgba(0, 142, 224, " + cellVal + ")";
+					var color = mimic_rgba(0, 142, 224, cellVal);
+				}
 
-				var color = "rgba(101, 236, 89, " + cellVal + ")";
 				$("#"+currId).css('background-color', color);
 			}
 		}
@@ -73,10 +85,16 @@ $(document).ready(function() {
 			var col = bestTimesIdxList[i][0];
 			var row = bestTimesIdxList[i][1];
 			var currId = row * availability[0].length + col;
-			var cellVal = availability[row][col];
-			var color = "rgba(255, 215, 0, " + cellVal + ")";
+			// var color = "rgb(69, 240, 100)";
+			if(currTable){
+				var color = "rgb(228, 92, 58)";
+			} 
+			else{
+				var color = "rgb(19, 64, 116)";
+			}
 			// console.log(currId);
 			$("#"+currId).css('background-color', color);
+			$("#"+currId).css('box-shadow', '0 0 0 1px #24272B');
 		}
 	}
 
