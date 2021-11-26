@@ -75,13 +75,13 @@ $(document).ready(function() {
 			for(var j = 0 ; j < availability[0].length ; j++){
 				var currId = i * availability[0].length + j;
 				var cellVal = availability[i][j];
-				var color = 'white';
+				var color = '#ECECEC';
 				if(cellVal === 0){
-					color = "white";
+					color = '#ECECEC';
 				}else if( cellVal === 0.75){
-					color = "#F4F569";
+					color = '#FADE52';
 				}else{
-					color = "#65EC59";
+					color = '#65EC59';
 				}
 				$("#" + availIdStr + " #"+currId).css('background-color', color)
 			}
@@ -100,16 +100,16 @@ $(document).ready(function() {
 		var currId = parseInt($(this).attr("id"))
 		var row = Math.floor(currId / (numCol - 1))
 		var col = currId %(numCol - 1)
-		var color = 'white';
+		var color = '#ECECEC';
 		if(toUpdate[row][col] === 0){
-			color = "#65EC59";
+			color = '#65EC59';
 			toUpdate[row][col] = 1;
 		}
 		else if(toUpdate[row][col] === 1){
-			color = "#F4F569";
+			color = '#FADE52';
 			toUpdate[row][col] = 0.75;
 		}else{
-			color = "white";
+			color = '#ECECEC';
 			toUpdate[row][col] = 0;
 		}
 		$(this).css('background-color', color)
@@ -128,7 +128,7 @@ $(document).ready(function() {
 			tableName = $(this).parent().parent().parent().parent().attr("id");
 
                 if ($('input[name="radio"]:checked').val() == 'none') {
-					$(this).css('background-color', 'white');
+					$(this).css('background-color', '#ECECEC');
 
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
@@ -140,7 +140,7 @@ $(document).ready(function() {
 					toUpdate[row][col] = 0;
                 }
                 else if ($('input[name="radio"]:checked').val() == 'green') { 
-                  $(this).css('background-color', '#65EC59');
+                  	$(this).css('background-color', '#65EC59');
 
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
@@ -152,7 +152,7 @@ $(document).ready(function() {
 					toUpdate[row][col] = 1;
                 }
                 else if ($('input[name="radio"]:checked').val() == 'yellow') {    
-					$(this).css('background-color', '#F4F569');
+					$(this).css('background-color', '#FADE52');
 
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
@@ -176,7 +176,7 @@ $(document).ready(function() {
 			tableName = $(this).parent().parent().parent().parent().attr("id");
 
                 if ($('input[name="radio"]:checked').val() == 'none') {
-					$(this).css('background-color', 'white');
+					$(this).css('background-color', '#ECECEC');
 
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
@@ -186,10 +186,10 @@ $(document).ready(function() {
 					}
 					
 					toUpdate[row][col] = 0;
-				  }
-				  else if ($('input[name="radio"]:checked').val() == 'green') { 
+				}
+				else if ($('input[name="radio"]:checked').val() == 'green') {
 					$(this).css('background-color', '#65EC59');
-		
+
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
 					}
@@ -198,10 +198,10 @@ $(document).ready(function() {
 					}
 					
 					toUpdate[row][col] = 1;
-				  }
-				  else if ($('input[name="radio"]:checked').val() == 'yellow') {    
-					$(this).css('background-color', '#F4F569'); 
-		
+				}
+				else if ($('input[name="radio"]:checked').val() == 'yellow') {
+					$(this).css('background-color', '#FADE52');
+					
 					if(tableName === "inPersonSchedule"){
 						toUpdate = inPersonMeetingTable
 					}
