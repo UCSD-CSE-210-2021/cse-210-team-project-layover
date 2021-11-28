@@ -43,7 +43,6 @@ class Meeting(db.Model):
     def getName(self):
         return self.meetingName
 
-    # THESE METHODS DO NOT WORK ANYMORE
     # ***userKey is by userEmail***
     def getUsers(self):        
         return list([user.userEmail for user in self.meetingUsers])
