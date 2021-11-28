@@ -64,8 +64,14 @@ table {
 	text-align: center;
 }
 tr, th, td {
+    background-clip: padding-box;
 	border: solid;
+    border-color: transparent;
 	border-width: 2px 2px;
+    border-radius: 8px;
+}
+th, td {
+    width: 12%;
 }
 #topDiv {
 	margin: 20px;
@@ -118,11 +124,11 @@ tr, th, td {
 	</div> -->
 
 	<div class="row">
-		<div id="timeFormatSelector" class="btn-group col-4" data-toggle="buttons" style="padding-left: 0px">
-			<label class="btn btn-light">
+		<div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
 				<input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
 			</label>
-			<label class="btn btn-light">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
 				<input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
 			</label>
 		</div>
