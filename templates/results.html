@@ -67,6 +67,10 @@
 				currentEmail.innerHTML = '<b>' + currentEmail.innerText + '</b>'
 			}
 		}
+		// Hacky way to change table display per participant by clicking #change_table 2 times
+		$('#change_table').trigger('click')
+		$('#change_table').trigger('click')
+		
 	}
 </script>
 {% endblock %}

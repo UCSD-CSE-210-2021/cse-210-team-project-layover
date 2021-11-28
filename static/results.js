@@ -25,6 +25,7 @@ $(document).ready(function() {
 	var bestTimesIdxInPerson = all_data.best_times_idx_inperson;
 	var bestTimesVirtual = all_data.best_times_virtual;
 	var bestTimesIdxVirtual = all_data.best_times_idx_virtual;
+	var usersMeetingInfo = all_data.meeting_info.users;
 	
 	if(meetingType === "remote"){
 		$("#curr_table_type").html("Current table: virtual availability")
@@ -98,26 +99,67 @@ $(document).ready(function() {
 		}
 	}
 
-	$("#change_table").click(function(){
+	$("#change_table").click(changeTableData);
+
+	function changeTableData(){
 		// Remove current HTML table
 		$('#tableSchedule').remove();
-		currTable = !currTable;
-		if(currTable){
-			$('#sched-results').append(buildTableHTML(startTime, endTime));
-			$("#best-times").html(buildRecommendationList(bestTimesInPerson));
-			colorTable(inPersonResultTable);
-			highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
-			$('#change_table').html("Click to go to virtual availability");
-			$("#curr_table_type").html("Current table: in-person availability");
-		}else{
-			$('#sched-results').append(buildTableHTML(startTime, endTime));
-			$("#best-times").html(buildRecommendationList(bestTimesVirtual));
-			colorTable(virtualResultTable);
-			highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
-			$('#change_table').html("Click to go to in-person availability");
-			$("#curr_table_type").html("Current table: virtual availability");
+
+		// Locate participant of interest
+		let allEmails = $('#users-list > ul > li')
+		let displayEmail = undefined
+		// Ref: https://stackoverflow.com/questions/10877903/check-if-text-in-cell-is-bold
+		for(let i = 0; i < allEmails.length; i++){
+			let currentEmail = allEmails[i]
+			if(currentEmail.firstChild.nodeName === 'b' || currentEmail.firstChild.nodeName === 'B'){
+				displayEmail = currentEmail.innerText
+			}
 		}
-	});
+
+		// Toggle in-person and virtual availability
+		currTable = !currTable;
+
+		// Check displayed email
+		if (displayEmail === 'Show All') { // show combined results
+			if(currTable){
+				$('#sched-results').append(buildTableHTML(startTime, endTime));
+				$("#best-times").html(buildRecommendationList(bestTimesInPerson));
+				colorTable(inPersonResultTable);
+				highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
+				$('#change_table').html("Click to go to virtual availability");
+				$("#curr_table_type").html("Current table: in-person availability");
+			}else{
+				$('#sched-results').append(buildTableHTML(startTime, endTime));
+				$("#best-times").html(buildRecommendationList(bestTimesVirtual));
+				colorTable(virtualResultTable);
+				highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
+				$('#change_table').html("Click to go to in-person availability");
+				$("#curr_table_type").html("Current table: virtual availability");
+			}
+		} else { // show specific user
+			if(currTable){
+				$('#sched-results').append(buildTableHTML(startTime, endTime));
+				$("#best-times").html(buildRecommendationList(bestTimesInPerson));
+				colorTable(usersMeetingInfo[displayEmail].inPersonAvailability);
+				$('#change_table').html("Click to go to virtual availability");
+				$("#curr_table_type").html("Current table: in-person availability of <b>" + displayEmail + "</b>");
+			}else{
+				$('#sched-results').append(buildTableHTML(startTime, endTime));
+				$("#best-times").html(buildRecommendationList(bestTimesVirtual));
+				colorTable(usersMeetingInfo[displayEmail].virtualAvailability);
+				$('#change_table').html("Click to go to in-person availability");
+				$("#curr_table_type").html("Current table: virtual availability of <b>" + displayEmail + "</b>");
+			}
+		}
+
+		// Hacky way to reformat time when re-rendered
+		let currentTimeFormat = $('#timeFormatSelector > label > input:checked')[0].parentElement.innerText.trim()
+		if (currentTimeFormat === '12-hour') {
+			reformatTimeDisplay('12h')
+		} else {
+			reformatTimeDisplay('24h')
+		}
+	}
 
 
 	var fullList = "<ul>"
