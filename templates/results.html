@@ -51,6 +51,27 @@
 			}
 		}
 	}
+
+	// Change data in table
+	function changeBoldEmail(email){
+		let allEmails = $('#users-list > ul > li')
+		// Ref: https://stackoverflow.com/questions/10877903/check-if-text-in-cell-is-bold
+		for(let i = 0; i < allEmails.length; i++){
+			let currentEmail = allEmails[i]
+			// Unbold text
+			if(currentEmail.firstChild.nodeName === 'b' || currentEmail.firstChild.nodeName === 'B'){
+				currentEmail.innerHTML = currentEmail.innerText
+			}
+			// Bold text if match `email`
+			if(currentEmail.innerText === email){
+				currentEmail.innerHTML = '<b>' + currentEmail.innerText + '</b>'
+			}
+		}
+		// Hacky way to change table display per participant by clicking #change_table 2 times
+		$('#change_table').trigger('click')
+		$('#change_table').trigger('click')
+		
+	}
 </script>
 {% endblock %}
 
