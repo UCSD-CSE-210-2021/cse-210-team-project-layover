@@ -124,11 +124,11 @@ th, td {
 	</div> -->
 
 	<div class="row">
-		<div id="timeFormatSelector" class="btn-group col-4" data-toggle="buttons" style="padding-left: 0px">
-			<label class="btn btn-light">
+		<div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
 				<input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
 			</label>
-			<label class="btn btn-light">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
 				<input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
 			</label>
 		</div>
