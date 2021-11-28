@@ -121,8 +121,9 @@ $(document).ready(function() {
 
 
 	var fullList = "<ul>"
+	fullList += "<li style='cursor: pointer;' onclick='changeBoldEmail(\"Show All\")'><b>Show All</b></li>"
 	$.each(all_data.meeting_info.users, function(i, value){     // Iterate through users
-		fullList += "<li>" + i + "</li>"                        // End list for individual user
+		fullList += "<li style='cursor: pointer;' onclick='changeBoldEmail(\"" + i + "\")'>" + i + "</li>"                        // End list for individual user
 	});
 	fullList += "</ul>"                                     	// End list for all users
 
