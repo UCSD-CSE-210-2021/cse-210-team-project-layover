@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 attrs==19.3.0
 backcall==0.1.0
 backports.entry-points-selectable==1.1.0
@@ -61,3 +62,10 @@ Werkzeug==2.0.2
 xlrd==1.2.0
 zipp==3.6.0
 zope.interface==5.4.0
+=======
+flask
+numpy
+coverage
+Flask-Testing
+blinker
+>>>>>>> 0c40b7dec75f7a90eda9ddbc7411962ffc686155

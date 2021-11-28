@@ -14,15 +14,18 @@ $(document).ready(function() {
 	// fullList += "</ul>"                                     // End list for all users
 	// $("#topDiv").html(fullList)                             // Display list in topDiv id from HTML file
 
-	console.log(all_data);
-
 	// Uncomment this
 	var inPersonResultTable = all_data.compiled_inperson;
 	var virtualResultTable = all_data.compiled_virtual;
 	var currTable = true; // true for in-person. false for virtual
 	var meetingType = all_data.meeting_info.meeting_type;
-	var bestTimesInPerson = all_data.best_times_inperson
-	var bestTimesVirtual = all_data.best_times_virtual
+	var startTime = all_data.meeting_info.day_start_time;
+	var endTime = all_data.meeting_info.day_end_time;
+	var bestTimesInPerson = all_data.best_times_inperson;
+	var bestTimesIdxInPerson = all_data.best_times_idx_inperson;
+	var bestTimesVirtual = all_data.best_times_virtual;
+	var bestTimesIdxVirtual = all_data.best_times_idx_virtual;
+	
 	if(meetingType === "remote"){
 		$("#curr_table_type").html("Current table: virtual availability")
 		currTable = false;
@@ -35,28 +38,63 @@ $(document).ready(function() {
 	// Must be after variable initialization
 	// Determines which table should be rendered
 	if(currTable){
-		$('#sched-results').append(buildTableHTML(inPersonResultTable));
+		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(inPersonResultTable);
+		highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
 		$("#best-times").html(buildRecommendationList(bestTimesInPerson));
-		// Binds jquery clickable function to clickable class
-		// registerClickable(inPersonMeetingTable);
 	}else{
-		$('#sched-results').append(buildTableHTML(virtualResultTable));
+		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(virtualResultTable);
+		highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
 		$("#best-times").html(buildRecommendationList(bestTimesVirtual));
-		// Binds jquery clickable function to clickable class
-		// registerClickable(virtualMeetingTable);
 	}
 
+	function mimic_rgba(r, g, b, a){
+		var bg_rgb = [255, 255, 255];
+
+		if (a > 0){
+			return "rgb(" + (r * a + bg_rgb[0] * (1 - a)) + ", " + (g * a + bg_rgb[1] * (1 - a)) + ", " + (b * a + bg_rgb[2] * (1 - a)) + ")"; 
+		}
+		else{
+			return "rgb(222, 222, 222)";
+		}
+	}
 
 	function colorTable(availability){
 		for(var i = 0 ; i < availability.length ; i++){
 			for(var j = 0 ; j < availability[0].length ; j++){
 				var currId = i * availability[0].length + j;
 				var cellVal = availability[i][j];
-				var color = color = "rgba(101, 236, 89, " + cellVal + ")";
-				$("#"+currId).css('background-color', color)
+
+				if(currTable){
+					// var color = "rgba(255, 124, 10, " + cellVal + ")";
+					var color = mimic_rgba(255, 124, 10, cellVal**0.8);
+				} 
+				else{
+					// var color = "rgba(0, 142, 224, " + cellVal + ")";
+					var color = mimic_rgba(0, 142, 224, cellVal);
+				}
+
+				$("#"+currId).css('background-color', color);
 			}
+		}
+	}
+	
+	function highlightBestTimes(availability, bestTimesIdxList){
+		for(var i = 0 ; i < bestTimesIdxList.length ; i++){
+			var col = bestTimesIdxList[i][0];
+			var row = bestTimesIdxList[i][1];
+			var currId = row * availability[0].length + col;
+			// var color = "rgb(69, 240, 100)";
+			if(currTable){
+				var color = "rgb(228, 92, 58)";
+			} 
+			else{
+				var color = "rgb(19, 64, 116)";
+			}
+			// console.log(currId);
+			$("#"+currId).css('background-color', color);
+			$("#"+currId).css('box-shadow', '0 0 0 1px #24272B');
 		}
 	}
 
@@ -65,15 +103,17 @@ $(document).ready(function() {
 		$('#tableSchedule').remove();
 		currTable = !currTable;
 		if(currTable){
-			$('#sched-results').append(buildTableHTML(inPersonResultTable));
+			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 			colorTable(inPersonResultTable);
+			highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson);
 			$('#change_table').html("Click to go to virtual availability");
 			$("#curr_table_type").html("Current table: in-person availability");
 		}else{
-			$('#sched-results').append(buildTableHTML(virtualResultTable));
+			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 			colorTable(virtualResultTable);
+			highlightBestTimes(virtualResultTable, bestTimesIdxVirtual);
 			$('#change_table').html("Click to go to in-person availability");
 			$("#curr_table_type").html("Current table: virtual availability");
 		}
