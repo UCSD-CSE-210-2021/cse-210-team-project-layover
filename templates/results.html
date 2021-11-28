@@ -104,12 +104,12 @@ tr:not(:first-child) td:not(:first-child) {
                     <button type="button" class="btn btn-primary" id="change_table">Click to go to virtual availability</button>
                 </div>
             </div>
-            <div id="timeFormatSelector" class="btn-group col-4" data-toggle="buttons" style="padding-left: 0px">
-                <label class="btn btn-light">
-                    <input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
+            <div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+                <label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
+                    <input type="radio" name="radio" checked> 12-hour </input>
                 </label>
-                <label class="btn btn-light">
-                    <input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
+                <label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
+                    <input type="radio" name="radio"> 24-hour </input>
                 </label>
             </div>
 
