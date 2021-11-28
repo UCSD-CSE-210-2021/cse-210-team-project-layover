@@ -37,7 +37,7 @@ class Meeting(db.Model):
     dayEndTime = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Meeting('{self.meetingID}', '{self.meetingName}')"
+        return f"Meeting('meetingID: {self.meetingID}', 'meetingName: {self.meetingName}')"
 
     def getMeetingID(self):
         return self.meetingID
@@ -325,7 +325,7 @@ class User(db.Model):
     remoteUserAvailability = db.Column(db.String(5000), unique=False) #max 5000 char...?
 
     def __repr__(self):
-        return f"User('{self.userName}', '{self.userEmail}')"
+        return f"User('userName: {self.userName}', 'userEmail: {self.userEmail}')"
 
     # def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
     #     self.inPersonAvailability = inPersonAvailability
