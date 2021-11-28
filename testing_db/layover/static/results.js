@@ -14,13 +14,13 @@ $(document).ready(function() {
 	// fullList += "</ul>"                                     // End list for all users
 	// $("#topDiv").html(fullList)                             // Display list in topDiv id from HTML file
 
-	console.log(all_data);
-
 	// Uncomment this
 	var inPersonResultTable = all_data.compiled_inperson;
 	var virtualResultTable = all_data.compiled_virtual;
 	var currTable = true; // true for in-person. false for virtual
 	var meetingType = all_data.meeting_info.meeting_type;
+	var startTime = all_data.meeting_info.day_start_time;
+	var endTime = all_data.meeting_info.day_end_time;
 	var bestTimesInPerson = all_data.best_times_inperson
 	var bestTimesVirtual = all_data.best_times_virtual
 	if(meetingType === "remote"){
@@ -35,17 +35,13 @@ $(document).ready(function() {
 	// Must be after variable initialization
 	// Determines which table should be rendered
 	if(currTable){
-		$('#sched-results').append(buildTableHTML(inPersonResultTable));
+		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(inPersonResultTable);
 		$("#best-times").html(buildRecommendationList(bestTimesInPerson));
-		// Binds jquery clickable function to clickable class
-		// registerClickable(inPersonMeetingTable);
 	}else{
-		$('#sched-results').append(buildTableHTML(virtualResultTable));
+		$('#sched-results').append(buildTableHTML(startTime, endTime));
 		colorTable(virtualResultTable);
 		$("#best-times").html(buildRecommendationList(bestTimesVirtual));
-		// Binds jquery clickable function to clickable class
-		// registerClickable(virtualMeetingTable);
 	}
 
 
@@ -65,13 +61,13 @@ $(document).ready(function() {
 		$('#tableSchedule').remove();
 		currTable = !currTable;
 		if(currTable){
-			$('#sched-results').append(buildTableHTML(inPersonResultTable));
+			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 			colorTable(inPersonResultTable);
 			$('#change_table').html("Click to go to virtual availability");
 			$("#curr_table_type").html("Current table: in-person availability");
 		}else{
-			$('#sched-results').append(buildTableHTML(virtualResultTable));
+			$('#sched-results').append(buildTableHTML(startTime, endTime));
 			$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 			colorTable(virtualResultTable);
 			$('#change_table').html("Click to go to in-person availability");

@@ -21,6 +21,8 @@ def handle_meeting_creation():
     # date_type = request.form['date_type']  			# Uncomment for milestone 2
     # start_date = request.form['start_date']  		# Uncomment for milestone 2
     # end_date = request.form['end_date']  			# Uncomment for milestone 2
+    day_start_time = int(request.form['start_time'])
+    day_end_time = int(request.form['end_time'])
 
     requestedDateType = 'general_week'  					# Remove for milestone 2
     requestedStartDate = ''  								# Remove for milestone 2
@@ -43,8 +45,9 @@ def handle_meeting_creation():
     endDate'''
 
     myMeeting = Meeting(meetingID=generatedMeetingID, meetingName=requestedMeetingName, meetingType=requestedMeetingType,
-        meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate)
-
+        meetingLength=requestedMeetingLength, dateType=requestedDateType, startDate=requestedStartDate, endDate=requestedEndDate,
+        dayStartTime=day_start_time, dayEndTime=day_end_time)
+		
     db.session.add(myMeeting)
     db.session.commit()
     # meeting_db[meeting_id] = myMeeting
@@ -61,15 +64,20 @@ def submitAvailability():
     '''
 
     data = request.get_json()
+    print(data)
     inPersonMeetingTable = json.dumps(data['inPersonMeetingTable'])
     virtualMeetingTable = json.dumps(data['virtualMeetingTable'])
     meeting_id = data['meeting_id']
     user_email = data['email']
-    user_name = data['user_name']
+    # user_name = data['user_name']
 
-    layoverUser = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
+    # layoverUser = User(name=user_name, email=user_email, meetingID=meeting_id, inPersonUserAvailability=inPersonMeetingTable, remoteUserAvailability=virtualMeetingTable)
 
-    db.session.add(layoverUser)
+    # setAvailability() from LayoverUser is now here
+    currUser = User.query.filter_by(meetingID=meeting_id, userEmail=user_email).first()
+    currUser.inPersonUserAvailability = inPersonMeetingTable
+    currUser.remoteUserAvailability = virtualMeetingTable
+    db.session.add(currUser)
     db.session.commit()
 
     return Response("Success", status=200)
@@ -87,8 +95,12 @@ def getUniqueRandomHash():
 @app.route('/meeting/<meeting_id>', methods=['GET', 'POST'])
 def meeting(meeting_id):
     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+    print("reached")
+    print(myMeeting)
+    print(type(myMeeting))
     # myMeeting = meeting_db[meeting_id]
     myData = myMeeting.toJSON()
+    print("myData is: " , myData)
     return render_template('scheduling-landing.html', data=myData)
 
 @app.route('/handle_user_info', methods=['POST'])
@@ -96,8 +108,13 @@ def handle_user_info():
     user_name = request.form['display_name']
     email = request.form['email']
     meeting_id = request.form['meeting_id']
+    print("meeting id is: " , meeting_id)
     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
-    if email not in myMeeting.getUsers():
+    print("myMeeting is: ", myMeeting)
+    usernames = [u.getID() for u in myMeeting.getUsers()]
+    print("usernames", usernames)
+    # addUser() from LayoverMeeting is now here
+    if email not in usernames:
         layoverUser = User(userName=user_name, userEmail=email, meetingID=meeting_id)
         db.session.add(layoverUser)
         db.session.commit()
@@ -108,8 +125,10 @@ def handle_user_info():
 def availability(meeting_id, email):
     # this is getting the user for the specific meetingID
     myUser = User.query.filter_by(meetingID=meeting_id, userEmail=email).first()
-    meeting_type = Meeting.query.filter_by(meetingID=meeting_id).first().getMeetingType()
-    return render_template('scheduling-availability.html', data=myUser.toJSON(), meetingType=meeting_type)
+    meeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+    # someData = myUser.toJSON()
+    # print("someData is: " , someData)
+    return render_template('scheduling-availability.html', data=myUser.toJSON(), meeting=meeting.toJSON())
     # return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
 

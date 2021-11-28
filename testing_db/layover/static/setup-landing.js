@@ -1,6 +1,48 @@
-// This file will contain any javascript computation that we need for the setup-landing html page
-// It is here where we will grab the setup information to inform what our scheduling will be:
-//     in-person, remote, both; fixed dates, general week; etc.
+var setupStartEndTimes = function(){
+	var startTime = $("<select id='start_time' class='form-control' name='start_time'>")
+	var endTime = $("<select id='end_time' class='form-control' name='end_time'>")
+	var i = 0;
+	for (i; i < 24; i++){
+		var AMPM = i <= 11 ? "am" : "pm";
+
+		// Setup display time
+		var displayTime;
+		if (i == 0){ displayTime = 12; }
+		else if (i >= 13){ displayTime = i - 12; }
+		else{ displayTime = i; }
+
+		// Create options and add to appropriate selects
+		var startTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+		// var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+		startTime.append(startTimeOption);
+		// endTime.append(endTimeOption);
+	}
+	startTime.val(8)    // Set start value to 8am
+	// endTime.val(18)     // Set end value at 6pm
+	$("#start_time_container").append(startTime);
+	$("#end_time_container").append(endTime);
+}
+
+// Reconfigures the end time selections such that they are always greater than startTime
+var setupEndTimes = function(startTime){
+	console.log("called")
+	var i = startTime + 1;
+	var myEndTime = $("#end_time");
+	myEndTime.empty();
+	for(i; i <= 24; i++){
+		var AMPM = i <= 11 || i == 24 ? "am" : "pm";
+		var displayTime;
+
+		if (i == 0){ displayTime = 12; }
+		else if (i >= 13){ displayTime = i - 12; }
+		else{ displayTime = i; }
+
+		var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+		myEndTime.append(endTimeOption);
+	}
+	var setEndTime = startTime + 1;
+	myEndTime.val(setEndTime);
+}
 
 // Runs right when page is accessed
 $(document).ready(function() {
@@ -20,6 +62,37 @@ $(document).ready(function() {
 		$("#start_date").attr("required", true);
 		$("#end_date").attr("required", true);
 	});
+
+	setupStartEndTimes();
+	setupEndTimes(8)
+	
+	// Disallow end time before start time
+	// $("#start_time").on("change", function(){
+	// 	console.log("called")
+	// 	var i = parseInt($(this).val()) + 1;
+	// 	var myEndTime = $("#end_time");
+	// 	myEndTime.empty();
+	// 	for(i; i <= 24; i++){
+	// 		var AMPM = i <= 11 || i == 24 ? "am" : "pm";
+	// 		var displayTime;
+
+	// 		if (i == 0){ displayTime = 12; }
+	// 		else if (i >= 13){ displayTime = i - 12; }
+	// 		else{ displayTime = i; }
+
+	// 		var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+	// 		myEndTime.append(endTimeOption);
+	// 	}
+	// 	// var setEndTime = $(this).val() == 23 ? 23 : parseInt($(this).val()) + 1;
+	// 	var setEndTime = parseInt($(this).val()) + 1;
+	// 	myEndTime.val(setEndTime);
+	// })
+
+	$("#start_time").on("change", function(){
+		var newStartTime = parseInt($(this).val());
+		setupEndTimes(newStartTime)
+	})
+	
 
 	// Get today's date, set min value of start/end date to today
 	var now = new Date();

@@ -33,9 +33,11 @@ class Meeting(db.Model):
     dateType = db.Column(db.String(20), nullable=False)
     startDate = db.Column(db.Integer, nullable=False)
     endDate = db.Column(db.Integer, nullable=False)
+    dayStartTime = db.Column(db.Integer, nullable=False)
+    dayEndTime = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"Meeting('{self.meetingID}', '{self.meetingName}')"
+        return f"Meeting('meetingID: {self.meetingID}', 'meetingName: {self.meetingName}')"
 
     def getMeetingID(self):
         return self.meetingID
@@ -44,8 +46,10 @@ class Meeting(db.Model):
         return self.meetingName
 
     # ***userKey is by userEmail***
-    def getUsers(self):        
-        return list([user.userEmail for user in self.meetingUsers])
+    def getUsers(self):
+        return self.meetingUsers
+        # Meeting.query.filter_by(meetingID=self.meetingID).first()
+        # return list([user.userEmail for user in self.meetingUsers])
 
     def getUser(self, userKey):
         try:
@@ -62,12 +66,45 @@ class Meeting(db.Model):
     def getDateType(self):
         return self.dateType
 
+    def getStartTime(self):
+        return self.day_start_time
+
+    def getEndTime(self):
+        return self.day_end_time
+
     # THIS NEEDS TO BE CHANGED!!!
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        print(self.__dict__)
+        print(type(self._sa_instance_state))
+
+        users = self.getUsers()
+        userDict = {}
+        for user in users:
+            userDict[user.getID()] = user.toJSON()
+
+        resultJSON = {
+            "meeting_id" : self.meetingID,
+            "name" : self.meetingName,
+            "users" : userDict,
+            "meeting_type" : self.meetingType,
+            "meeting_length" : self.meetingLength,
+            "date_type" : self.dateType,
+            "start_date" : self.startDate,
+            "end_date" : self.endDate,
+            "day_start_time" : self.dayStartTime,
+            "day_end_time" : self.dayEndTime
+		}
+
+        return json.dumps(resultJSON, sort_keys=True, indent=4)
+        # return json.dumps(resultJSON)
+
+
+        # return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        # return json.dumps(self, default=jsonDefaultFunction , sort_keys=True, indent=4)
 
     def compiledAvailability(self, inPerson: bool):
-        userKeys = list(self.getUsers())
+        users = list(self.getUsers())
+        userKeys = [u.getID() for u in users]
 
         # Initializing template via hard coding
         # TODO: make compiled schedule dynamic, but not reliant on a key in case no availabilities added yet
@@ -77,7 +114,7 @@ class Meeting(db.Model):
         # user0 = self.getUser(userKeys[0])
         # user0_availability = np.array(user0.getInPersonAvailability())
         num_blocks_in_day = int(
-            (self.day_end_time - self.day_start_time) * (60 / 15))
+            (self.dayEndTime - self.dayStartTime) * (60 / 15))
 
         # WARNING: FOLLOWING VALUE IS HARD CODED
         num_days = 7
@@ -114,7 +151,7 @@ class Meeting(db.Model):
         # print(compiled_list)
 
         start_ind = 0
-        end_ind = start_ind + self.meeting_length
+        end_ind = start_ind + self.meetingLength
 
         # dummy values, must change in future
         start_time = datetime(2021, 11, 4, hour=7)
@@ -126,7 +163,7 @@ class Meeting(db.Model):
         best_five = {}
         for day_idx, day in enumerate(compiled_list.T):
             start_ind = 0
-            end_ind = start_ind + int((self.meeting_length/15))
+            end_ind = start_ind + int((self.meetingLength/15))
             while end_ind <= len(day):
                 curr_sum = sum(day[start_ind:end_ind])
 
@@ -279,19 +316,19 @@ class User(db.Model):
 
     # character lengths are hard coded for testing purposes!!!
     userName = db.Column(db.String(20), unique=False, nullable=False)
-    userEmail = db.Column(db.String(50), primary_key=True)
-    meetingID = db.Column(db.String(20), db.ForeignKey('meeting.meetingID'), nullable=False)
+    userEmail = db.Column(db.String(50), primary_key=True)  # ERIC: is it unique based on user ID. Or is it unique based on (userID, meetingID)?
+    meetingID = db.Column(db.String(20), db.ForeignKey('meeting.meetingID'), primary_key=True, nullable=False)
 
     # input to availability schedules should be a json.dumps() object!
     inPersonUserAvailability = db.Column(db.String(5000), unique=False) #max 5000 char...?
     remoteUserAvailability = db.Column(db.String(5000), unique=False) #max 5000 char...?
 
     def __repr__(self):
-        return f"User('{self.userName}', '{self.userEmail}')"
+        return f"User('userName: {self.userName}', 'userEmail: {self.userEmail}')"
 
-    def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
-        self.inPersonAvailability = inPersonAvailability
-        self.virtualAvailability = virtualAvailability
+    # def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
+    #     self.inPersonAvailability = inPersonAvailability
+    #     self.virtualAvailability = virtualAvailability
 
     def getName(self):
         return self.userName
@@ -303,13 +340,28 @@ class User(db.Model):
         return self.userEmail
 
     def getInPersonAvailability(self):
-        return self.inPersonAvailability
+        parsedInPerson = None 
+        if self.inPersonUserAvailability != None: 
+            parsedInPerson = json.loads(self.inPersonUserAvailability) 
+        return parsedInPerson
 
     def getVirtualAvailability(self):
-        return self.virtualAvailability
+        parsedVirtual = None 
+        if self.remoteUserAvailability: 
+            parsedVirtual = json.loads(self.remoteUserAvailability) 
+        return parsedVirtual
 
     def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+                
+        resultJSON = {
+            "meeting_id" : self.meetingID,
+            "name" : self.userName,
+            "email" : self.userEmail,
+            "inPersonAvailability" : self.getInPersonAvailability(),
+            "virtualAvailability" : self.getVirtualAvailability()
+		}
+
+        return json.dumps(resultJSON, sort_keys=True, indent=4)
 
     def __eq__(self, other):
 
