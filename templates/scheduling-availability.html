@@ -43,7 +43,13 @@ th, td {
 .noClick{
 	pointer-events: none;
 }
-
+img{
+	max-width: 100%;
+	max-height: 100%;
+}
+img:hover{
+	cursor: pointer;
+}
 {% endblock %}
 
 {% block content %}
@@ -104,9 +110,9 @@ th, td {
 			<!-- Button here -->
 			<!-- Cheap hack to make the button in the middle. Probably should be refactored to use CSS instead. -->
 			<br><br><br><br><br><br><br><br><br>
-			<button type="button" class="btn btn-primary" id="copyToVirtual">Copy In-Person Availability To Virtual Availability</button>
+			<img src="{{url_for('static', filename='img/arrow_right.png')}}" id="copyToVirtual"/>
 			<br><br>
-			<button type="button" class="btn btn-primary" id="copyToInPerson">Copy Virtual Availability To In-Person Availability</button>
+			<img src="{{url_for('static', filename='img/arrow_left.png')}}" id="copyToInPerson"/>
 		</div>
 	
 		<!-- Virtual table -->
@@ -115,10 +121,9 @@ th, td {
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-3">
-			<button type="button" class="btn btn-primary" id="submit_availability">Submit</button>
-		</div>
+
+	<div class="row d-flex justify-content-center">
+		<button type="submit" class="btn btn-primary col-2" id="submit_availability">Submit</button>
 	</div>
 </div>
 
