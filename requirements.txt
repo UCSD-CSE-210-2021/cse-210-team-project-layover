@@ -3,3 +3,4 @@ numpy
 coverage
 Flask-Testing
 blinker
+gunicorn
