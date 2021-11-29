@@ -6,6 +6,53 @@
 <script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
+<script>
+	// Reformat time displayed in the table
+	function reformatTimeDisplay(format){
+		allTimeDisplays = $('.timeDisplay')
+		// Change everything into 24-hour format
+		for (let i = 0; i < allTimeDisplays.length; i++) {
+			let currentObj = allTimeDisplays[i]
+			let currentObjTime = currentObj.innerHTML
+			if (currentObjTime.indexOf(':') != -1) {
+				continue
+			}
+			if (currentObjTime.indexOf('AM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('AM')))
+				if (hour == 12) {
+					hour = 0
+				}
+				currentObjTime = hour.toString() + ':00'
+
+			} else if (currentObjTime.indexOf('PM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('PM')))
+				if (hour != 12) {
+					hour += 12
+				}
+				currentObjTime = hour.toString() + ':00'
+			}
+			currentObj.innerHTML = currentObjTime
+		}
+
+		// Format 24h to 12h if specified
+		if (format === '12h') {
+			for (let i = 0; i < allTimeDisplays.length; i++) {
+				// Same logic as function in buildTable.js
+				let currentObj = allTimeDisplays[i]
+				let currentObjTime = currentObj.innerHTML
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf(':')))
+				if (hour < 12) {
+					displayTime = hour == 0 ? 12: hour
+					meridiem = 'AM'
+				} else {
+					displayTime = hour == 12 ? 12: hour - 12
+					meridiem = 'PM'
+				}
+				currentObj.innerHTML = displayTime + ' ' + meridiem
+			}
+		}
+	}
+</script>
 {% endblock %}
 
 {% block styling %}
@@ -83,8 +130,16 @@ img:hover{
 	</div> -->
 
 	<div class="row">
-		<div class="row col-8"></div>
-		<div class="btn-group col-4" data-toggle="buttons">
+		<div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
+				<input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
+			</label>
+			<label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
+				<input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
+			</label>
+		</div>
+		<div class="row col-4"></div>
+		<div id="availabilitySelector" class="btn-group col-4" data-toggle="buttons">
 			<label class="btn btn-primary">
 				<input type="radio" name="radio" value="green"> Yes </input>
 			</label>

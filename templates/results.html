@@ -5,6 +5,74 @@
 <script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'results.js') }}"></script>
+<script>
+	// Reformat time displayed in the table
+	function reformatTimeDisplay(format){
+		allTimeDisplays = $('.timeDisplay')
+		// Change everything into 24-hour format
+		for (let i = 0; i < allTimeDisplays.length; i++) {
+			let currentObj = allTimeDisplays[i]
+			let currentObjTime = currentObj.innerHTML
+			if (currentObjTime.indexOf(':') != -1) {
+				continue
+			}
+			if (currentObjTime.indexOf('AM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('AM')))
+				if (hour == 12) {
+					hour = 0
+				}
+				currentObjTime = hour.toString() + ':00'
+
+			} else if (currentObjTime.indexOf('PM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('PM')))
+				if (hour != 12) {
+					hour += 12
+				}
+				currentObjTime = hour.toString() + ':00'
+			}
+			currentObj.innerHTML = currentObjTime
+		}
+
+		// Format 24h to 12h if specified
+		if (format === '12h') {
+			for (let i = 0; i < allTimeDisplays.length; i++) {
+				// Same logic as function in buildTable.js
+				let currentObj = allTimeDisplays[i]
+				let currentObjTime = currentObj.innerHTML
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf(':')))
+				if (hour < 12) {
+					displayTime = hour == 0 ? 12: hour
+					meridiem = 'AM'
+				} else {
+					displayTime = hour == 12 ? 12: hour - 12
+					meridiem = 'PM'
+				}
+				currentObj.innerHTML = displayTime + ' ' + meridiem
+			}
+		}
+	}
+
+	// Change data in table
+	function changeBoldEmail(email){
+		let allEmails = $('#users-list > ul > li')
+		// Ref: https://stackoverflow.com/questions/10877903/check-if-text-in-cell-is-bold
+		for(let i = 0; i < allEmails.length; i++){
+			let currentEmail = allEmails[i]
+			// Unbold text
+			if(currentEmail.firstChild.nodeName === 'b' || currentEmail.firstChild.nodeName === 'B'){
+				currentEmail.innerHTML = currentEmail.innerText
+			}
+			// Bold text if match `email`
+			if(currentEmail.innerText === email){
+				currentEmail.innerHTML = '<b>' + currentEmail.innerText + '</b>'
+			}
+		}
+		// Hacky way to change table display per participant by clicking #change_table 2 times
+		$('#change_table').trigger('click')
+		$('#change_table').trigger('click')
+		
+	}
+</script>
 {% endblock %}
 
 {% block styling %}
@@ -56,6 +124,14 @@ tr:not(:first-child) td:not(:first-child) {
                 <div class="col-3">
                     <button type="button" class="btn btn-primary" id="change_table">Click to go to virtual availability</button>
                 </div>
+            </div>
+            <div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+                <label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
+                    <input type="radio" name="radio" checked> 12-hour </input>
+                </label>
+                <label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
+                    <input type="radio" name="radio"> 24-hour </input>
+                </label>
             </div>
 
         </div>
