@@ -63,15 +63,16 @@ table {
 	table-layout: fixed;
 	text-align: center;
 }
-tr, th, td {
-    background-clip: padding-box;
-	border: solid;
-    border-color: transparent;
-	border-width: 2px 2px;
-    border-radius: 8px;
-}
 th, td {
     width: 12%;
+}
+td {
+    background-clip: padding-box;
+}
+tr:not(:first-child) td:not(:first-child) {
+    border-color: transparent;
+    border-width: 2px;
+    border-radius: 8px;
 }
 #topDiv {
 	margin: 20px;

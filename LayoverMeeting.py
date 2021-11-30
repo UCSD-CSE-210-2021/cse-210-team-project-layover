@@ -130,7 +130,7 @@ class LayoverMeeting:
 
 		# dummy values, must change in future
 		start_time = datetime(2021, 11, 4, hour=self.day_start_time)
-		end_time = datetime(2021, 11, 4, hour=self.day_end_time)
+		# end_time = datetime(2021, 11, 4, hour=self.day_end_time)
 		week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday',
 					 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
 

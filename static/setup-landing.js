@@ -13,14 +13,35 @@ var setupStartEndTimes = function(){
 
 		// Create options and add to appropriate selects
 		var startTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
-		var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+		// var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
 		startTime.append(startTimeOption);
-		endTime.append(endTimeOption);
+		// endTime.append(endTimeOption);
 	}
 	startTime.val(8)    // Set start value to 8am
-	endTime.val(18)     // Set end value at 6pm
+	// endTime.val(18)     // Set end value at 6pm
 	$("#start_time_container").append(startTime);
 	$("#end_time_container").append(endTime);
+}
+
+// Reconfigures the end time selections such that they are always greater than startTime
+var setupEndTimes = function(startTime){
+	console.log("called")
+	var i = startTime + 1;
+	var myEndTime = $("#end_time");
+	myEndTime.empty();
+	for(i; i <= 24; i++){
+		var AMPM = i <= 11 || i == 24 ? "am" : "pm";
+		var displayTime;
+
+		if (i == 0){ displayTime = 12; }
+		else if (i >= 13){ displayTime = i - 12; }
+		else{ displayTime = i; }
+
+		var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+		myEndTime.append(endTimeOption);
+	}
+	var setEndTime = startTime + 1;
+	myEndTime.val(setEndTime);
 }
 
 // Runs right when page is accessed
@@ -43,27 +64,35 @@ $(document).ready(function() {
 	});
 
 	setupStartEndTimes();
-
+	setupEndTimes(8)
+	
 	// Disallow end time before start time
+	// $("#start_time").on("change", function(){
+	// 	console.log("called")
+	// 	var i = parseInt($(this).val()) + 1;
+	// 	var myEndTime = $("#end_time");
+	// 	myEndTime.empty();
+	// 	for(i; i <= 24; i++){
+	// 		var AMPM = i <= 11 || i == 24 ? "am" : "pm";
+	// 		var displayTime;
+
+	// 		if (i == 0){ displayTime = 12; }
+	// 		else if (i >= 13){ displayTime = i - 12; }
+	// 		else{ displayTime = i; }
+
+	// 		var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
+	// 		myEndTime.append(endTimeOption);
+	// 	}
+	// 	// var setEndTime = $(this).val() == 23 ? 23 : parseInt($(this).val()) + 1;
+	// 	var setEndTime = parseInt($(this).val()) + 1;
+	// 	myEndTime.val(setEndTime);
+	// })
+
 	$("#start_time").on("change", function(){
-		var i = parseInt($(this).val()) + 1;
-		var myEndTime = $("#end_time");
-		myEndTime.empty();
-		for(i; i <= 24; i++){
-			var AMPM = i <= 11 || i == 24 ? "am" : "pm";
-			var displayTime;
-
-			if (i == 0){ displayTime = 12; }
-			else if (i >= 13){ displayTime = i - 12; }
-			else{ displayTime = i; }
-
-			var endTimeOption = $("<option value='" + i + "'>" + displayTime + ":00 " + AMPM + "</option>")
-			myEndTime.append(endTimeOption);
-		}
-		// var setEndTime = $(this).val() == 23 ? 23 : parseInt($(this).val()) + 1;
-		var setEndTime = parseInt($(this).val()) + 1;
-		myEndTime.val(setEndTime);
+		var newStartTime = parseInt($(this).val());
+		setupEndTimes(newStartTime)
 	})
+	
 
 	// Get today's date, set min value of start/end date to today
 	var now = new Date();
