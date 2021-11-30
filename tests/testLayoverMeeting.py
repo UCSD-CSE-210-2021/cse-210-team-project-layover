@@ -242,8 +242,8 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Sunday 08:00', 'Sunday 08:15', 
-					'Sunday 08:30']
+		expected = ['Sunday 08:00 AM', 'Sunday 08:15 AM', 
+					'Sunday 08:30 AM']
 		# Order is not relevant so use countEqual
 		self.assertCountEqual(actual, expected)
 
@@ -266,8 +266,8 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Sunday 08:00', 'Sunday 08:15', 
-					'Sunday 08:30', 'Monday 08:15', 'Monday 08:30']
+		expected = ['Sunday 08:00 AM', 'Sunday 08:15 AM', 
+					'Sunday 08:30 AM', 'Monday 08:15 AM', 'Monday 08:30 AM']
 		# Order is not relevant so use countEqual
 		self.assertCountEqual(actual, expected)
 
@@ -292,8 +292,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Saturday 09:15', 'Sunday 08:00', 
-					'Sunday 08:15', 'Sunday 08:30', 'Monday 08:15']
+		expected = ['Saturday 09:15 AM']
 		# Order is not relevant so use countEqual
 		self.assertCountEqual(actual, expected)
 
@@ -327,8 +326,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Tuesday 08:00', 'Tuesday 08:15', 
-					'Wednesday 08:45', 'Wednesday 09:00', 'Saturday 08:30']
+		expected = ['Tuesday 08:00 AM', 'Tuesday 08:15 AM']
 		# Order is not relevant so use countEqual
 		self.assertCountEqual(actual, expected)
 
@@ -395,8 +393,7 @@ class TestLayoverMeeting(BaseCase):
 		meeting.addUser(self.newUser2)
 
 		actual = meeting.bestMeetingTimes(meeting.compiledAvailability(True))[1]
-		expected = ['Friday 08:00', 'Sunday 08:00', 
-					'Friday 08:15', 'Sunday 08:15', 'Friday 08:30']  # <- these are slightly suspect. 
+		expected = ['Friday 08:00 AM']  								# <- these are slightly suspect. 
 																	 # for example friday 8am 1 user can't 
 																	 # make it and the other is maybe
 																	 # yet we recommend 7:15-8:15

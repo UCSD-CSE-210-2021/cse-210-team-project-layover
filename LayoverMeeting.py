@@ -155,7 +155,7 @@ class LayoverMeeting:
 						range = new_largest - new_smallest
 
 						# keep length to top 5
-						while range > 0.0005:
+						while range > 0.0004:
 							best_five.pop(sorted(best_five)[0])
 							new_largest = sorted(best_five, reverse=True)[0]
 							new_smallest = sorted(best_five)[0]
