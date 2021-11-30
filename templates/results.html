@@ -17,12 +17,13 @@ body {
 table {
 	table-layout: fixed;
 	text-align: center;
-}
-tr, th, td {
-    background-clip: padding-box;
+    border-collapse: collapse;
 }
 th, td {
     width: 12%;
+}
+td {
+    background-clip: padding-box;
 }
 tr:not(:first-child) td:not(:first-child) {
     border-color: transparent;
