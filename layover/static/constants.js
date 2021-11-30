@@ -1,0 +1,1 @@
+const numCol = 8;

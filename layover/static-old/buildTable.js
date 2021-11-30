@@ -1,7 +1,8 @@
 // Builds HTML table using the table Structure
-function buildTableHTML(availability){
+function buildTableHTML(startTime, endTime){
 	
-    var currTime = new Date(startingTimeStr);
+    var currTime = startTime;
+    
     var currCellId = 0;
     var table = '<table id=tableSchedule>';
 
@@ -12,13 +13,12 @@ function buildTableHTML(availability){
         "</tr> "
     ].join("\n")
 
-    // Loop through all the times we want
-    for(var aTime = 0 ; aTime < numTimes ; aTime++){
+    while(currTime != endTime){
         // append time or blank cell
         table += "<tr>"
         table += createTimeCell(currTime)
         // append remaining cells
-        for(var j = 0 ; j < availability[0].length ; j++){
+        for(var j = 0 ; j < numCol - 1 ; j++){
             table += createBlankCellWithId(currCellId);
             currCellId++;
         }
@@ -31,12 +31,13 @@ function buildTableHTML(availability){
             table += createBlankCellWithoutId()
 
             // append remaining rows
-            for(var j = 0 ; j < availability[0].length ; j++){
+            for(var j = 0 ; j < numCol - 1 ; j++){
                 table += createBlankCellWithId(currCellId);
                 currCellId++;
             }
             table += "</tr>"
         }
+        currTime++;
     }
     table += '</table>'
     return table
@@ -53,7 +54,6 @@ function createBlankCellWithoutId(){
 }
 
 function createTimeCell(currTime){
-    ret = "<td class='noClick'>" + currTime.getHours() + ":00</td>";
-    currTime.setHours(currTime.getHours() + 1);
+    ret = "<td class='noClick'>" + currTime + ":00</td>";
     return ret;
 }

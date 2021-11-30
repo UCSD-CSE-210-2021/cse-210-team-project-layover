@@ -1,6 +1,16 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);
-	$("#user_name").html(all_data.userName + "'s availability");
+	var meetingDetails = jQuery.parseJSON(meeting);
+	console.log(all_data)
+	console.log(meetingDetails)
+
+	var meetingType = meetingDetails.meeting_type;
+
+	var startTime = meetingDetails.day_start_time;
+	var endTime = meetingDetails.day_end_time;
+	var numTimes = meetingDetails.day_end_time - meetingDetails.day_start_time;
+
+	$("#user_name").html(all_data.name + "'s availability");
 
 	// Variable initialization
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
@@ -22,17 +32,17 @@ $(document).ready(function() {
 	}
 
 	// If user already has data, then load that
-	if(all_data.inPersonUserAvailability !== null){
-		inPersonMeetingTable = all_data.inPersonUserAvailability;
+	if(all_data.inPersonAvailability !== null){
+		inPersonMeetingTable = all_data.inPersonAvailability;
 	}
-	if(all_data.remoteUserAvailability !== null){
-		virtualMeetingTable = all_data.remoteUserAvailability;
+	if(all_data.virtualAvailability !== null){
+		virtualMeetingTable = all_data.virtualAvailability;
 	}
 
 	// Render both tables regardless. Rely on above logic to hide appropriate table
-	$('#inPersonSchedule').append(buildTableHTML(inPersonMeetingTable));
+	$('#inPersonSchedule').append(buildTableHTML(startTime, endTime));
 	colorTable(inPersonMeetingTable, "inPersonSchedule");
-	$('#virtualSchedule').append(buildTableHTML(virtualMeetingTable));
+	$('#virtualSchedule').append(buildTableHTML(startTime, endTime));
 	colorTable(virtualMeetingTable, "virtualSchedule");
 
 	// Tie updateTable function to clickable cells
@@ -224,15 +234,14 @@ $(document).ready(function() {
 			data : JSON.stringify(
 				{inPersonMeetingTable: inPersonMeetingTable,
 				 virtualMeetingTable: virtualMeetingTable,
-				"meeting_id": all_data.meetingID,
-				"email": all_data.userEmail,
-				"user_name": all_data.userName}
+				"meeting_id": all_data.meeting_id,
+				"email": all_data.email}
 			),
 			contentType : 'application/json',
 			dataType: 'text',
 			success: function(result){
 				console.log("Successfully submitted availability")
-				window.location = '/results/' + all_data.meetingID
+				window.location = '/results/' + all_data.meeting_id
 			},
 			error: function(request, status, error){
 				console.log("Error");
