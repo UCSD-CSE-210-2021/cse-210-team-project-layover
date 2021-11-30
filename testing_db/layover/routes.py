@@ -131,36 +131,69 @@ def availability(meeting_id, email):
     return render_template('scheduling-availability.html', data=myUser.toJSON(), meeting=meeting.toJSON())
     # return render_template('scheduling-availability.html', data=myUser.toJSON(), data2=meetingType)
 
-
 @app.route('/results/<meeting_id>')
 def results(meeting_id):
-    # Meeting Information
-    myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
-    meeting_json = myMeeting.toJSON()
+	# Meeting Information
+	myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+	meeting_json = myMeeting.toJSON()
 
-    # compile in-person availability
-    combined_results_inperson = myMeeting.compiledAvailability(
-        True)
-    lists = combined_results_inperson.tolist()
-    compiled_inperson = json.dumps(lists)
+	# compile in-person availability
+	combined_results_inperson = myMeeting.compiledAvailability(
+		True)
+	lists = combined_results_inperson.tolist()
+	compiled_inperson = json.dumps(lists)
 
-    # Top 5 best timings for in-person
-    schedule_results = myMeeting.bestMeetingTimes(
-        combined_results_inperson)
-    best_times_inperson = json.dumps(schedule_results)
+	# Top 5 best timings for in-person
+	best_times_idx_inperson, best_times_inperson = myMeeting.bestMeetingTimes(combined_results_inperson)
+	best_times_inperson = json.dumps(best_times_inperson)
+	best_times_idx_inperson = json.dumps(best_times_idx_inperson)
 
-    # compile virtual availability
-    combined_results_virtual = myMeeting.compiledAvailability(
-        False)
-    lists = combined_results_virtual.tolist()
-    compiled_virtual = json.dumps(lists)
+	# compile virtual availability
+	combined_results_virtual = myMeeting.compiledAvailability(
+		False)
+	lists = combined_results_virtual.tolist()
+	compiled_virtual = json.dumps(lists)
 
-    # Top 5 best timings for virtual
-    schedule_results = myMeeting.bestMeetingTimes(
-        combined_results_virtual)
-    best_times_virtual = json.dumps(schedule_results)
+	# Top 5 best timings for virtual
+	best_times_idx_virtual, best_times_virtual = myMeeting.bestMeetingTimes(combined_results_virtual)
+	best_times_virtual = json.dumps(best_times_virtual)
+	best_times_idx_virtual = json.dumps(best_times_idx_virtual)
 
-    data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
-        + best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
-        ',"best_times_virtual":' + best_times_virtual + '}'
-    return render_template('results.html', data=data)
+	data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
+		+ best_times_inperson + ',"best_times_idx_inperson":' + best_times_idx_inperson + ',"compiled_virtual":' + compiled_virtual + \
+		',"best_times_virtual":' + best_times_virtual + ',"best_times_idx_virtual":' + best_times_idx_virtual + '}'
+	return render_template('results.html', data=data)
+
+
+# @app.route('/results/<meeting_id>')
+# def results(meeting_id):
+#     # Meeting Information
+#     myMeeting = Meeting.query.filter_by(meetingID=meeting_id).first()
+#     meeting_json = myMeeting.toJSON()
+
+#     # compile in-person availability
+#     combined_results_inperson = myMeeting.compiledAvailability(
+#         True)
+#     lists = combined_results_inperson.tolist()
+#     compiled_inperson = json.dumps(lists)
+
+#     # Top 5 best timings for in-person
+#     schedule_results = myMeeting.bestMeetingTimes(
+#         combined_results_inperson)
+#     best_times_inperson = json.dumps(schedule_results)
+
+#     # compile virtual availability
+#     combined_results_virtual = myMeeting.compiledAvailability(
+#         False)
+#     lists = combined_results_virtual.tolist()
+#     compiled_virtual = json.dumps(lists)
+
+#     # Top 5 best timings for virtual
+#     schedule_results = myMeeting.bestMeetingTimes(
+#         combined_results_virtual)
+#     best_times_virtual = json.dumps(schedule_results)
+
+#     data = '{"meeting_info":' + meeting_json + ',"compiled_inperson":' + compiled_inperson + ',"best_times_inperson":' \
+#         + best_times_inperson + ',"compiled_virtual":' + compiled_virtual + \
+#         ',"best_times_virtual":' + best_times_virtual + '}'
+#     return render_template('results.html', data=data)

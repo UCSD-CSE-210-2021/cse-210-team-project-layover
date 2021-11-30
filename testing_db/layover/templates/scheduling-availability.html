@@ -6,6 +6,53 @@
 <script type="text/javascript" src="{{ url_for('static', filename = 'constants.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'buildTable.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename = 'scheduling-availability.js') }}"></script>
+<script>
+	// Reformat time displayed in the table
+	function reformatTimeDisplay(format){
+		allTimeDisplays = $('.timeDisplay')
+		// Change everything into 24-hour format
+		for (let i = 0; i < allTimeDisplays.length; i++) {
+			let currentObj = allTimeDisplays[i]
+			let currentObjTime = currentObj.innerHTML
+			if (currentObjTime.indexOf(':') != -1) {
+				continue
+			}
+			if (currentObjTime.indexOf('AM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('AM')))
+				if (hour == 12) {
+					hour = 0
+				}
+				currentObjTime = hour.toString() + ':00'
+
+			} else if (currentObjTime.indexOf('PM') != -1) {
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf('PM')))
+				if (hour != 12) {
+					hour += 12
+				}
+				currentObjTime = hour.toString() + ':00'
+			}
+			currentObj.innerHTML = currentObjTime
+		}
+
+		// Format 24h to 12h if specified
+		if (format === '12h') {
+			for (let i = 0; i < allTimeDisplays.length; i++) {
+				// Same logic as function in buildTable.js
+				let currentObj = allTimeDisplays[i]
+				let currentObjTime = currentObj.innerHTML
+				let hour = Number(currentObjTime.substring(0, currentObjTime.indexOf(':')))
+				if (hour < 12) {
+					displayTime = hour == 0 ? 12: hour
+					meridiem = 'AM'
+				} else {
+					displayTime = hour == 12 ? 12: hour - 12
+					meridiem = 'PM'
+				}
+				currentObj.innerHTML = displayTime + ' ' + meridiem
+			}
+		}
+	}
+</script>
 {% endblock %}
 
 {% block styling %}
@@ -16,9 +63,16 @@ table {
 	table-layout: fixed;
 	text-align: center;
 }
-tr, th, td {
-	border: solid;
-	border-width: 2px 2px;
+th, td {
+    width: 12%;
+}
+td {
+    background-clip: padding-box;
+}
+tr:not(:first-child) td:not(:first-child) {
+    border-color: transparent;
+    border-width: 2px;
+    border-radius: 8px;
 }
 #topDiv {
 	margin: 20px;
@@ -37,7 +91,13 @@ tr, th, td {
 .noClick{
 	pointer-events: none;
 }
-
+img{
+	max-width: 100%;
+	max-height: 100%;
+}
+img:hover{
+	cursor: pointer;
+}
 {% endblock %}
 
 {% block content %}
@@ -71,8 +131,16 @@ tr, th, td {
 	</div> -->
 
 	<div class="row">
-		<div class="row col-8"></div>
-		<div class="btn-group col-4" data-toggle="buttons">
+		<div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
+			<label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
+				<input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
+			</label>
+			<label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
+				<input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
+			</label>
+		</div>
+		<div class="row col-4"></div>
+		<div id="availabilitySelector" class="btn-group col-4" data-toggle="buttons">
 			<label class="btn btn-primary">
 				<input type="radio" name="radio" value="green"> Yes </input>
 			</label>
@@ -98,9 +166,9 @@ tr, th, td {
 			<!-- Button here -->
 			<!-- Cheap hack to make the button in the middle. Probably should be refactored to use CSS instead. -->
 			<br><br><br><br><br><br><br><br><br>
-			<button type="button" class="btn btn-primary" id="copyToVirtual">Copy In-Person Availability To Virtual Availability</button>
+			<img src="{{url_for('static', filename='img/arrow_right.png')}}" id="copyToVirtual"/>
 			<br><br>
-			<button type="button" class="btn btn-primary" id="copyToInPerson">Copy Virtual Availability To In-Person Availability</button>
+			<img src="{{url_for('static', filename='img/arrow_left.png')}}" id="copyToInPerson"/>
 		</div>
 	
 		<!-- Virtual table -->
@@ -109,10 +177,9 @@ tr, th, td {
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-3">
-			<button type="button" class="btn btn-primary" id="submit_availability">Submit</button>
-		</div>
+
+	<div class="row d-flex justify-content-center">
+		<button type="submit" class="btn btn-primary col-2" id="submit_availability">Submit</button>
 	</div>
 </div>
 
