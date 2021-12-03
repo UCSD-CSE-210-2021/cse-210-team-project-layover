@@ -26,7 +26,7 @@ jobs:
       #   run: python -m unittest discover tests
 
       - name: Set Env
-        run: . setEnv.sh 
+        run: export MY_ENV=testSettings.py
 
       - name: Run Test & Generate Coverage
         run: coverage run -m unittest
