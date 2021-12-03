@@ -25,6 +25,9 @@ jobs:
       # - name: Run Test
       #   run: python -m unittest discover tests
 
+      - name: Set Env
+        run: . setEnv.sh 
+
       - name: Run Test & Generate Coverage
         run: coverage run -m unittest
 

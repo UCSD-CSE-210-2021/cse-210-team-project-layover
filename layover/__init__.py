@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
+app.config.from_object('layover.settings')
+app.config.from_envvar('MY_ENV', silent=True)
 
-app.config['SECRET_KEY'] = 'dev'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///layover.db'
+print("DB URI IS: ", app.config['SQLALCHEMY_DATABASE_URI'])
 
 db = SQLAlchemy(app)
 

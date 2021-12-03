@@ -45,12 +45,8 @@ class Meeting(db.Model):
     def getName(self):
         return self.meetingName
 
-    # THESE METHODS DO NOT WORK ANYMORE
-    # ***userKey is by userEmail***
     def getUsers(self):
         return self.meetingUsers
-        # Meeting.query.filter_by(meetingID=self.meetingID).first()
-        # return list([user.userEmail for user in self.meetingUsers])
 
     def getUser(self, userKey):
         try:
@@ -73,11 +69,17 @@ class Meeting(db.Model):
     def getEndTime(self):
         return self.day_end_time
 
-    # THIS NEEDS TO BE CHANGED!!!
-    def toJSON(self):
-        print(self.__dict__)
-        print(type(self._sa_instance_state))
+    def addUser(self, newUser):
+        self.meetingUsers.append(newUser)
+        db.session.commit()
 
+    def __eq__(self, other):
+        if isinstance(other, Meeting) and other.toJSON() == self.toJSON():
+            return True
+
+        return False
+
+    def toJSON(self):
         users = self.getUsers()
         userDict = {}
         for user in users:
@@ -99,12 +101,7 @@ class Meeting(db.Model):
         }
 
         return json.dumps(resultJSON, sort_keys=True, indent=4)
-        # return json.dumps(resultJSON)
-
-
-        # return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-        # return json.dumps(self, default=jsonDefaultFunction , sort_keys=True, indent=4)
-
+		
     def compiledAvailability(self, inPerson: bool):
         users = list(self.getUsers())
         userKeys = [u.getID() for u in users]
@@ -388,9 +385,11 @@ class User(db.Model):
     def __repr__(self):
         return f"User('userName: {self.userName}', 'userEmail: {self.userEmail}')"
 
-    # def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
-    #     self.inPersonAvailability = inPersonAvailability
-    #     self.virtualAvailability = virtualAvailability
+    def setAvailability(self, inPersonAvailability: list, virtualAvailability: list):
+        jsonInPersonMeetingTable = json.dumps(inPersonAvailability)
+        jsonVirtualMeetingTable = json.dumps(virtualAvailability)
+        self.inPersonUserAvailability = jsonInPersonMeetingTable
+        self.remoteUserAvailability = jsonVirtualMeetingTable
 
     def getName(self):
         return self.userName
@@ -426,8 +425,7 @@ class User(db.Model):
         return json.dumps(resultJSON, sort_keys=True, indent=4)
 
     def __eq__(self, other):
-
-        if isinstance(other, Meeting) and other.toJSON == self.toJSON:
+        if isinstance(other, User) and other.toJSON() == self.toJSON():
             return True
 
         return False
