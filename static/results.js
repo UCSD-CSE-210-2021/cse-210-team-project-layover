@@ -1,6 +1,9 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);                  // Read in data
 	$("#meeting_name").html(all_data.meeting_info.name + " Results")     // Write the heading dynamically
+	
+	$('.nav-heading').text(all_data.meeting_info.name + " Results");
+	$('.nav-heading').addClass('text-center text-capitalize');
 
 	// TODO: Use data to calculate table to display
 	// var fullList = "<ul>"
@@ -144,7 +147,8 @@ $(document).ready(function() {
 	//Functionality to copy meeting ID on click
 	$('#copyBtn').click(function(){
 		navigator.clipboard.writeText($("#meetingId").text()).then(function () {
-			alert('It worked! Do a CTRL - V to paste')
+			$('#copyBtn').find('i').toggleClass('fa-copy fa-check');
+			// alert('It worked! Do a CTRL - V to paste')
 		}, function () {
 			alert('Failure to copy. Check permissions for clipboard')
 		});
