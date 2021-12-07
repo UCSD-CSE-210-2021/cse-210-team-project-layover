@@ -16,7 +16,7 @@ function buildTableHTML(startTime, endTime){
     while(currTime != endTime){
         // append time or blank cell
         table += "<tr>"
-        table += createTimeCell(currTime)
+        table += createTimeCell(currTime, '12h')
         // append remaining cells
         for(var j = 0 ; j < numCol - 1 ; j++){
             table += createBlankCellWithId(currCellId);
@@ -53,7 +53,19 @@ function createBlankCellWithoutId(){
     return ret
 }
 
-function createTimeCell(currTime){
-    ret = "<td class='noClick'>" + currTime + ":00</td>";
-    return ret;
+function createTimeCell(currTime, timeFormat){
+    let displayTime
+    let meridiem
+    if (timeFormat == '12h') {
+        if (currTime < 12) {
+            displayTime = currTime == 0 ? 12: currTime
+            meridiem = 'AM'
+        } else {
+            displayTime = currTime == 12 ? 12: currTime - 12
+            meridiem = 'PM'
+        }
+        return "<td class='noClick timeDisplay'>" + displayTime + ' ' + meridiem + "</td>";
+    } else {
+        return "<td class='noClick timeDisplay'>" + currTime + ":00</td>";
+    }
 }
