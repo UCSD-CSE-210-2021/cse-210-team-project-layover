@@ -132,17 +132,17 @@ img:hover{
 
 	<div class="row">
 		<div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
-			<label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
-				<input type="radio" name="radio" onclick="reformatTimeDisplay('12h')" checked> 12-hour </input>
+			<label class="btn btn-primary" onclick="reformatTimeDisplay('12h')">
+				<input type="radio" name="radio1" checked> 12-hour </input>
 			</label>
-			<label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
-				<input type="radio" name="radio" onclick="reformatTimeDisplay('24h')"> 24-hour </input>
+			<label class="btn btn-primary" onclick="reformatTimeDisplay('24h')">
+				<input type="radio" name="radio1"> 24-hour </input>
 			</label>
 		</div>
 		<div class="row col-4"></div>
 		<div id="availabilitySelector" class="btn-group col-4" data-toggle="buttons">
 			<label class="btn btn-primary">
-				<input type="radio" name="radio" value="green"> Yes </input>
+				<input type="radio" name="radio" value="green"  checked> Yes </input>
 			</label>
 			<label class="btn btn-primary">
 				<input type="radio" name="radio" value="yellow"> If I have to </input>
@@ -155,14 +155,17 @@ img:hover{
 
 	<!-- For in-person or virtual. NOT BOTH -->
 	<!-- <div id="schedule" class="row"></div> -->
-	
+	<div class="row" style="margin-top: 2%;">
+		<!-- In person table -->		
+		<div class="row col-5"><h6>In-person Availability</h6></div>
+		<div class="row col-2"></div>
+		<div class="row col-5"><h6>Virtual Availability</h6></div>
+	</div>
+		
 	<div class="row">
-		<!-- In person table -->
-		<div id="inPersonSchedule" class="row col-5">
-			In-person Availability
-		</div>
+		<div id="inPersonSchedule" class="row col-5 ui_box"></div>
 
-		<div id="buttonWrapper" class="col-2">
+		<div id="buttonWrapper" class="col-1">
 			<!-- Button here -->
 			<!-- Cheap hack to make the button in the middle. Probably should be refactored to use CSS instead. -->
 			<br><br><br><br><br><br><br><br><br>
@@ -172,9 +175,7 @@ img:hover{
 		</div>
 	
 		<!-- Virtual table -->
-		<div id="virtualSchedule" class="row col-5">
-			Virtual Availability
-		</div>
+		<div id="virtualSchedule" class="row col-5 ui_box"></div>
 	</div>
 
 

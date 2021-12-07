@@ -32,7 +32,7 @@ $(document).ready(function() {
 	var usersMeetingInfo = all_data.meeting_info.users;
 	
 	if(meetingType === "remote"){
-		$("#curr_table_type").html("Current table: virtual availability")
+		$("#curr_table_type").html("Viewing: Virtual availability")
 		currTable = false;
 	}
 
@@ -156,15 +156,15 @@ $(document).ready(function() {
 				$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 				colorTable(inPersonResultTable);
 				highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson, meetingLength);
-				$('#change_table').html("Click to go to virtual availability");
-				$("#curr_table_type").html("Current table: in-person availability");
+				$('#change_table').html("Toggle: Virtual availability");
+				$("#curr_table_type").html("Viewing: In-person availability");
 			}else{
 				$('#sched-results').append(buildTableHTML(startTime, endTime));
 				$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 				colorTable(virtualResultTable);
 				highlightBestTimes(virtualResultTable, bestTimesIdxVirtual, meetingLength);
-				$('#change_table').html("Click to go to in-person availability");
-				$("#curr_table_type").html("Current table: virtual availability");
+				$('#change_table').html("Toggle: In-person availability");
+				$("#curr_table_type").html("Viewing: Virtual availability");
 			}
 		} else { // show specific user
 			if(currTable){

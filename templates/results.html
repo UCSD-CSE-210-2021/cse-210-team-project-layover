@@ -80,7 +80,7 @@
 	text-align: center;
 }
 body {
-    background: #F2F2F2;
+    <!-- background: #F2F2F2; -->
 }
 table {
 	table-layout: fixed;
@@ -116,25 +116,23 @@ tr:not(:first-child) td:not(:first-child) {
 	</div> -->
 
     <div class="col-6">
-        <div class="row" id="curr_table_type">
-            Current table: In-person availability
-        </div>
-        <div class="row" id="change_table_div">
-            <div class="col-3">
-                <button type="button" class="btn btn-primary" id="change_table">Click to go to virtual availability</button>
+        <div class="row">
+            <div class="col-5 col-form-label" id="curr_table_type">
+                Viewing: In-person availability
             </div>
-        </div>
-        <div id="sched-results" class="container ui_box">
-            <div id="timeFormatSelector" class="btn-group col-4" style="padding-left: 0px">
-                <label class="btn btn-light" onclick="reformatTimeDisplay('12h')">
-                    <input type="radio" name="radio" checked> 12-hour </input>
+            <div class="col-5" id="change_table_div">
+                <button type="button" class="btn btn-primary" id="change_table">Toggle: Virtual availability</button>
+            </div>            
+            <div id="timeFormatSelector" class="btn-group col-1" style="margin-left: -10%;"> <!-- Needs to be changed. -->
+                <label class="btn btn-primary" onclick="reformatTimeDisplay('12h')">
+                    <input type="radio" name="radio1" checked> 12-hour </input>
                 </label>
-                <label class="btn btn-light" onclick="reformatTimeDisplay('24h')">
-                    <input type="radio" name="radio"> 24-hour </input>
+                <label class="btn btn-primary" onclick="reformatTimeDisplay('24h')">
+                    <input type="radio" name="radio1"> 24-hour </input>
                 </label>
             </div>
-
         </div>
+        <div id="sched-results" class="container ui_box"></div>
     </div>
 
 
@@ -157,18 +155,20 @@ tr:not(:first-child) td:not(:first-child) {
             <div class="col-1"></div>
         </div>
         
-        <div class="row"> <!-- Hard-coded margin-top for now. Needs to be changed. -->
+        <div class="row">
             <div class="col-2"></div>
             <div class="col-9 ui_box">
                 <h6>Click to copy/share meeting link:</h6>
-                <p id="meetingId"></p>
-                <button type="button" class="btn btn-primary" id="copyBtn"><i class="fas fa-x fa-copy"></i> &nbsp; Copy Meeting ID</button>
+                
+            <div class="row ui_box" style="background-color: white;">
+            <div class="col-10"><b id="meetingId"></b></div>
+            <div class="col-2"><button type="button" class="btn btn-primary" id="copyBtn"><i class="fas fa-x fa-copy"></i></button></div>
             </div>
             <div class="col-2"></div>
 
         </div>
         
-        <div class="row"> <!-- Hard-coded margin-top for now. Needs to be changed. -->
+        <div class="row">
             <div class="col-2"></div>
             <div class="col-9 ui_box">
                 <button type="button" class="btn btn-primary" id="editingPage">Go back to Editing Page</button>
