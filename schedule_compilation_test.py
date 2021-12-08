@@ -94,7 +94,8 @@ if __name__ == '__main__':
 
     compiled_schedule = myMeeting.compiledAvailability(True)
 
-    best_times = myMeeting.bestMeetingTimes(compiled_schedule)
+    best_times_idx, best_times = myMeeting.bestMeetingTimes(compiled_schedule)
+    print(best_times_idx)
     print(best_times)
 
     '''

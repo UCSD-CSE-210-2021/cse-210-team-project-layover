@@ -110,49 +110,60 @@ class LayoverMeeting:
         # compiled_list = self.compiledAvailability()
         # print(compiled_list)
 
-        start_ind = 0
-        end_ind = start_ind + self.meeting_length
+        # start_ind = 0
+        # end_ind = start_ind + self.meeting_length
 
         # dummy values, must change in future
-        start_time = datetime(2021, 11, 4, hour=7)
-        end_time = datetime(2021, 11, 4, hour=22)
+        start_time = datetime(2021, 11, 4, hour=self.dayStartTime)
+        # end_time = datetime(2021, 11, 4, hour=self.day_end_time)
         week_dict = {0: 'Sunday', 1: 'Monday', 2: 'Tuesday',
-                     3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
+                        3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'}
 
         # key = sum of compiled availabilities over the potential meeting times, and val = (day index, time index) tuple
         best_five = {}
         for day_idx, day in enumerate(compiled_list.T):
             start_ind = 0
-            end_ind = start_ind + int((self.meeting_length/15))
+            end_ind = start_ind + int((self.meetingLength/15))
             while end_ind <= len(day):
                 curr_sum = sum(day[start_ind:end_ind])
 
                 if best_five:
-                    # check if curr sum is greater than any of the current top 5
-                    for i in sorted(best_five):
-                        if curr_sum > i or len(best_five) < 5:
-                            while curr_sum in best_five:
-                                curr_sum += 0.0001
-                            best_five[curr_sum] = (day_idx, start_ind)
+                    # check if curr sum is greater than the current greatest
+                    largest = sorted(best_five, reverse=True)[0]
+                    # for i in sorted(best_five):
+                    if curr_sum >= largest and curr_sum != 0:# or len(best_five) < 5 and curr_sum != 0:
+                        while curr_sum in best_five:
+                            curr_sum -= 0.0001
+                        best_five[curr_sum] = (day_idx, start_ind)
+                        new_largest = sorted(best_five, reverse=True)[0]
+                        new_smallest = sorted(best_five)[0]
+                        range = new_largest - new_smallest
 
-                            # if length is larger than 5, pop the smallest key
-                            if len(best_five) > 5:
-                                best_five.pop(sorted(best_five)[0])
-                            # break out of loop so we don't pop more than one
-                            break
+                        # keep length to top 5
+                        while range > 0.0004:
+                            best_five.pop(sorted(best_five)[0])
+                            new_largest = sorted(best_five, reverse=True)[0]
+                            new_smallest = sorted(best_five)[0]
+                            range = new_largest - new_smallest
+                        # # break out of loop so we don't pop more than one
+                        # break
 
                 else:  # if dict is empty add in first value
-                    best_five[curr_sum] = (day_idx, start_ind)
+                    if curr_sum != 0:
+                        best_five[curr_sum] = (day_idx, start_ind)
 
                 start_ind += 1
                 end_ind += 1
 
         best_times = []
+        best_times_idx = []
         for i in sorted(best_five):
             datetime_tostr = start_time+timedelta(minutes=(15*best_five[i][1]))
             best_times.insert(
-                0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%H:%M")))
-        return best_times
+                0, (week_dict[best_five[i][0]] + ' ' + datetime_tostr.strftime("%I:%M %p")))
+            best_times_idx.insert(0, best_five[i])
+
+        return best_times_idx, best_times
 
 
 	# meeting length
