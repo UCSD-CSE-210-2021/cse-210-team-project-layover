@@ -93,6 +93,11 @@ if __name__ == '__main__':
     print(json_avail_load[0][0])
 
     compiled_schedule = myMeeting.compiledAvailability(True)
+
+    best_times = myMeeting.bestMeetingTimes(compiled_schedule)
+    print(best_times)
+
+    '''
     # print(compiled_schedule)
     # print()
     # the following code is purely for testing - Alex
@@ -104,3 +109,4 @@ if __name__ == '__main__':
         transposed_schedule[i][i:num_zeros+i] = zeros
     # new_compiled_schedule = transposed_schedule.T
     # myMeeting.bestMeetingTimesV2(new_compiled_schedule)
+    '''
