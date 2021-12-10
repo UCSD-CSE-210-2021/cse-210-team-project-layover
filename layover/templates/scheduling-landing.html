@@ -12,14 +12,12 @@
 {% endblock %}
 
 {% block content %}
-
-<h1 id="meeting_name" class="text-center text-capitalize"></h1>
-
 <div id="topDiv" class="row">
 	<div class="col-6">
 		<div class="row">
 			If you'd like to add or edit your availability, enter your info below!
 		</div>
+		<br>
 		<div class="row">
 			<form action="{{ url_for('handle_user_info') }}" method="post">
 				<div class="form-group row">
@@ -51,6 +49,7 @@
 		<div class="row">
 			If you would like to see the results, click below!
 		</div>
+		<br>
 		<div class="row">
 			<div class="col-3">
 				 <a href="/results/" role="button" class="btn btn-primary" id="results_btn">Results</a>

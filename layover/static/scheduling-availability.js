@@ -7,7 +7,7 @@ $(document).ready(function() {
 	var endTime = meetingDetails.day_end_time;
 	var numTimes = meetingDetails.day_end_time - meetingDetails.day_start_time;
 
-	$("#nav-heading").text(all_data.name + "'s availability");
+	$(".nav-heading").text(all_data.name + "'s availability");
 
 	// Variable initialization
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
