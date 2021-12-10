@@ -1,7 +1,12 @@
 $(document).ready(function() {
 	var all_data = jQuery.parseJSON(data);                  // Read in data
 	$("#meeting_name").html(all_data.meeting_info.name + " Results")     // Write the heading dynamically
-	console.log(all_data)
+	
+	$('.nav-heading').text(all_data.meeting_info.name + " Results");
+	$('.nav-heading').addClass('text-center text-capitalize');
+	
+	$('#main_title').text("Layover: " + all_data.meeting_info.name);
+
 	// TODO: Use data to calculate table to display
 	// var fullList = "<ul>"
 	// $.each(all_data.meeting_info.users, function(i, value){              // Iterate through users
@@ -29,7 +34,7 @@ $(document).ready(function() {
 	var usersMeetingInfo = all_data.meeting_info.users;
 	
 	if(meetingType === "remote"){
-		$("#curr_table_type").html("Current table: virtual availability")
+		$("#curr_table_type").html("Viewing: Virtual availability")
 		currTable = false;
 	}
 
@@ -153,29 +158,29 @@ $(document).ready(function() {
 				$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 				colorTable(inPersonResultTable);
 				highlightBestTimes(inPersonResultTable, bestTimesIdxInPerson, meetingLength);
-				$('#change_table').html("Click to go to virtual availability");
-				$("#curr_table_type").html("Current table: in-person availability");
+				$('#change_table').html("Toggle: Virtual availability");
+				$("#curr_table_type").html("Viewing: In-person availability");
 			}else{
 				$('#sched-results').append(buildTableHTML(startTime, endTime));
 				$("#best-times").html(buildRecommendationList(bestTimesVirtual));
 				colorTable(virtualResultTable);
 				highlightBestTimes(virtualResultTable, bestTimesIdxVirtual, meetingLength);
-				$('#change_table').html("Click to go to in-person availability");
-				$("#curr_table_type").html("Current table: virtual availability");
+				$('#change_table').html("Toggle: In-person availability");
+				$("#curr_table_type").html("Viewing: Virtual availability");
 			}
 		} else { // show specific user
 			if(currTable){
- 				$('#sched-results').append(buildTableHTML(startTime, endTime));
+				$('#sched-results').append(buildTableHTML(startTime, endTime));
 				$("#best-times").html(buildRecommendationList(bestTimesInPerson));
 				colorTable(usersMeetingInfo[displayEmail].inPersonAvailability);
-				$('#change_table').html("Click to go to virtual availability");
-				$("#curr_table_type").html("Current table: in-person availability of <b>" + displayEmail + "</b>");
+				$('#change_table').html("Toggle: Virtual availability");
+				$("#curr_table_type").html("Viewing: In-person availability");
 			}else{
 				$('#sched-results').append(buildTableHTML(startTime, endTime));
 				$("#best-times").html(buildRecommendationList(bestTimesVirtual));
-				colorTable(usersMeetingInfo[displayEmail].virtualAvailability);
-				$('#change_table').html("Click to go to in-person availability");
-				$("#curr_table_type").html("Current table: virtual availability of <b>" + displayEmail + "</b>");
+				colorTable(usersMeetingInfo[displayEmail].virtualAvailability);				
+				$('#change_table').html("Toggle: In-person availability");
+				$("#curr_table_type").html("Viewing: Virtual availability");
 			}
 		}
 
@@ -189,7 +194,7 @@ $(document).ready(function() {
 	}
 
 
-	var fullList = "<ul>"
+	var fullList = "<ul id='participantList' style='list-style-type:none; padding-left:0;'>"
 	fullList += "<li style='cursor: pointer;' onclick='changeBoldEmail(\"Show All\")'><b>Show All</b></li>"
 	$.each(all_data.meeting_info.users, function(i, value){     // Iterate through users
 		fullList += "<li style='cursor: pointer;' onclick='changeBoldEmail(\"" + i + "\")'>" + i + "</li>"                        // End list for individual user
@@ -200,7 +205,7 @@ $(document).ready(function() {
 
 	function buildRecommendationList(recommendationList){
     // Display list of Top 5 best times
-		var bestTimes = "<ul>"
+		var bestTimes = "<ul id='timeList' style='list-style-position: inside; padding-left:0;'>"
 		$.each(recommendationList, function(i, value){
 			bestTimes += "<li>" + value + "</li>"
 		})
@@ -214,7 +219,8 @@ $(document).ready(function() {
 	//Functionality to copy meeting ID on click
 	$('#copyBtn').click(function(){
 		navigator.clipboard.writeText($("#meetingId").text()).then(function () {
-			alert('It worked! Do a CTRL - V to paste')
+			$('#copyBtn').find('i').toggleClass('fa-copy fa-check');
+			// alert('It worked! Do a CTRL - V to paste')
 		}, function () {
 			alert('Failure to copy. Check permissions for clipboard')
 		});

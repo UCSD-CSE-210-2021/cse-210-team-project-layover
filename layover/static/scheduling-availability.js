@@ -8,7 +8,7 @@ $(document).ready(function() {
 	var numTimes = meetingDetails.day_end_time - meetingDetails.day_start_time;
 
 	$(".nav-heading").text(all_data.name + "'s availability");
-
+	$('#main_title').text("Layover: " + meetingDetails.name);
 	// Variable initialization
 	var inPersonMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
 	var virtualMeetingTable = Array(numTimes * 4).fill().map(() => Array(numCol - 1).fill(0));
@@ -43,7 +43,7 @@ $(document).ready(function() {
 	colorTable(virtualMeetingTable, "virtualSchedule");
 
 	// Tie updateTable function to clickable cells
-	$(".clickable").click(updateTable);
+	// $(".clickable").click(updateTable);
 
 	// Bind copyTable function to the correct button
 	$("#copyToVirtual").click({from: inPersonMeetingTable, to: virtualMeetingTable, tableType: "virtualSchedule"}, copyTable);
@@ -116,13 +116,15 @@ $(document).ready(function() {
 	}
 
 	var isMouseDown = false;
+	// var started = false;
+	// var mousedownFired = false;
 
 	$(function () {
-        isMouseDown = false;		
+        isMouseDown = false;
 		$('#inPersonSchedule, #virtualSchedule').on('mousedown', '#tableSchedule td', function(){
-            isMouseDown = true; 
-			
-			var currId = parseInt($(this).attr("id"));
+			console.log("Mousedown");
+            isMouseDown = true;
+			var currId = parseInt($(this).attr("id"));	
 			var row = Math.floor(currId / (numCol - 1));
 			var col = currId %(numCol - 1);
 			tableName = $(this).parent().parent().parent().parent().attr("id");
@@ -168,12 +170,14 @@ $(document).ready(function() {
           })
 
 		  $('#inPersonSchedule, #virtualSchedule').on('mouseover', '#tableSchedule td', function(){
-            if (isMouseDown) {    
+            if (isMouseDown) {  
+				started = false;				
+				console.log("Dragging");
 				
-			var currId = parseInt($(this).attr("id"));
-			var row = Math.floor(currId / (numCol - 1));
-			var col = currId %(numCol - 1);
-			tableName = $(this).parent().parent().parent().parent().attr("id");
+				var currId = parseInt($(this).attr("id"));
+				var row = Math.floor(currId / (numCol - 1));
+				var col = currId %(numCol - 1);
+				tableName = $(this).parent().parent().parent().parent().attr("id");
 
                 if ($('#availabilitySelector > label > input:checked').val() == 'none') {
 					$(this).css('background-color', '#ECECEC');
